@@ -1,46 +1,142 @@
-# Getting Started with Create React App
+# TARG Барахолка - Веб-версия
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Веб-версия приложения TARG Барахолка, созданная на основе SwiftUI приложения.
 
-## Available Scripts
+## 🚀 Быстрый старт
 
-In the project directory, you can run:
+### Установка зависимостей
+```bash
+npm install
+```
 
-### `npm start`
+### Запуск в режиме разработки
+```bash
+npm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Приложение будет доступно по адресу [http://localhost:3000](http://localhost:3000)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🔥 Настройка Firebase
 
-### `npm test`
+### 1. Создание проекта Firebase
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. Перейдите на [Firebase Console](https://console.firebase.google.com/)
+2. Создайте новый проект
+3. Включите следующие сервисы:
+   - Authentication (Email/Password)
+   - Firestore Database
+   - Storage
 
-### `npm run build`
+### 2. Получение конфигурации
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. В настройках проекта найдите раздел "Your apps"
+2. Добавьте веб-приложение
+3. Скопируйте конфигурацию
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Обновление конфигурации
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Откройте файл `src/firebase/config.ts` и замените `firebaseConfig` на ваши данные:
 
-### `npm run eject`
+```typescript
+const firebaseConfig = {
+  apiKey: "ваш-api-key",
+  authDomain: "ваш-project.firebaseapp.com",
+  projectId: "ваш-project-id",
+  storageBucket: "ваш-project.appspot.com",
+  messagingSenderId: "ваш-sender-id",
+  appId: "ваш-app-id"
+};
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 4. Настройка правил Firestore
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+В Firebase Console перейдите в Firestore Database → Rules и установите следующие правила:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Пользователи могут читать все объявления
+    match /listings/{listingId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Пользователи могут управлять своими профилями
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Пользователи могут управлять своими избранными
+    match /favorites/{favoriteId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Пользователи могут читать и писать сообщения
+    match /messages/{messageId} {
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == resource.data.senderId || request.auth.uid == resource.data.receiverId);
+    }
+  }
+}
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## 📱 Функциональность
 
-## Learn More
+Приложение включает следующие функции:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- ✅ **Многоязычность** (Русский, Английский, Сербский)
+- ✅ **Аутентификация** пользователей
+- ✅ **Объявления** с категориями
+- ✅ **Избранное**
+- ✅ **Чат** между пользователями
+- ✅ **Профили** пользователей
+- ✅ **Загрузка изображений**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🏗️ Архитектура
+
+Проект основан на архитектуре вашего SwiftUI приложения:
+
+- **Contexts** - аналоги @StateObject в SwiftUI
+- **Components** - аналоги Views в SwiftUI  
+- **Types** - аналоги Models в SwiftUI
+- **Firebase** - замена Core Data
+
+## 🎨 Дизайн
+
+Используется Tailwind CSS с кастомными цветами в стиле вашего приложения:
+- Основной цвет: Turquoise (#00e6cc)
+- Градиенты и тени
+- Адаптивный дизайн
+
+## 📦 Сборка для продакшена
+
+```bash
+npm run build
+```
+
+## 🔧 Дополнительные настройки
+
+### Переменные окружения
+
+Создайте файл `.env` в корне проекта:
+
+```env
+REACT_APP_FIREBASE_API_KEY=ваш-api-key
+REACT_APP_FIREBASE_AUTH_DOMAIN=ваш-project.firebaseapp.com
+REACT_APP_FIREBASE_PROJECT_ID=ваш-project-id
+REACT_APP_FIREBASE_STORAGE_BUCKET=ваш-project.appspot.com
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=ваш-sender-id
+REACT_APP_FIREBASE_APP_ID=ваш-app-id
+```
+
+## 🤝 Вклад в проект
+
+1. Форкните репозиторий
+2. Создайте ветку для новой функции
+3. Внесите изменения
+4. Создайте Pull Request
+
+## 📄 Лицензия
+
+MIT License

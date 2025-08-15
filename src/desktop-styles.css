@@ -1,0 +1,256 @@
+/* Десктопные стили для карточек объявлений */
+@media (min-width: 768px) {
+  /* Скрываем мобильный фильтр на десктопе */
+  .mobile-filter-overlay {
+    display: none;
+  }
+
+  .listings-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
+
+  .listing-card {
+    max-width: 300px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+  }
+
+  .listing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  .listing-image-container {
+    height: 180px;
+    margin-bottom: 0;
+    padding-bottom: 40px;
+  }
+
+  .listing-content {
+    padding: 12px;
+  }
+
+  .listing-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .price-text {
+    font-size: 18px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .listing-location {
+    margin-top: 6px;
+  }
+
+  .location-text {
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+  .listing-image-container {
+    position: relative;
+  }
+
+  .favorite-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+  }
+
+  .favorite-button:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+
+  .heart-icon {
+    width: 16px;
+    height: 16px;
+    color: #ef4444;
+  }
+
+  .favorite-button.favorite-active .heart-icon {
+    color: #ef4444;
+  }
+
+  /* Скрываем сердечко в текстовой части на десктопе */
+  .listing-header .favorite-button {
+    display: none;
+  }
+}
+
+/* Десктопные стили для больших экранов */
+@media (min-width: 1400px) {
+  .announcements-view {
+    max-width: 1800px;
+  }
+
+  .listings-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    justify-items: center;
+  }
+
+  .listing-card {
+    max-width: 300px;
+    width: 100%;
+  }
+
+  .listing-image-container {
+    height: 220px;
+  }
+}
+
+/* Десктопные стили для поиска и фильтров */
+@media (min-width: 768px) {
+  .search-section {
+    padding: 24px;
+  }
+
+  .search-bar-with-filters {
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .search-input-group {
+    flex: 1;
+  }
+
+  .search-input {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+
+  .filter-toggle-button {
+    width: auto;
+    padding: 10px 16px;
+  }
+
+  .sort-button {
+    width: auto;
+    padding: 10px 16px;
+  }
+
+  .categories-section {
+    padding: 0 24px;
+  }
+
+  .categories-scroll {
+    gap: 16px;
+  }
+
+  .category-button {
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 16px;
+  }
+
+  /* Десктопные стили для выпадающих фильтров */
+  .filter-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px 0;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-section-header:hover {
+    background: #f9fafb;
+  }
+
+  .filter-section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    text-align: left;
+  }
+
+  .filter-section-icon {
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+    transition: transform 0.2s ease;
+  }
+
+  .filter-section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 0;
+  }
+
+  .filter-section-content.expanded {
+    max-height: 300px;
+    padding: 16px 0;
+  }
+
+  /* Анимация для иконок */
+  .filter-section-header:hover .filter-section-icon {
+    color: #8b5cf6;
+  }
+
+  /* Стили для содержимого секций */
+  .filter-section-content.expanded .city-input-container,
+  .filter-section-content.expanded .filter-select,
+  .filter-section-content.expanded .filter-segmented,
+  .filter-section-content.expanded .price-inputs {
+    margin-top: 12px;
+  }
+
+  /* Стили для переключателя "Только с фото" */
+  .filter-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+  }
+
+  .filter-toggle:hover {
+    background: #f9fafb;
+  }
+
+  .toggle-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  /* Анимация для переключателя */
+  .toggle-slider {
+    transition: background-color 0.3s ease;
+  }
+
+  .toggle-input:checked + .toggle-slider {
+    background: #8b5cf6;
+  }
+
+  .toggle-input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+  }
+} 

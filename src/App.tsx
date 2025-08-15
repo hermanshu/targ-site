@@ -1,25 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { AuthProvider } from './contexts/AuthContext';
+import { LanguageProvider } from './contexts/LanguageContext';
+import { ListingsProvider } from './contexts/ListingsContext';
+import { FavoritesProvider } from './contexts/FavoritesContext';
+import StartView from './components/StartView';
+import MainTabView from './components/MainTabView';
 
 function App() {
+  const [showStart, setShowStart] = useState(true);
+
+  const handleStart = () => {
+    setShowStart(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LanguageProvider>
+      <AuthProvider>
+        <FavoritesProvider>
+          <ListingsProvider>
+            <div className="App">
+              {showStart ? (
+                <StartView onStart={handleStart} />
+              ) : (
+                <MainTabView />
+              )}
+            </div>
+          </ListingsProvider>
+        </FavoritesProvider>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }
 

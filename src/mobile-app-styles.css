@@ -1,0 +1,1023 @@
+/* Мобильные стили в стиле приложения */
+@media (max-width: 767px) {
+  /* Основной контейнер */
+  .mobile-home-view {
+    background: #f8f9fa;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding-bottom: 100px; /* Отступ для закрепленной панели навигации */
+  }
+
+  /* Закрепленная панель навигации */
+  .tab-bar {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(229, 231, 235, 0.5) !important;
+  }
+
+  /* Заголовок */
+  .mobile-header {
+    background: white;
+    padding: 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* Поисковая строка */
+  .mobile-search-container {
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .mobile-search-bar {
+    display: flex;
+    align-items: center;
+    background: #f3f4f6;
+    border-radius: 12px;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .mobile-search-input-wrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+    z-index: 1;
+  }
+
+  .mobile-search-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+    color: #1f2937;
+    padding-left: 28px;
+  }
+
+  .mobile-search-input::placeholder {
+    color: #9ca3af;
+    font-size: 15px;
+  }
+
+  .mobile-filter-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-right: 8px;
+    position: relative;
+  }
+
+  .mobile-filter-button::after {
+    content: '';
+    position: absolute;
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 20px;
+    background: #d1d5db;
+  }
+
+  .mobile-filter-button:hover {
+    background: #e5e7eb;
+  }
+
+  .filter-icon {
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+  }
+
+  /* Кнопка смены языка */
+  .mobile-language-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+  }
+
+  .mobile-language-button:hover {
+    background: #e5e7eb;
+  }
+
+  .language-icon {
+    width: 16px;
+    height: 16px;
+    color: #6b7280;
+  }
+
+  .language-text {
+    font-size: 14px;
+    color: #374151;
+  }
+
+  /* Выпадающее меню языков */
+  .mobile-language-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    margin-top: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 150px;
+    overflow: hidden;
+  }
+
+  .mobile-language-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: left;
+  }
+
+  .mobile-language-option:hover {
+    background: #f9fafb;
+  }
+
+  .mobile-language-option.active {
+    background: #f3f4f6;
+  }
+
+  .mobile-language-flag {
+    font-size: 16px;
+  }
+
+  .mobile-language-name {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+  }
+
+  /* Мобильные стили для заглушек авторизации */
+  .auth-required-container {
+    padding: 20px !important;
+    padding-top: 20px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    display: flex !important;
+    min-height: calc(100vh - 100px) !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 100px !important;
+  }
+
+  /* Блокируем прокрутку body при открытой заглушке */
+  body.auth-required-open {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+  }
+
+  .auth-required-content {
+    padding: 32px 24px !important;
+    max-width: 340px !important;
+    margin: auto !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .auth-required-icon {
+    width: 64px !important;
+    height: 64px !important;
+    margin-bottom: 24px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .lock-icon {
+    width: 28px !important;
+    height: 28px !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+  }
+
+  .auth-required-title {
+    font-size: 24px !important;
+    margin-bottom: 12px !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    font-weight: 600 !important;
+  }
+
+  .auth-required-description {
+    font-size: 15px !important;
+    margin-bottom: 32px !important;
+    color: rgba(255, 255, 255, 0.7) !important;
+    line-height: 1.5 !important;
+  }
+
+  .auth-required-button {
+    padding: 16px 24px !important;
+    font-size: 15px !important;
+    max-width: 260px !important;
+    border-radius: 14px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+  }
+
+  .auth-required-or {
+    font-size: 13px !important;
+    margin: 10px 0 !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  /* Компактная кнопка "Связаться" рядом с продавцом */
+  .seller-info {
+    position: relative !important;
+    padding-right: 120px !important;
+  }
+
+  .contact-button-mobile {
+    position: absolute !important;
+    right: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: #a78bfa !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    white-space: nowrap !important;
+  }
+
+  .contact-button-mobile:hover {
+    background: #8b5cf6 !important;
+  }
+
+  .contact-icon-mobile {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .contact-text-mobile {
+    font-size: 11px !important;
+  }
+
+  /* Скрываем нижнюю панель с кнопкой на мобильных */
+  .detail-bottom-actions {
+    display: none !important;
+  }
+
+  /* Мобильные стили для сообщений */
+  .mobile-messages-container {
+    height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #f8fafc !important;
+  }
+
+  /* Список чатов */
+  .mobile-chats-list {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: white !important;
+  }
+
+  .mobile-chats-header {
+    padding: 16px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    background: white !important;
+  }
+
+  .mobile-chats-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .mobile-chats-content {
+    flex: 1 !important;
+    overflow-y: auto !important;
+  }
+
+  .mobile-chat-item {
+    display: flex !important;
+    align-items: center !important;
+    padding: 16px !important;
+    border-bottom: 1px solid #f3f4f6 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .mobile-chat-item:hover {
+    background: #f9fafb !important;
+  }
+
+  .mobile-chat-avatar {
+    position: relative !important;
+    margin-right: 12px !important;
+  }
+
+  .mobile-avatar-initial {
+    width: 48px !important;
+    height: 48px !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 18px !important;
+  }
+
+  .mobile-online-indicator {
+    position: absolute !important;
+    bottom: 2px !important;
+    right: 2px !important;
+    width: 12px !important;
+    height: 12px !important;
+    background: #10b981 !important;
+    border-radius: 50% !important;
+    border: 2px solid white !important;
+  }
+
+  .mobile-unread-badge {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    background: #ef4444 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+  }
+
+  .mobile-chat-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+
+  .mobile-chat-header-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 4px !important;
+  }
+
+  .mobile-chat-name {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 !important;
+  }
+
+  .mobile-chat-time {
+    font-size: 12px !important;
+    color: #6b7280 !important;
+  }
+
+  .mobile-chat-listing-info {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 4px !important;
+  }
+
+  .mobile-listing-title {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .mobile-listing-price {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #059669 !important;
+    margin-left: 8px !important;
+  }
+
+  .mobile-chat-message-row {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .mobile-chat-last-message {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* Пустое состояние */
+  .mobile-empty-state {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 40px 20px !important;
+    text-align: center !important;
+  }
+
+  .empty-icon {
+    width: 64px !important;
+    height: 64px !important;
+    background: #f3f4f6 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 16px !important;
+  }
+
+  .empty-icon-svg {
+    width: 32px !important;
+    height: 32px !important;
+    color: #9ca3af !important;
+  }
+
+  .empty-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .empty-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Чат */
+  .mobile-chat-view {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: white !important;
+  }
+
+  .mobile-chat-header {
+    display: flex !important;
+    align-items: center !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    background: white !important;
+  }
+
+  .mobile-back-button {
+    background: none !important;
+    border: none !important;
+    padding: 8px !important;
+    margin-right: 12px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .mobile-back-button:hover {
+    background: #f3f4f6 !important;
+  }
+
+  .mobile-back-icon {
+    width: 20px !important;
+    height: 20px !important;
+    color: #374151 !important;
+  }
+
+  .mobile-chat-info {
+    display: flex !important;
+    align-items: center !important;
+    flex: 1 !important;
+  }
+
+  .mobile-chat-details {
+    margin-left: 12px !important;
+  }
+
+  .mobile-chat-status {
+    font-size: 12px !important;
+    color: #6b7280 !important;
+  }
+
+  .mobile-chat-menu-button {
+    background: none !important;
+    border: none !important;
+    padding: 8px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .mobile-chat-menu-button:hover {
+    background: #f3f4f6 !important;
+  }
+
+  .mobile-menu-icon {
+    width: 20px !important;
+    height: 20px !important;
+    color: #374151 !important;
+  }
+
+  /* Область сообщений */
+  .mobile-messages-area {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    padding: 16px !important;
+    background: #f8fafc !important;
+  }
+
+  .mobile-empty-chat {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    text-align: center !important;
+  }
+
+  .empty-chat-icon {
+    width: 64px !important;
+    height: 64px !important;
+    background: #f3f4f6 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 16px !important;
+  }
+
+  .empty-chat-icon-svg {
+    width: 32px !important;
+    height: 32px !important;
+    color: #9ca3af !important;
+  }
+
+  .empty-chat-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 8px !important;
+  }
+
+  .empty-chat-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+  }
+
+  .mobile-messages-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .mobile-message {
+    display: flex !important;
+    align-items: flex-end !important;
+  }
+
+  .mobile-message.own {
+    justify-content: flex-end !important;
+  }
+
+  .mobile-message.other {
+    justify-content: flex-start !important;
+  }
+
+  .mobile-message-content {
+    max-width: 70% !important;
+    padding: 12px 16px !important;
+    border-radius: 18px !important;
+    position: relative !important;
+  }
+
+  .mobile-message.own .mobile-message-content {
+    background: #a78bfa !important;
+    color: white !important;
+    border-bottom-right-radius: 4px !important;
+  }
+
+  .mobile-message.other .mobile-message-content {
+    background: white !important;
+    color: #1f2937 !important;
+    border: 1px solid #e5e7eb !important;
+    border-bottom-left-radius: 4px !important;
+  }
+
+  .mobile-message-text {
+    margin: 0 0 4px 0 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+
+  .mobile-message-time {
+    font-size: 11px !important;
+    opacity: 0.7 !important;
+  }
+
+  .mobile-message-attachments {
+    margin-bottom: 8px !important;
+  }
+
+  .mobile-message-attachment {
+    width: 100% !important;
+    max-width: 200px !important;
+    border-radius: 8px !important;
+    margin-bottom: 4px !important;
+  }
+
+  /* Поле ввода */
+  .mobile-message-input {
+    padding: 16px !important;
+    background: white !important;
+    border-top: 1px solid #e5e7eb !important;
+  }
+
+  .mobile-attachments-preview {
+    display: flex !important;
+    gap: 8px !important;
+    margin-bottom: 12px !important;
+    overflow-x: auto !important;
+  }
+
+  .mobile-attachment-preview {
+    position: relative !important;
+    flex-shrink: 0 !important;
+  }
+
+  .mobile-attachment-preview img {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+  }
+
+  .mobile-remove-attachment {
+    position: absolute !important;
+    top: -4px !important;
+    right: -4px !important;
+    background: #ef4444 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 20px !important;
+    height: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+  }
+
+  .mobile-remove-icon {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .mobile-input-container {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .mobile-attachment-button {
+    background: none !important;
+    border: none !important;
+    padding: 8px !important;
+    cursor: pointer !important;
+    border-radius: 8px !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .mobile-attachment-button:hover {
+    background: #f3f4f6 !important;
+  }
+
+  .mobile-attachment-icon {
+    width: 20px !important;
+    height: 20px !important;
+    color: #6b7280 !important;
+  }
+
+  .mobile-message-input-field {
+    flex: 1 !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 20px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    outline: none !important;
+    background: #f9fafb !important;
+  }
+
+  .mobile-message-input-field:focus {
+    border-color: #a78bfa !important;
+    background: white !important;
+  }
+
+  .mobile-send-button {
+    background: #a78bfa !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s !important;
+  }
+
+  .mobile-send-button:hover:not(:disabled) {
+    background: #8b5cf6 !important;
+  }
+
+  .mobile-send-button:disabled {
+    background: #d1d5db !important;
+    cursor: not-allowed !important;
+  }
+
+  .mobile-send-icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* Категории */
+  .mobile-categories {
+    background: white;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .mobile-categories-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 0 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .mobile-categories-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .mobile-category-item:hover {
+    background: #f3f4f6;
+  }
+
+  .mobile-category-item.active {
+    background: #8b5cf6;
+    border-color: #8b5cf6;
+    color: white;
+  }
+
+  .mobile-category-icon {
+    width: 24px;
+    height: 24px;
+    color: #6b7280;
+  }
+
+  .mobile-category-item.active .mobile-category-icon {
+    color: white;
+  }
+
+  .mobile-category-name {
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* Список объявлений */
+  .mobile-listings {
+    padding: 16px;
+  }
+
+  .mobile-listings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .mobile-listings-count {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+  }
+
+  .mobile-sort-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mobile-sort-button:hover {
+    background: #f9fafb;
+  }
+
+  .sort-icon {
+    width: 16px;
+    height: 16px;
+    color: #6b7280;
+  }
+
+  /* Сетка объявлений */
+  .mobile-listings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .mobile-listing-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mobile-listing-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .mobile-listing-image {
+    position: relative;
+    height: 120px;
+    background: #f3f4f6;
+  }
+
+  .mobile-listing-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mobile-listing-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #f3f4f6;
+  }
+
+  .placeholder-icon {
+    width: 32px;
+    height: 32px;
+    color: #9ca3af;
+  }
+
+  .mobile-favorite-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mobile-favorite-button:hover {
+    background: white;
+    transform: scale(1.1);
+  }
+
+  .favorite-icon {
+    width: 16px;
+    height: 16px;
+    color: #9ca3af;
+    transition: color 0.2s;
+  }
+
+  .favorite-icon.active {
+    color: #ef4444;
+  }
+
+  .mobile-listing-content {
+    padding: 12px;
+  }
+
+  .mobile-listing-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-listing-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 4px;
+  }
+
+  .mobile-listing-location {
+    font-size: 12px;
+    color: #6b7280;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Скрываем десктопные элементы на мобильных */
+  .website-announcements-view,
+  .announcements-view {
+    display: none !important;
+  }
+
+  /* Показываем мобильный интерфейс */
+  .mobile-home-view {
+    display: block !important;
+  }
+}
+
+/* Десктопные стили - скрываем мобильный интерфейс */
+@media (min-width: 768px) {
+  .mobile-home-view {
+    display: none !important;
+  }
+} 
