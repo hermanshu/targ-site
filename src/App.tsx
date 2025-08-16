@@ -9,7 +9,7 @@ import './coming-soon.css';
 
 // Переключатель режима обслуживания
 // Измените на false для включения основного сайта
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 function App() {
   // Если включен режим обслуживания, показываем заглушку
