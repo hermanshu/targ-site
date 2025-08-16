@@ -5,6 +5,7 @@ import { ListingsProvider } from './contexts/ListingsContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 import MainTabView from './components/MainTabView';
 import ComingSoon from './components/ComingSoon';
+import ErrorBoundary from './components/ErrorBoundary';
 import './coming-soon.css';
 
 // Переключатель режима обслуживания
@@ -19,17 +20,19 @@ function App() {
 
   // Иначе показываем основной сайт
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <ListingsProvider>
-          <FavoritesProvider>
-            <div className="App">
-              <MainTabView />
-            </div>
-          </FavoritesProvider>
-        </ListingsProvider>
-      </AuthProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <ListingsProvider>
+            <FavoritesProvider>
+              <div className="App">
+                <MainTabView />
+              </div>
+            </FavoritesProvider>
+          </ListingsProvider>
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }
 

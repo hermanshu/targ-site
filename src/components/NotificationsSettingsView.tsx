@@ -23,7 +23,7 @@ const NotificationsSettingsView: React.FC = () => {
     platformNews: true,
     listingStats: true
   });
-  const [isLoading, setIsLoading] = useState(false);
+
 
   // Загружаем настройки из localStorage при инициализации
   useEffect(() => {

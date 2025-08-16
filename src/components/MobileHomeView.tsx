@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MagnifyingGlassIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { 
-  HomeIcon, 
+  HomeIcon,
   WrenchScrewdriverIcon, 
   BuildingOfficeIcon, 
   TruckIcon, 
@@ -12,18 +12,11 @@ import {
   HeartIcon,
   Squares2X2Icon,
   ClockIcon,
-  ArrowDownIcon,
-  ArrowUpIcon,
-  StarIcon,
-  PhotoIcon,
   BriefcaseIcon,
-  HomeModernIcon,
   SparklesIcon,
-  UserGroupIcon,
   ShoppingBagIcon,
   GiftIcon,
   EllipsisHorizontalIcon,
-  ChevronDownIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
@@ -40,7 +33,7 @@ const MobileHomeView: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { getPublishedListings, loadMoreListings, isLoading, hasMore } = useListings();
+  const { getPublishedListings } = useListings();
   const { currentLanguage, setLanguage, languages } = useLanguage();
   const { t } = useTranslation();
 
@@ -69,13 +62,7 @@ const MobileHomeView: React.FC = () => {
     return cats;
   }, [t]);
 
-  const sortOptions = useMemo(() => [
-    { id: 'newest', title: t('home.sortNewest'), icon: ClockIcon },
-    { id: 'cheap', title: t('home.sortCheapest'), icon: ArrowDownIcon },
-    { id: 'expensive', title: t('home.sortExpensive'), icon: ArrowUpIcon },
-    { id: 'popular', title: t('home.sortPopular'), icon: StarIcon },
-    { id: 'withPhoto', title: t('home.sortWithPhoto'), icon: PhotoIcon }
-  ], [t]);
+
 
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('allListings');

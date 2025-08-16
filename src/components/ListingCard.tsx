@@ -9,7 +9,6 @@ import {
   DevicePhoneMobileIcon, 
   TrophyIcon, 
   BookOpenIcon, 
-  HeartIcon as HeartIconCategory,
   Squares2X2Icon,
   ShoppingBagIcon,
   SparklesIcon,

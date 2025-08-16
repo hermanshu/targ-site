@@ -91,9 +91,9 @@ const ComingSoon: React.FC = () => {
           <div className="coming-soon-social">
             <p>Следите за нами:</p>
             <div className="social-links">
-              <a href="#" className="social-link">Instagram</a>
-              <a href="#" className="social-link">Facebook</a>
-              <a href="#" className="social-link">Telegram</a>
+              <button className="social-link">Instagram</button>
+              <button className="social-link">Facebook</button>
+              <button className="social-link">Telegram</button>
             </div>
           </div>
         </div>

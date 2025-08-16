@@ -9,10 +9,8 @@ import {
   TagIcon,
   PhotoIcon
 } from '@heroicons/react/24/outline';
-import { useAuth } from '../contexts/AuthContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
-import { useNavigate } from 'react-router-dom';
 import { Listing } from '../types';
 
 interface FormData {
@@ -35,10 +33,8 @@ interface EditListingViewProps {
 }
 
 const EditListingView: React.FC<EditListingViewProps> = ({ listing, onBack }) => {
-  const { currentUser } = useAuth();
   const { updateListing } = useListings();
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     title: listing.title,
     description: listing.description || '',

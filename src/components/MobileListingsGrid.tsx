@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Listing } from '../types';
 import ListingCard from './ListingCard';
 

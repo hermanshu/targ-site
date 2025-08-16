@@ -5,13 +5,12 @@ import {
   BuildingOfficeIcon,
   MapPinIcon,
   CalendarIcon,
-  StarIcon,
   EyeIcon,
   HeartIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { Listing } from '../types';
-import { useAuth } from '../contexts/AuthContext';
+
 import { useTranslation } from '../hooks/useTranslation';
 import { useListings } from '../contexts/ListingsContext';
 
@@ -31,7 +30,7 @@ const SellerProfileView: React.FC<SellerProfileViewProps> = ({
   onNavigateToMessages
 }) => {
 
-  const { currentUser } = useAuth();
+
   const { t } = useTranslation();
   const { listings } = useListings();
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);

@@ -220,8 +220,8 @@ const AnnouncementsView: React.FC = () => {
   };
 
   const handleCardClick = (listing: Listing) => {
-
-    // TODO: Навигация к деталям объявления
+    // Навигация к деталям объявления будет реализована позже
+    console.log('Открыть детали объявления:', listing.title);
   };
 
   const handleFilterChange = (filters: FilterState) => {
