@@ -16,7 +16,8 @@ import {
   BriefcaseIcon,
   UserGroupIcon,
   HomeModernIcon,
-  UserIcon
+  UserIcon,
+  SwatchIcon
 } from '@heroicons/react/24/outline';
 import { Listing } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
@@ -48,7 +49,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
   const getCategoryIcon = (category: string) => {
     const icons: { [key: string]: React.ComponentType<{ className?: string }> } = {
-      'furniture': HomeIcon,
+      'furniture': SwatchIcon,
       'services': WrenchScrewdriverIcon,
       'realEstate': BuildingOfficeIcon,
       'transport': TruckIcon,

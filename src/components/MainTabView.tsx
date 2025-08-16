@@ -168,7 +168,7 @@ const TabBar = () => {
   const location = useLocation();
   const { currentUser } = useAuth();
   const { t } = useTranslation();
-  const tabRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const tabRefs = useRef<(HTMLAnchorElement | HTMLButtonElement | null)[]>([]);
   const [lensStyle, setLensStyle] = useState({ left: '0px', width: '0px' });
 
   const tabs = useMemo(() => {
@@ -232,6 +232,49 @@ const TabBar = () => {
       {tabs.map((tab, index) => {
         const isActive = location.pathname === tab.href;
         const Icon = isActive ? tab.activeIcon : tab.icon;
+        
+        // Если это кнопка "Главная" и мы уже на главной странице, добавляем функцию прокрутки
+        if (tab.href === '/' && location.pathname === '/') {
+          return (
+            <button
+              key={tab.name}
+              ref={(el) => { tabRefs.current[index] = el; }}
+              className={`tab-item ${isActive ? 'active' : ''}`}
+              onClick={() => {
+                console.log('Нажата кнопка "Главная" на главной странице');
+                // Прокручиваем к началу списка объявлений
+                const listingsGrid = document.querySelector('.website-listings-grid');
+                const contentArea = document.querySelector('.content-area');
+                
+                if (listingsGrid && contentArea) {
+                  // Вычисляем позицию элемента относительно content-area
+                  const contentRect = contentArea.getBoundingClientRect();
+                  const gridRect = listingsGrid.getBoundingClientRect();
+                  const scrollTop = contentArea.scrollTop + (gridRect.top - contentRect.top);
+                  
+                  contentArea.scrollTo({
+                    top: scrollTop,
+                    behavior: 'smooth'
+                  });
+                } else if (contentArea) {
+                  // Fallback на content-area
+                  contentArea.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                  });
+                } else {
+                  window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+            >
+              <Icon style={{ width: '24px', height: '24px' }} />
+              <span style={{ marginTop: '4px' }}>{tab.name}</span>
+            </button>
+          );
+        }
         
         return (
           <Link

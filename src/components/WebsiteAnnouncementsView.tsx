@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MagnifyingGlassIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { 
-  HomeIcon, 
+  HomeIcon,
   WrenchScrewdriverIcon, 
   BuildingOfficeIcon, 
   TruckIcon, 
@@ -24,7 +24,8 @@ import {
   GiftIcon,
   EllipsisHorizontalIcon,
   ChevronDownIcon,
-  UserIcon
+  UserIcon,
+  SwatchIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -35,6 +36,7 @@ import ListingDetailView from './ListingDetailView';
 import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import SortSheet from './SortSheet';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
+import ScrollToTopButton from './ScrollToTopButton';
 import { Listing } from '../types';
 
 const WebsiteAnnouncementsView: React.FC = () => {
@@ -60,7 +62,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
       { name: t('home.animals'), key: 'animals', icon: HeartIcon, isEmoji: false },
       { name: t('home.construction'), key: 'construction', icon: WrenchScrewdriverIcon, isEmoji: false },
       { name: t('home.free'), key: 'free', icon: GiftIcon, isEmoji: false },
-      { name: t('home.furniture'), key: 'furniture', icon: HomeIcon, isEmoji: false },
+      { name: t('home.furniture'), key: 'furniture', icon: SwatchIcon, isEmoji: false },
       { name: t('home.transport'), key: 'transport', icon: TruckIcon, isEmoji: false },
       { name: t('home.sport'), key: 'sport', icon: TrophyIcon, isEmoji: false },
       { name: t('home.books'), key: 'books', icon: BookOpenIcon, isEmoji: false },
@@ -610,6 +612,9 @@ const WebsiteAnnouncementsView: React.FC = () => {
         selectedSort={selectedSort}
         onSortSelect={handleSortSelect}
       />
+
+      {/* Кнопка "Наверх" */}
+      <ScrollToTopButton />
     </div>
   );
 };
