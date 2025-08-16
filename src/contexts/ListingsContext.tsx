@@ -11,6 +11,9 @@ interface ListingsContextType {
   loadMoreListings: () => Promise<void>;
   isLoading: boolean;
   hasMore: boolean;
+  incrementViews: (listingId: string) => void;
+  incrementFavorites: (listingId: string) => void;
+  decrementFavorites: (listingId: string) => void;
 }
 
 const ListingsContext = createContext<ListingsContextType | undefined>(undefined);
@@ -661,7 +664,31 @@ const initialListings: Listing[] = [
 ];
 
 export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [listings, setListings] = useState<Listing[]>(initialListings);
+  // Функция для загрузки объявлений из localStorage
+  const loadListingsFromStorage = (): Listing[] => {
+    const savedListings = localStorage.getItem('listings');
+    if (savedListings) {
+      try {
+        const listings = JSON.parse(savedListings);
+        // Преобразуем строки дат обратно в объекты Date
+        return listings.map((listing: any) => ({
+          ...listing,
+          createdAt: new Date(listing.createdAt)
+        }));
+      } catch (error) {
+        console.error('Ошибка при загрузке объявлений из localStorage:', error);
+        localStorage.removeItem('listings');
+      }
+    }
+    return initialListings;
+  };
+
+  // Функция для сохранения объявлений в localStorage
+  const saveListingsToStorage = (listingsToSave: Listing[]) => {
+    localStorage.setItem('listings', JSON.stringify(listingsToSave));
+  };
+
+  const [listings, setListings] = useState<Listing[]>(loadListingsFromStorage);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -680,17 +707,92 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       isPublished: true
     };
     
-    setListings(prev => [newListing, ...prev]);
+    setListings(prev => {
+      const updatedListings = [newListing, ...prev];
+      saveListingsToStorage(updatedListings);
+      return updatedListings;
+    });
   };
 
   const updateListing = (id: string, updates: Partial<Listing>) => {
-    setListings(prev => prev.map(listing => 
-      listing.id === id ? { ...listing, ...updates } : listing
-    ));
+    setListings(prev => {
+      const updatedListings = prev.map(listing => 
+        listing.id === id ? { ...listing, ...updates } : listing
+      );
+      saveListingsToStorage(updatedListings);
+      return updatedListings;
+    });
   };
 
   const deleteListing = (id: string) => {
-    setListings(prev => prev.filter(listing => listing.id !== id));
+    setListings(prev => {
+      const updatedListings = prev.filter(listing => listing.id !== id);
+      saveListingsToStorage(updatedListings);
+      return updatedListings;
+    });
+  };
+
+  const incrementViews = (listingId: string) => {
+    setListings(prev => {
+      const updatedListings = prev.map(listing => 
+        listing.id === listingId 
+          ? { ...listing, views: (listing.views || 0) + 1 }
+          : listing
+      );
+      saveListingsToStorage(updatedListings);
+      return updatedListings;
+    });
+    
+    // На продакшене здесь будет API запрос для сохранения статистики
+    // Пример: await api.incrementViews(listingId);
+    
+    // Для демонстрации сохраняем в localStorage
+    const stats = JSON.parse(localStorage.getItem('listing_stats') || '{}');
+    stats[listingId] = stats[listingId] || {};
+    stats[listingId].views = (stats[listingId].views || 0) + 1;
+    localStorage.setItem('listing_stats', JSON.stringify(stats));
+  };
+
+  const incrementFavorites = (listingId: string) => {
+    setListings(prev => {
+      const updatedListings = prev.map(listing => 
+        listing.id === listingId 
+          ? { ...listing, favorites: (listing.favorites || 0) + 1 }
+          : listing
+      );
+      saveListingsToStorage(updatedListings);
+      return updatedListings;
+    });
+    
+    // На продакшене здесь будет API запрос для сохранения статистики
+    // Пример: await api.incrementFavorites(listingId);
+    
+    // Для демонстрации сохраняем в localStorage
+    const stats = JSON.parse(localStorage.getItem('listing_stats') || '{}');
+    stats[listingId] = stats[listingId] || {};
+    stats[listingId].favorites = (stats[listingId].favorites || 0) + 1;
+    localStorage.setItem('listing_stats', JSON.stringify(stats));
+  };
+
+  const decrementFavorites = (listingId: string) => {
+    setListings(prev => {
+      const updatedListings = prev.map(listing => 
+        listing.id === listingId 
+          ? { ...listing, favorites: Math.max(0, (listing.favorites || 0) - 1) }
+          : listing
+      );
+      saveListingsToStorage(updatedListings);
+      return updatedListings;
+    });
+    
+    // На продакшене здесь будет API запрос для сохранения статистики
+    // Пример: await api.decrementFavorites(listingId);
+    
+    // Для демонстрации сохраняем в localStorage
+    const stats = JSON.parse(localStorage.getItem('listing_stats') || '{}');
+    stats[listingId] = stats[listingId] || {};
+    stats[listingId].favorites = Math.max(0, (stats[listingId].favorites || 0) - 1);
+    localStorage.setItem('listing_stats', JSON.stringify(stats));
   };
 
   const getUserListings = (userId: string) => {
@@ -743,7 +845,10 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       getPublishedListings,
       loadMoreListings,
       isLoading,
-      hasMore
+      hasMore,
+      incrementViews,
+      incrementFavorites,
+      decrementFavorites
     }}>
       {children}
     </ListingsContext.Provider>

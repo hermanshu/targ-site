@@ -37,13 +37,14 @@ import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import SortSheet from './SortSheet';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
 import ScrollToTopButton from './ScrollToTopButton';
+
 import { Listing } from '../types';
 
 const WebsiteAnnouncementsView: React.FC = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { getPublishedListings, loadMoreListings, isLoading, hasMore } = useListings();
+  const { getPublishedListings, loadMoreListings, isLoading, hasMore, incrementViews } = useListings();
   const { currentLanguage, setLanguage, languages } = useLanguage();
   const { t } = useTranslation();
 
@@ -125,12 +126,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
     setActiveMainCategory(null);
   }, []);
 
-  // Отслеживаем изменения selectedCategory
-  useEffect(() => {
-    console.log('=== selectedCategory changed ===');
-    console.log('New selectedCategory value:', selectedCategory);
-    console.log('=== End change tracking ===');
-  }, [selectedCategory]);
+
 
   // Фильтрация объявлений
   const filteredListings = useMemo(() => {
@@ -145,33 +141,17 @@ const WebsiteAnnouncementsView: React.FC = () => {
     }
 
     // Фильтр по категории
-    console.log('=== Filtering Debug ===');
-    console.log('selectedCategory:', selectedCategory);
-    console.log('isAllListingsSelected:', selectedCategory === 'allListings');
-    
     const isAllListingsSelected = selectedCategory === 'allListings';
     
     if (!isAllListingsSelected) {
       // Фильтруем объявления по ключу категории или подкатегории
-      console.log('Filtering by category:', selectedCategory);
-      console.log('Available listings categories:', Array.from(new Set(listings.map(l => l.category))));
-      console.log('Available listings subcategories:', Array.from(new Set(listings.map(l => l.subcategory).filter(Boolean))));
-      
       filtered = filtered.filter(listing => {
         // Проверяем совпадение по основной категории или подкатегории
         const matchesCategory = listing.category === selectedCategory;
         const matchesSubcategory = listing.subcategory === selectedCategory;
-        const matches = matchesCategory || matchesSubcategory;
-        
-        console.log(`Listing "${listing.title}" category: "${listing.category}" subcategory: "${listing.subcategory}" matches "${selectedCategory}": ${matches}`);
-        return matches;
+        return matchesCategory || matchesSubcategory;
       });
-      
-      console.log('Filtered listings count:', filtered.length);
-    } else {
-      console.log('Showing all listings (no category filter)');
     }
-    console.log('=== End Filtering Debug ===');
 
     // Фильтры
     if (filterState.cityInput) {
@@ -249,7 +229,11 @@ const WebsiteAnnouncementsView: React.FC = () => {
     
     switch (selectedSort) {
       case 'newest':
-        return sorted.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        return sorted.sort((a, b) => {
+          const dateA = typeof a.createdAt === 'string' ? new Date(a.createdAt) : a.createdAt;
+          const dateB = typeof b.createdAt === 'string' ? new Date(b.createdAt) : b.createdAt;
+          return dateB.getTime() - dateA.getTime();
+        });
       case 'cheap':
         return sorted.sort((a, b) => {
           // Пропускаем объявления с "Договорная" ценой
@@ -305,6 +289,8 @@ const WebsiteAnnouncementsView: React.FC = () => {
   };
 
   const handleCardClick = (listing: Listing) => {
+    // Увеличиваем счетчик просмотров при клике на карточку
+    incrementViews(listing.id);
     setSelectedListing(listing);
   };
 
@@ -313,8 +299,6 @@ const WebsiteAnnouncementsView: React.FC = () => {
   };
 
   const handleNavigateToMessages = (listing: Listing) => {
-    console.log('Переходим к сообщениям для объявления:', listing.title, 'продавец:', listing.sellerName);
-    
     // Переходим к сообщениям с полными параметрами объявления
     const params = new URLSearchParams({
       listingId: listing.id,
@@ -342,6 +326,36 @@ const WebsiteAnnouncementsView: React.FC = () => {
     }
   };
 
+  const handleNavigateToSellerProfile = (sellerId: string, sellerName: string, isCompany: boolean) => {
+    // Навигация к отдельной странице профиля продавца
+    const params = new URLSearchParams({
+      sellerId,
+      sellerName,
+      isCompany: isCompany.toString()
+    });
+    navigate(`/seller?${params.toString()}`);
+  };
+
+  const renderListingDetail = () => {
+    if (!selectedListing) {
+      return null;
+    }
+    
+    const isListingFavorite = isFavorite(selectedListing.id);
+    
+    return (
+      <ListingDetailView
+        listing={selectedListing}
+        onBack={handleBackToList}
+        onFavoriteToggle={handleFavoriteToggle}
+        isFavorite={isListingFavorite}
+        onNavigateToMessages={handleNavigateToMessages}
+        onNavigateToProfile={handleNavigateToProfile}
+        onNavigateToSellerProfile={handleNavigateToSellerProfile}
+      />
+    );
+  };
+
   const handleFilterChange = (filters: FilterState) => {
     setFilterState(filters);
   };
@@ -361,22 +375,14 @@ const WebsiteAnnouncementsView: React.FC = () => {
   };
 
   const handleCategoryClick = (categoryName: string) => {
-    console.log('=== Category Click Debug ===');
-    console.log('Clicked category name:', categoryName);
-    
     const category = categories.find(cat => cat.name === categoryName);
-    console.log('Found category:', category);
     
     if (category?.hasSubcategories) {
       // Если у категории есть подкатегории, переключаем их отображение
-      console.log('Category has subcategories, toggling expansion');
       setExpandedCategory(expandedCategory === categoryName ? null : categoryName);
       setActiveMainCategory(categoryName);
     } else if (category) {
       // Если это обычная категория, выбираем её
-      console.log('Setting selected category to:', category.key);
-      console.log('Before setSelectedCategory, selectedCategory is:', selectedCategory);
-      
       setSelectedCategory(category.key);
       setExpandedCategory(null);
       setActiveMainCategory(null);
@@ -386,21 +392,13 @@ const WebsiteAnnouncementsView: React.FC = () => {
         setActiveMainCategory(null);
       }
     }
-    
-    console.log('Current selectedCategory will be:', category?.key);
-    console.log('=== End Debug ===');
   };
 
   const handleSubcategoryClick = (subcategoryName: string) => {
-    console.log('=== Subcategory Click Debug ===');
-    console.log('Clicked subcategory name:', subcategoryName);
-    
     // Находим подкатегорию в списке и получаем её ключ
     const subcategory = Object.values(subcategories).flat().find(sub => sub.name === subcategoryName);
-    console.log('Found subcategory:', subcategory);
     
     if (subcategory) {
-      console.log('Setting selected category to:', subcategory.key);
       setSelectedCategory(subcategory.key);
       
       // Находим основную категорию для этой подкатегории
@@ -413,8 +411,6 @@ const WebsiteAnnouncementsView: React.FC = () => {
       }
     }
     setExpandedCategory(null);
-    
-    console.log('=== End Subcategory Debug ===');
   };
 
   const handleLanguageSelect = (languageCode: string) => {
@@ -451,6 +447,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
         isFavorite={isFavorite(selectedListing.id)}
         onNavigateToMessages={handleNavigateToMessages}
         onNavigateToProfile={handleNavigateToProfile}
+        onNavigateToSellerProfile={handleNavigateToSellerProfile}
       />
     );
   }
@@ -469,7 +466,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
               console.error('Ошибка загрузки логотипа:', e);
               e.currentTarget.style.display = 'none';
             }}
-            onLoad={() => console.log('Логотип загружен успешно')}
+
           />
         </div>
         
@@ -615,6 +612,9 @@ const WebsiteAnnouncementsView: React.FC = () => {
 
       {/* Кнопка "Наверх" */}
       <ScrollToTopButton />
+
+      {/* Детальная карточка объявления */}
+      {renderListingDetail()}
     </div>
   );
 };

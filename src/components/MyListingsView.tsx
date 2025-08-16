@@ -14,13 +14,18 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { Listing } from '../types';
+import ListingDetailView from './ListingDetailView';
+import EditListingView from './EditListingView';
 
 const MyListingsView: React.FC = () => {
   const { currentUser } = useAuth();
-  const { getUserListings, updateListing, deleteListing } = useListings();
+  const { getUserListings, updateListing, deleteListing, incrementViews } = useListings();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'active' | 'archived' | 'draft'>('active');
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  const [editingListing, setEditingListing] = useState<Listing | null>(null);
 
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
@@ -54,7 +59,10 @@ const MyListingsView: React.FC = () => {
   const filteredListings = userListings.filter(listing => listing.status === activeTab);
 
   const handleEdit = (listingId: string) => {
-    alert(`${t('myListings.edit')} ${listingId}`);
+    const listing = userListings.find(l => l.id === listingId);
+    if (listing) {
+      setEditingListing(listing);
+    }
   };
 
   const handleArchive = (listingId: string) => {
@@ -75,6 +83,55 @@ const MyListingsView: React.FC = () => {
     updateListing(listingId, { isPublished: true, status: 'active' });
   };
 
+  const handleCardClick = (listing: Listing) => {
+    // Увеличиваем счетчик просмотров при клике на карточку
+    incrementViews(listing.id);
+    setSelectedListing(listing);
+  };
+
+  const handleBackToList = () => {
+    setSelectedListing(null);
+  };
+
+  const handleBackFromEdit = () => {
+    setEditingListing(null);
+  };
+
+  const handleNavigateToMessages = (listing: Listing) => {
+
+    
+    // Переходим к сообщениям с полными параметрами объявления
+    const params = new URLSearchParams({
+      listingId: listing.id,
+      sellerId: listing.userId,
+      title: listing.title,
+      sellerName: listing.sellerName,
+      price: listing.price,
+      currency: listing.currency,
+      city: listing.city,
+      category: listing.category,
+      isCompany: listing.isCompany.toString(),
+      imageName: listing.imageName || '',
+      contactMethod: listing.contactMethod || 'chat'
+    });
+    navigate(`/messages?${params.toString()}`);
+  };
+
+  const handleNavigateToProfile = (mode?: 'signin' | 'signup') => {
+    if (mode === 'signup') {
+      navigate('/profile?mode=signup');
+    } else if (mode === 'signin') {
+      navigate('/profile?mode=signin');
+    } else {
+      navigate('/profile');
+    }
+  };
+
+  const handleFavoriteToggle = (listing: Listing) => {
+    // В "Мои объявления" можно добавить логику для избранного
+
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active': return 'text-green-600 bg-green-100';
@@ -93,180 +150,251 @@ const MyListingsView: React.FC = () => {
     }
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
+    // Если дата передана как строка, преобразуем её в объект Date
+    let dateObj: Date;
+    if (typeof date === 'string') {
+      dateObj = new Date(date);
+    } else {
+      dateObj = date;
+    }
+    
+    // Проверяем, что дата корректная
+    if (!dateObj || isNaN(dateObj.getTime())) {
+      return 'Дата не указана';
+    }
+    
     return new Intl.DateTimeFormat('ru-RU', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
-    }).format(date);
+    }).format(dateObj);
   };
 
+  // Если редактируется объявление, показываем форму редактирования
+  if (editingListing) {
+    return (
+      <EditListingView
+        listing={editingListing}
+        onBack={handleBackFromEdit}
+      />
+    );
+  }
+
+  // Если выбрано объявление, показываем детальный просмотр
+  if (selectedListing) {
+    return (
+      <ListingDetailView
+        listing={selectedListing}
+        onBack={handleBackToList}
+        onFavoriteToggle={handleFavoriteToggle}
+        isFavorite={false} // В "Мои объявления" всегда false
+        onNavigateToMessages={handleNavigateToMessages}
+        onNavigateToProfile={handleNavigateToProfile}
+      />
+    );
+  }
+
   return (
-    <div className="my-listings-container">
-      {/* Заголовок */}
+    <div className="my-listings-page">
+      {/* Заголовок страницы */}
       <div className="my-listings-header">
         <button 
           onClick={() => window.history.back()}
-          className="back-button"
+          className="my-listings-back-button"
         >
-          <ArrowLeftIcon className="back-icon" />
+          <ArrowLeftIcon className="my-listings-back-icon" />
           <span>{t('myListings.back')}</span>
         </button>
         <h1 className="my-listings-title">{t('myListings.title')}</h1>
         <button 
-          className="add-listing-button"
+          className="my-listings-add-button"
           onClick={() => navigate('/add')}
         >
-          <PlusIcon className="add-icon" />
+          <PlusIcon className="my-listings-add-icon" />
           <span>{t('myListings.add')}</span>
         </button>
       </div>
 
       {/* Статистика */}
-      <div className="listings-stats">
-        <div className="stat-card">
-          <div className="stat-number">{userListings.filter(l => l.status === 'active').length}</div>
-          <div className="stat-label">{t('myListings.statsLabels.active')}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-number">{userListings.reduce((sum, l) => sum + (l.views || 0), 0)}</div>
-          <div className="stat-label">{t('myListings.statsLabels.views')}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-number">{userListings.reduce((sum, l) => sum + (l.favorites || 0), 0)}</div>
-          <div className="stat-label">{t('myListings.statsLabels.inFavorites')}</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-number">{userListings.filter(l => l.status === 'archived').length}</div>
-          <div className="stat-label">{t('myListings.statsLabels.inArchive')}</div>
+      <div className="website-stats-section">
+        <div className="website-stats-grid">
+          <div className="website-stat-card">
+            <div className="website-stat-number">{userListings.filter(l => l.status === 'active').length}</div>
+            <div className="website-stat-label">{t('myListings.statsLabels.active')}</div>
+          </div>
+          <div className="website-stat-card">
+            <div className="website-stat-number">{userListings.reduce((sum, l) => sum + (l.views || 0), 0)}</div>
+            <div className="website-stat-label">{t('myListings.statsLabels.views')}</div>
+          </div>
+          <div className="website-stat-card">
+            <div className="website-stat-number">{userListings.reduce((sum, l) => sum + (l.favorites || 0), 0)}</div>
+            <div className="website-stat-label">{t('myListings.statsLabels.inFavorites')}</div>
+          </div>
+          <div className="website-stat-card">
+            <div className="website-stat-number">{userListings.filter(l => l.status === 'archived').length}</div>
+            <div className="website-stat-label">{t('myListings.statsLabels.inArchive')}</div>
+          </div>
         </div>
       </div>
 
       {/* Табы */}
-      <div className="listings-tabs">
-        <button 
-          className={`tab-button ${activeTab === 'active' ? 'active' : ''}`}
-          onClick={() => setActiveTab('active')}
-        >
-          {t('myListings.tabs.active')} ({userListings.filter(l => l.status === 'active').length})
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'draft' ? 'active' : ''}`}
-          onClick={() => setActiveTab('draft')}
-        >
-          {t('myListings.tabs.drafts')} ({userListings.filter(l => l.status === 'draft').length})
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'archived' ? 'active' : ''}`}
-          onClick={() => setActiveTab('archived')}
-        >
-          {t('myListings.tabs.archive')} ({userListings.filter(l => l.status === 'archived').length})
-        </button>
+      <div className="website-categories-section">
+        <div className="website-categories-scroll">
+          <button 
+            className={`website-category-button ${activeTab === 'active' ? 'active' : ''}`}
+            onClick={() => setActiveTab('active')}
+          >
+            <span className="website-category-name">
+              {t('myListings.tabs.active')} ({userListings.filter(l => l.status === 'active').length})
+            </span>
+          </button>
+          <button 
+            className={`website-category-button ${activeTab === 'draft' ? 'active' : ''}`}
+            onClick={() => setActiveTab('draft')}
+          >
+            <span className="website-category-name">
+              {t('myListings.tabs.drafts')} ({userListings.filter(l => l.status === 'draft').length})
+            </span>
+          </button>
+          <button 
+            className={`website-category-button ${activeTab === 'archived' ? 'active' : ''}`}
+            onClick={() => setActiveTab('archived')}
+          >
+            <span className="website-category-name">
+              {t('myListings.tabs.archive')} ({userListings.filter(l => l.status === 'archived').length})
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Список объявлений */}
-      <div className="listings-grid">
+      <div className="website-listings-grid">
         {filteredListings.length === 0 ? (
-          <div className="empty-state">
-            <ArchiveBoxIcon className="empty-icon" />
-            <h3>{t('myListings.noListings')}</h3>
-            <p>{t('myListings.noListingsInCategory')}</p>
+          <div className="website-empty-state">
+            <ArchiveBoxIcon className="website-empty-icon" />
+            <h3 className="website-empty-title">{t('myListings.noListings')}</h3>
+            <p className="website-empty-description">{t('myListings.noListingsInCategory')}</p>
           </div>
         ) : (
-          filteredListings.map(listing => (
-            <div key={listing.id} className="listing-card">
-              <div className="listing-image">
-                {listing.imageName ? (
-                  <img src={`/images/${listing.imageName}.jpg`} alt={listing.title} />
-                ) : (
-                  <div className="image-placeholder">
-                    <span>{t('common.noPhoto')}</span>
-                  </div>
-                )}
-                <div className="listing-status">
-                  <span className={`status-badge ${getStatusColor(listing.status || 'active')}`}>
-                    {getStatusText(listing.status || 'active')}
-                  </span>
-                </div>
-              </div>
-
-              <div className="listing-content">
-                <h3 className="listing-title">{listing.title}</h3>
-                <div className="listing-price">
-                  {listing.price} {listing.currency}
-                  {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && ' / месяц'}
-                </div>
-                <div className="listing-location">
-                  <MapPinIcon className="location-icon" />
-                  {listing.city}
-                </div>
-                <div className="listing-category">{getTranslatedCategory(listing.category)}</div>
-                
-                <div className="listing-stats">
-                  <div className="stat-item">
-                    <EyeIcon className="stat-icon" />
-                    <span>{listing.views || 0}</span>
-                  </div>
-                  <div className="stat-item">
-                    <HeartIcon className="stat-icon" />
-                    <span>{listing.favorites || 0}</span>
-                  </div>
-                  <div className="stat-item">
-                    <CalendarIcon className="stat-icon" />
-                    <span>{formatDate(listing.createdAt)}</span>
+          <div className="listings-grid">
+            {filteredListings.map(listing => (
+              <div 
+                key={listing.id} 
+                className="listing-card"
+                onClick={() => handleCardClick(listing)}
+              >
+                <div className="listing-image-container">
+                  {listing.imageName ? (
+                    <div className="listing-image">
+                      <img src={`/images/${listing.imageName}.jpg`} alt={listing.title} />
+                    </div>
+                  ) : (
+                    <div className="listing-image-placeholder">
+                      <div className="placeholder-icon">📷</div>
+                      <span>{t('common.noPhoto')}</span>
+                    </div>
+                  )}
+                  <div className="listing-status-overlay">
+                    <span className={`website-status-badge ${getStatusColor(listing.status || 'active')}`}>
+                      {getStatusText(listing.status || 'active')}
+                    </span>
                   </div>
                 </div>
 
-                <div className="listing-actions">
-                  <button 
-                    onClick={() => handleEdit(listing.id)}
-                    className="action-button edit"
-                  >
-                    <PencilIcon className="action-icon" />
-                    {t('myListings.edit')}
-                  </button>
+                <div className="listing-content">
+                  <h3 className="listing-title">{listing.title}</h3>
+                  <div className="listing-price">
+                    {listing.price} {listing.currency}
+                    {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && ' / месяц'}
+                  </div>
+                  <div className="listing-location">
+                    <MapPinIcon className="location-icon" />
+                    {listing.city}
+                  </div>
+                  <div className="listing-category">{getTranslatedCategory(listing.category)}</div>
                   
-                  {listing.status === 'active' && (
+                  <div className="listing-stats">
+                    <div className="stat-item">
+                      <EyeIcon className="stat-icon" />
+                      <span>{listing.views || 0}</span>
+                    </div>
+                    <div className="stat-item">
+                      <HeartIcon className="stat-icon" />
+                      <span>{listing.favorites || 0}</span>
+                    </div>
+                    <div className="stat-item">
+                      <CalendarIcon className="stat-icon" />
+                      <span>{formatDate(listing.createdAt)}</span>
+                    </div>
+                  </div>
+
+                  <div className="listing-actions">
                     <button 
-                      onClick={() => handleArchive(listing.id)}
-                      className="action-button archive"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(listing.id);
+                      }}
+                      className="website-action-button edit"
                     >
-                      <ArchiveBoxIcon className="action-icon" />
-                      {t('myListings.archive')}
+                      <PencilIcon className="action-icon" />
+                      {t('myListings.edit')}
                     </button>
-                  )}
-                  
-                  {listing.status === 'archived' && (
+                    
+                    {listing.status === 'active' && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleArchive(listing.id);
+                        }}
+                        className="website-action-button archive"
+                      >
+                        <ArchiveBoxIcon className="action-icon" />
+                        {t('myListings.archive')}
+                      </button>
+                    )}
+                    
+                    {listing.status === 'archived' && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleActivate(listing.id);
+                        }}
+                        className="website-action-button activate"
+                      >
+                        <EyeIcon className="action-icon" />
+                        {t('myListings.activate')}
+                      </button>
+                    )}
+                    
+                    {listing.status === 'draft' && (
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePublish(listing.id);
+                        }}
+                        className="website-action-button publish"
+                      >
+                        <EyeIcon className="action-icon" />
+                        {t('myListings.publish')}
+                      </button>
+                    )}
+                    
                     <button 
-                      onClick={() => handleActivate(listing.id)}
-                      className="action-button activate"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(listing.id);
+                      }}
+                      className="website-action-button delete"
                     >
-                      <EyeIcon className="action-icon" />
-                      {t('myListings.activate')}
+                      <TrashIcon className="action-icon" />
+                      {t('myListings.delete')}
                     </button>
-                  )}
-                  
-                  {listing.status === 'draft' && (
-                    <button 
-                      onClick={() => handlePublish(listing.id)}
-                      className="action-button publish"
-                    >
-                      <EyeIcon className="action-icon" />
-                      {t('myListings.publish')}
-                    </button>
-                  )}
-                  
-                  <button 
-                    onClick={() => handleDelete(listing.id)}
-                    className="action-button delete"
-                  >
-                    <TrashIcon className="action-icon" />
-                    {t('myListings.delete')}
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>

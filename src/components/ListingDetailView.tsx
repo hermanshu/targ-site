@@ -28,6 +28,7 @@ interface ListingDetailViewProps {
   isFavorite: boolean;
   onNavigateToMessages?: (listing: Listing) => void;
   onNavigateToProfile?: (mode?: 'signin' | 'signup') => void;
+  onNavigateToSellerProfile?: (sellerId: string, sellerName: string, isCompany: boolean) => void;
 }
 
 const ListingDetailView: React.FC<ListingDetailViewProps> = ({
@@ -36,8 +37,10 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
   onFavoriteToggle,
   isFavorite,
   onNavigateToMessages,
-  onNavigateToProfile
+  onNavigateToProfile,
+  onNavigateToSellerProfile
 }) => {
+
   const { currentUser } = useAuth();
   const { t } = useTranslation();
   const isMobile = useIsMobile();
@@ -257,9 +260,17 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
     setTimeout(() => setAnimateHeart(false), 350);
   };
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
+    // Если дата передана как строка, преобразуем её в объект Date
+    let dateObj: Date;
+    if (typeof date === 'string') {
+      dateObj = new Date(date);
+    } else {
+      dateObj = date;
+    }
+    
     // Проверяем, что дата корректная
-    if (!date || isNaN(date.getTime())) {
+    if (!dateObj || isNaN(dateObj.getTime())) {
       return 'Дата не указана';
     }
     
@@ -267,7 +278,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
       day: 'numeric',
       month: 'long',
       year: 'numeric'
-    }).format(date);
+    }).format(dateObj);
   };
 
   const formatViews = (views: number) => {
@@ -377,7 +388,6 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
 
   // Функции для полноэкранного просмотра фото
   const handleImageClick = () => {
-    console.log('Image clicked!', listing.imageName);
     if (listing.imageName) {
       setShowFullscreenImage(true);
     }
@@ -567,7 +577,17 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
               )}
             </div>
             <div className="seller-details">
-              <div className="seller-name">{listing.sellerName}</div>
+              <div 
+                className="seller-name clickable"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onNavigateToSellerProfile?.(listing.userId, listing.sellerName, listing.isCompany);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                {listing.sellerName}
+              </div>
               <div className="seller-type">
                 {listing.isCompany ? t('listingDetail.company') : t('listingDetail.individual')}
               </div>

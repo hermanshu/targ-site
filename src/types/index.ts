@@ -12,7 +12,7 @@ export interface Listing {
   isCompany: boolean;
   imageName: string;
   description?: string;
-  createdAt: Date;
+  createdAt: Date | string;
   userId: string;
   // Дополнительные поля для "Мои объявления"
   status?: 'active' | 'archived' | 'draft';

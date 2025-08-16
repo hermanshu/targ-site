@@ -33,7 +33,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   listing, 
   onFavoriteToggle, 
   isFavorite, 
-  onCardClick 
+  onCardClick
 }) => {
   const [animateHeart, setAnimateHeart] = useState(false);
   const { t } = useTranslation();

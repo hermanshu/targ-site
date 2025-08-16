@@ -401,6 +401,61 @@ export interface Translations {
     };
   };
 
+  // Редактирование объявления
+  editListing: {
+    title: string;
+    update: string;
+    updating: string;
+    success: string;
+    error: string;
+    existingImages: string;
+  };
+  sellerProfile: {
+    title: string;
+    listingDetails: string;
+    aboutSeller: string;
+    location: string;
+    memberSince: string;
+    notSpecified: string;
+    sellerListings: string;
+    noListings: string;
+    noListingsDescription: string;
+    totalListings: string;
+    activeListings: string;
+    totalViews: string;
+    totalFavorites: string;
+    reviews: string;
+  };
+
+  // Добавление объявления
+  addListing: {
+    title: string;
+    description: string;
+    price: string;
+    currency: string;
+    category: string;
+    subcategory: string;
+    location: string;
+    images: string;
+    contactMethod: string;
+    chat: string;
+    phone: string;
+    uploadImages: string;
+    titlePlaceholder: string;
+    descriptionPlaceholder: string;
+    selectCategory: string;
+    selectSubcategory: string;
+    selectLocation: string;
+    errors: {
+      titleRequired: string;
+      priceRequired: string;
+      priceInvalid: string;
+      categoryRequired: string;
+      locationRequired: string;
+      subcategoryRequired: string;
+    };
+  };
+
   // Уведомления
   notifications: {
     codeSent: string;
@@ -880,19 +935,19 @@ export const translations: Translations = {
       block: 'Заблокировать',
   },
 
-    myListings: {
+        myListings: {
       title: 'Мои объявления',
       add: 'Добавить',
       active: 'Активные',
-    archived: 'Архив',
-    noListings: 'Пока нет объявлений',
-    createFirstListing: 'Создайте первое объявление',
+      archived: 'Архив',
+      noListings: 'Пока нет объявлений',
+      createFirstListing: 'Создайте первое объявление',
       edit: 'Редактировать',
-    archive: 'Архивировать',
+      archive: 'Архивировать',
       activate: 'Активировать',
       publish: 'Опубликовать',
       delete: 'Удалить',
-    back: 'Назад',
+      back: 'Назад',
       deleteConfirmation: 'Вы уверены, что хотите удалить это объявление?',
       status: {
         active: 'Активно',
@@ -910,6 +965,59 @@ export const translations: Translations = {
         active: 'Активные',
         drafts: 'Черновики',
         archive: 'Архив',
+      },
+    },
+
+      editListing: {
+    title: 'Редактировать объявление',
+    update: 'Обновить',
+    updating: 'Обновление...',
+    success: 'Объявление успешно обновлено',
+    error: 'Ошибка при обновлении объявления',
+    existingImages: 'Существующие изображения',
+  },
+  sellerProfile: {
+    title: 'Профиль продавца',
+    listingDetails: 'Детали объявления',
+    aboutSeller: 'О продавце',
+    location: 'Местоположение',
+    memberSince: 'Участник с',
+    notSpecified: 'Не указано',
+    sellerListings: 'Объявления продавца',
+    noListings: 'Нет объявлений',
+    noListingsDescription: 'У этого продавца пока нет активных объявлений',
+    totalListings: 'Всего объявлений',
+    activeListings: 'Активных объявлений',
+    totalViews: 'Всего просмотров',
+    totalFavorites: 'Всего в избранном',
+    reviews: 'отзывов',
+  },
+
+    addListing: {
+      title: 'Название',
+      description: 'Описание',
+      price: 'Цена',
+      currency: 'Валюта',
+      category: 'Категория',
+      subcategory: 'Подкатегория',
+      location: 'Местоположение',
+      images: 'Изображения',
+      contactMethod: 'Способ связи',
+      chat: 'Чат',
+      phone: 'Телефон',
+      uploadImages: 'Загрузить изображения',
+      titlePlaceholder: 'Введите название объявления',
+      descriptionPlaceholder: 'Опишите товар или услугу...',
+      selectCategory: 'Выберите категорию',
+      selectSubcategory: 'Выберите подкатегорию',
+      selectLocation: 'Выберите город',
+      errors: {
+        titleRequired: 'Название обязательно',
+        priceRequired: 'Цена обязательна',
+        priceInvalid: 'Некорректная цена',
+        categoryRequired: 'Категория обязательна',
+        locationRequired: 'Местоположение обязательно',
+        subcategoryRequired: 'Подкатегория обязательна',
       },
     },
 

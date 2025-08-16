@@ -223,6 +223,16 @@ const MobileHomeView: React.FC = () => {
     }
   };
 
+  const handleNavigateToSellerProfile = (sellerId: string, sellerName: string, isCompany: boolean) => {
+    // Навигация к отдельной странице профиля продавца
+    const params = new URLSearchParams({
+      sellerId,
+      sellerName,
+      isCompany: isCompany.toString()
+    });
+    navigate(`/seller?${params.toString()}`);
+  };
+
   const handleLanguageSelect = (languageCode: string) => {
     setLanguage(languageCode as any);
     setShowLanguageMenu(false);
@@ -239,6 +249,7 @@ const MobileHomeView: React.FC = () => {
         isFavorite={isFavorite(selectedListing.id)}
         onNavigateToMessages={handleNavigateToMessages}
         onNavigateToProfile={handleNavigateToProfile}
+        onNavigateToSellerProfile={handleNavigateToSellerProfile}
       />
     );
   }

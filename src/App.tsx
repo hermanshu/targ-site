@@ -21,13 +21,13 @@ function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <FavoritesProvider>
-          <ListingsProvider>
+        <ListingsProvider>
+          <FavoritesProvider>
             <div className="App">
               <MainTabView />
             </div>
-          </ListingsProvider>
-        </FavoritesProvider>
+          </FavoritesProvider>
+        </ListingsProvider>
       </AuthProvider>
     </LanguageProvider>
   );

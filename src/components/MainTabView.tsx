@@ -17,12 +17,53 @@ import NotificationsSettingsView from './NotificationsSettingsView';
 import HelpAndSupportView from './HelpAndSupportView';
 import ReviewsView from './ReviewsView';
 import WelcomeModal from './WelcomeModal';
+import SellerProfileView from './SellerProfileView';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { Listing } from '../types';
 
 // Временные компоненты для демонстрации
+const SellerProfileViewWrapper = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  
+  const sellerId = searchParams.get('sellerId');
+  const sellerName = searchParams.get('sellerName');
+  const isCompany = searchParams.get('isCompany') === 'true';
+  
+  if (!sellerId || !sellerName) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Продавец не найден</h2>
+        <p>Отсутствуют необходимые параметры: sellerId или sellerName</p>
+        <button onClick={() => navigate('/')}>Вернуться на главную</button>
+      </div>
+    );
+  }
+  
+  const handleBack = () => {
+    navigate(-1); // Возврат на предыдущую страницу
+  };
+  
+  const handleNavigateToMessages = (listing: Listing) => {
+    // Навигация к сообщениям
+    navigate('/messages');
+  };
+  
+  return (
+    <SellerProfileView
+      sellerId={sellerId}
+      sellerName={sellerName}
+      isCompany={isCompany}
+      onBack={handleBack}
+      onNavigateToMessages={handleNavigateToMessages}
+    />
+  );
+};
+
 const AddListingViewWrapper = () => {
   const { currentUser } = useAuth();
   const { t } = useTranslation();
@@ -43,6 +84,7 @@ const FavoritesViewWrapper = () => {
   const { currentUser } = useAuth();
   const { t } = useTranslation();
   const { isFavorite, removeFromFavorites } = useFavorites();
+  const { incrementViews } = useListings();
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const navigate = useNavigate();
   
@@ -56,6 +98,8 @@ const FavoritesViewWrapper = () => {
   }
 
   const handleCardClick = (listing: Listing) => {
+    // Увеличиваем счетчик просмотров при клике на карточку
+    incrementViews(listing.id);
     setSelectedListing(listing);
   };
 
@@ -83,6 +127,18 @@ const FavoritesViewWrapper = () => {
     }
   };
 
+  const handleNavigateToSellerProfile = (sellerId: string, sellerName: string, isCompany: boolean) => {
+    // Навигация к отдельной странице профиля продавца
+    const params = new URLSearchParams({
+      sellerId,
+      sellerName,
+      isCompany: isCompany.toString()
+    });
+    navigate(`/seller?${params.toString()}`);
+  };
+
+
+
   if (selectedListing) {
     return (
       <ListingDetailView
@@ -92,6 +148,7 @@ const FavoritesViewWrapper = () => {
         isFavorite={isFavorite(selectedListing.id)}
         onNavigateToMessages={handleNavigateToMessages}
         onNavigateToProfile={handleNavigateToProfile}
+        onNavigateToSellerProfile={handleNavigateToSellerProfile}
       />
     );
   }
@@ -104,7 +161,6 @@ const MobileMessagesViewWrapper = () => {
   
   const handleNavigateToMessages = (listing: Listing) => {
     // Логика навигации к сообщениям
-    console.log('Navigate to messages for listing:', listing);
   };
 
   const handleNavigateToProfile = (mode?: 'signin' | 'signup') => {
@@ -141,7 +197,6 @@ const MessagesViewWrapper = () => {
 
   const handleNavigateToMessages = (listing: Listing) => {
     // Логика навигации к сообщениям
-    console.log('Navigate to messages for listing:', listing);
   };
 
   const handleNavigateToProfile = (mode?: 'signin' | 'signup') => {
@@ -241,7 +296,7 @@ const TabBar = () => {
               ref={(el) => { tabRefs.current[index] = el; }}
               className={`tab-item ${isActive ? 'active' : ''}`}
               onClick={() => {
-                console.log('Нажата кнопка "Главная" на главной странице');
+            
                 // Прокручиваем к началу списка объявлений
                 const listingsGrid = document.querySelector('.website-listings-grid');
                 const contentArea = document.querySelector('.content-area');
@@ -366,6 +421,7 @@ const MainTabViewContent: React.FC<{
               <ProfileView />
             )
           } />
+          <Route path="/seller" element={<SellerProfileViewWrapper />} />
         </Routes>
       </div>
       <TabBar />

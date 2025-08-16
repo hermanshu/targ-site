@@ -18,7 +18,6 @@ const ScrollToTopButton: React.FC = () => {
 
   // Прокручиваем наверх
   const scrollToTop = () => {
-    console.log('Нажата кнопка "Наверх"');
     // Прокручиваем к началу списка объявлений
     const listingsGrid = document.querySelector('.website-listings-grid');
     const contentArea = document.querySelector('.content-area');

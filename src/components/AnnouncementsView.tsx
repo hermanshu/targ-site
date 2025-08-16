@@ -87,7 +87,7 @@ const AnnouncementsView: React.FC = () => {
   }, []);
 
   // Отладочная информация
-  console.log('AnnouncementsView render:', { isMobile, windowWidth });
+
 
   // Фильтрация объявлений
   const filteredListings = useMemo(() => {
@@ -173,7 +173,11 @@ const AnnouncementsView: React.FC = () => {
 
     switch (selectedSort) {
       case 'newest':
-        return sorted.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        return sorted.sort((a, b) => {
+          const dateA = typeof a.createdAt === 'string' ? new Date(a.createdAt) : a.createdAt;
+          const dateB = typeof b.createdAt === 'string' ? new Date(b.createdAt) : b.createdAt;
+          return dateB.getTime() - dateA.getTime();
+        });
       case 'cheap':
         return sorted.sort((a, b) => {
           // Пропускаем объявления с "Договорная" ценой
@@ -216,7 +220,7 @@ const AnnouncementsView: React.FC = () => {
   };
 
   const handleCardClick = (listing: Listing) => {
-    console.log('Открыть детали объявления:', listing.title);
+
     // TODO: Навигация к деталям объявления
   };
 
@@ -261,11 +265,6 @@ const AnnouncementsView: React.FC = () => {
             <button 
               className={`filter-toggle-button ${isFilterActive || showFilters ? 'active' : ''}`}
               onClick={() => {
-                console.log('Filter button clicked!', { 
-                  currentShowFilters: showFilters, 
-                  isMobile, 
-                  willShow: !showFilters 
-                });
                 setShowFilters(!showFilters);
               }}
             >
@@ -333,13 +332,7 @@ const AnnouncementsView: React.FC = () => {
       {(() => {
         const isMobileDevice = windowWidth <= 767;
         const mobileFilterIsOpen = showFilters && isMobileDevice;
-        console.log('=== FILTER DEBUG ===');
-        console.log('showFilters:', showFilters);
-        console.log('isMobile:', isMobile);
-        console.log('windowWidth:', windowWidth);
-        console.log('isMobileDevice:', isMobileDevice);
-        console.log('mobileFilterIsOpen:', mobileFilterIsOpen);
-        console.log('=== END FILTER DEBUG ===');
+
         
         return (
           <MobileFilterSheet
