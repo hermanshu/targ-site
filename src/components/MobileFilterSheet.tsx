@@ -41,7 +41,7 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
   const [showCitySuggestions, setShowCitySuggestions] = useState(false);
   const [localFilters, setLocalFilters] = useState<FilterState>(filterState);
 
-  const categories = ["", t('home.electronics'), t('home.furniture'), t('home.fashion'), t('home.books'), t('home.sport'), t('home.transport'), t('home.kids'), t('home.realEstate'), t('home.services'), t('home.animals'), t('home.construction'), t('home.free'), t('home.other')];
+  const categories = ["", t('home.electronics'), t('home.furniture'), t('home.fashion'), t('home.books'), t('home.sport'), t('home.transport'), t('home.kids'), t('home.realEstate'), t('home.services'), t('home.animals'), t('home.construction'), t('home.free'), t('home.other'), t('home.plants')];
   const conditions = { "any": "Не важно", "new": "Новое", "used": "Б/у" };
   const deliveries = { "any": "Не важно", "delivery": "Доставка", "pickup": "Самовывоз" };
   const sellers = { "any": "Не важно", "company": "Компания", "private": "Частное" };

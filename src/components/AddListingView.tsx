@@ -24,7 +24,7 @@ interface FormData {
   location: string;
   images: File[];
   contactMethod: 'phone' | 'chat';
-  delivery: 'pickup' | 'delivery';
+  delivery?: 'pickup' | 'delivery';
   characteristics: Record<string, string>;
 }
 
@@ -43,7 +43,6 @@ const AddListingView: React.FC = () => {
     location: '',
     images: [],
     contactMethod: 'chat',
-    delivery: 'pickup',
     characteristics: {}
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -239,7 +238,8 @@ const AddListingView: React.FC = () => {
       ...prev, 
       category,
       subcategory: '',
-      characteristics: {} // Сбрасываем характеристики при смене категории
+      characteristics: {}, // Сбрасываем характеристики при смене категории
+      ...((category === 'work' || category === 'real-estate') && { delivery: undefined }) // Убираем доставку для категорий "Работа" и "Недвижимость"
     }));
     // Очищаем ошибки характеристик
     setErrors(prev => {
@@ -377,7 +377,7 @@ const AddListingView: React.FC = () => {
 
     try {
       // Создаем новое объявление
-      const newListing = {
+      const newListing: any = {
         title: formData.title,
         description: formData.description,
         price: formData.price,
@@ -389,9 +389,13 @@ const AddListingView: React.FC = () => {
         imageName: formData.images.length > 0 ? 'user-upload' : '',
         userId: currentUser?.id || 'anonymous',
         characteristics: formData.characteristics,
-        contactMethod: formData.contactMethod,
-        delivery: formData.delivery
+        contactMethod: formData.contactMethod
       };
+
+      // Добавляем поле доставки только для категорий, где это логично
+      if (formData.category !== 'work' && formData.category !== 'real-estate') {
+        newListing.delivery = formData.delivery;
+      }
 
       // Добавляем объявление в контекст
       addListing(newListing);
@@ -696,28 +700,30 @@ const AddListingView: React.FC = () => {
           )}
         </div>
 
-        {/* Доставка */}
-        <div className="form-section">
-          <label className="form-label">{t('listings.deliveryMethod')} *</label>
-          <div className="delivery-buttons">
-            <button
-              type="button"
-              className={`delivery-button ${formData.delivery === 'pickup' ? 'active' : ''}`}
-              onClick={() => handleInputChange('delivery', 'pickup')}
-            >
-              <span className="delivery-text">{t('listings.pickup')}</span>
-              <span className="delivery-hint">{t('listings.buyerWillPickup')}</span>
-            </button>
-            <button
-              type="button"
-              className={`delivery-button ${formData.delivery === 'delivery' ? 'active' : ''}`}
-              onClick={() => handleInputChange('delivery', 'delivery')}
-            >
-              <span className="delivery-text">{t('listings.delivery')}</span>
-              <span className="delivery-hint">{t('listings.sellerWillDeliver')}</span>
-            </button>
+        {/* Доставка - не показываем для категорий "Работа" и "Недвижимость" */}
+        {formData.category !== 'work' && formData.category !== 'real-estate' && (
+          <div className="form-section">
+            <label className="form-label">{t('listings.deliveryMethod')} *</label>
+            <div className="delivery-buttons">
+              <button
+                type="button"
+                className={`delivery-button ${formData.delivery === 'pickup' ? 'active' : ''}`}
+                onClick={() => handleInputChange('delivery', 'pickup')}
+              >
+                <span className="delivery-text">{t('listings.pickup')}</span>
+                <span className="delivery-hint">{t('listings.buyerWillPickup')}</span>
+              </button>
+              <button
+                type="button"
+                className={`delivery-button ${formData.delivery === 'delivery' ? 'active' : ''}`}
+                onClick={() => handleInputChange('delivery', 'delivery')}
+              >
+                <span className="delivery-text">{t('listings.delivery')}</span>
+                <span className="delivery-hint">{t('listings.sellerWillDeliver')}</span>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Кнопка отправки */}
         <div className="form-actions">

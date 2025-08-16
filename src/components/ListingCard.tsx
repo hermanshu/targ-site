@@ -15,7 +15,8 @@ import {
   SparklesIcon,
   BriefcaseIcon,
   UserGroupIcon,
-  HomeModernIcon
+  HomeModernIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { Listing } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
@@ -54,7 +55,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
       'electronics': DevicePhoneMobileIcon,
       'sport': TrophyIcon,
       'books': BookOpenIcon,
-      'kids': HeartIconCategory,
+      'kids': UserIcon,
       'homeAndGarden': HomeIcon,
       'fashion': ShoppingBagIcon,
       'work': BriefcaseIcon,
@@ -123,7 +124,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="price-bar">
           <span className="price-text">
             {listing.price} {listing.currency}
-            {(listing.category === 'work' || listing.category === 'vacancies' || listing.category === 'rent') && ' / месяц'}
+            {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && ' / месяц'}
           </span>
         </div>
       </div>

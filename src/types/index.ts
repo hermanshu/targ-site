@@ -7,6 +7,7 @@ export interface Listing {
   currency: 'EUR' | 'RSD';
   city: string;
   category: string;
+  subcategory?: string;
   sellerName: string;
   isCompany: boolean;
   imageName: string;

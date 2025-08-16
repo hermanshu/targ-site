@@ -19,6 +19,7 @@ import { Listing } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { useListingImages } from '../hooks/useListingImages';
 
 interface ListingDetailViewProps {
   listing: Listing;
@@ -50,10 +51,18 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showFullscreenImage, setShowFullscreenImage] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Используем хук для работы с изображениями
+  const {
+    currentIndex,
+    totalImages,
+    nextImage,
+    prevImage,
+    getImageSrc,
+    hasMultipleImages
+  } = useListingImages({ imageName: listing.imageName });
 
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
@@ -371,38 +380,28 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
     console.log('Image clicked!', listing.imageName);
     if (listing.imageName) {
       setShowFullscreenImage(true);
-      setCurrentImageIndex(0);
     }
   };
 
   const handleCloseFullscreen = () => {
     setShowFullscreenImage(false);
-    setCurrentImageIndex(0);
   };
 
   const handleNextImage = () => {
-    // Пока что у нас только одно изображение, но можно расширить
-    setCurrentImageIndex(0);
+    nextImage();
   };
 
   const handlePrevImage = () => {
-    // Пока что у нас только одно изображение, но можно расширить
-    setCurrentImageIndex(0);
+    prevImage();
   };
 
   // Функции для листания фото на странице
   const handlePrevPhoto = () => {
-    setCurrentPhotoIndex(prev => {
-      if (prev === 0) return 3; // Переход к последнему фото
-      return prev - 1;
-    });
+    prevImage();
   };
 
   const handleNextPhoto = () => {
-    setCurrentPhotoIndex(prev => {
-      if (prev === 3) return 0; // Переход к первому фото
-      return prev + 1;
-    });
+    nextImage();
   };
 
   // Функции для свайпов на мобильной версии
@@ -443,11 +442,13 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
         handlePrevImage();
       }
     } else {
-      // Листание фото на странице
-      if (e.key === 'ArrowRight') {
-        handleNextPhoto();
-      } else if (e.key === 'ArrowLeft') {
-        handlePrevPhoto();
+      // Листание фото на странице для объявлений с множественными изображениями
+      if (hasMultipleImages) {
+        if (e.key === 'ArrowRight') {
+          handleNextPhoto();
+        } else if (e.key === 'ArrowLeft') {
+          handlePrevPhoto();
+        }
       }
     }
   };
@@ -490,7 +491,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
           >
             {listing.imageName ? (
               <img 
-                src={`/images/${listing.imageName}.jpg`} 
+                src={getImageSrc()}
                 alt={listing.title}
                 className="detail-image"
                 onClick={handleImageClick}
@@ -505,8 +506,42 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
               <span>{t('listingDetail.noPhoto')}</span>
             </div>
             {listing.imageName && (
-              <div className="image-overlay" onClick={handleImageClick}>
-              </div>
+              <>
+                <div className="image-overlay" onClick={handleImageClick}>
+                </div>
+                
+                {/* Кнопки навигации по фото для объявлений с множественными изображениями */}
+                {hasMultipleImages && (
+                  <>
+                                          <button 
+                        className="photo-nav-button prev" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          prevImage();
+                        }}
+                      >
+                        <ChevronLeftIcon className="photo-nav-icon" />
+                      </button>
+                      
+                      <button 
+                        className="photo-nav-button next" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          nextImage();
+                        }}
+                      >
+                        <ChevronRightIcon className="photo-nav-icon" />
+                      </button>
+                      
+                      {/* Индикатор фото */}
+                      <div className="photo-indicator">
+                        <span className="photo-counter">
+                          {currentIndex + 1} / {totalImages}
+                        </span>
+                      </div>
+                  </>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -518,7 +553,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
             <h1 className="detail-title">{listing.title}</h1>
             <div className="detail-price">
               {listing.price} {listing.currency}
-              {(listing.category === 'work' || listing.category === 'vacancies' || listing.category === 'rent') && ' / месяц'}
+              {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && ' / месяц'}
             </div>
           </div>
 
@@ -574,8 +609,8 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
               <span className="category-value">{getTranslatedCategory(listing.category)}</span>
             </div>
 
-            {/* Способ доставки */}
-            {listing.delivery && (
+            {/* Способ доставки - не показываем для категорий "Работа", "Вакансии" и "Недвижимость" */}
+            {listing.delivery && listing.category !== 'work' && listing.category !== 'vacancies' && listing.category !== 'realEstate' && (
               <div className="detail-delivery">
                 <span className="delivery-label">{t('listingDetail.delivery')}:</span>
                 <span className="delivery-value">
@@ -858,7 +893,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
         <div className="fullscreen-image-overlay" onClick={handleCloseFullscreen}>
           <div className="fullscreen-image-container" onClick={(e) => e.stopPropagation()}>
             <img 
-              src={`/images/${listing.imageName}.jpg`} 
+              src={getImageSrc()}
               alt={listing.title}
               className="fullscreen-image"
             />
@@ -879,7 +914,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
             {/* Индикатор изображений */}
             <div className="fullscreen-indicator">
               <span className="fullscreen-counter">
-                {currentImageIndex + 1} / 1
+                {currentIndex + 1} / {totalImages}
               </span>
             </div>
           </div>

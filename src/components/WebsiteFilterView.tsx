@@ -43,7 +43,7 @@ const WebsiteFilterView: React.FC<WebsiteFilterViewProps> = ({
   const [showCategorySuggestions, setShowCategorySuggestions] = useState(false);
   const [localFilters, setLocalFilters] = useState<FilterState>(filterState);
 
-  const categories = ["", t('home.electronics'), t('home.furniture'), t('home.fashion'), t('home.books'), t('home.sport'), t('home.transport'), t('home.kids'), t('home.realEstate'), t('home.services'), t('home.animals'), t('home.construction'), t('home.free'), t('home.other')];
+  const categories = ["", t('home.electronics'), t('home.furniture'), t('home.fashion'), t('home.books'), t('home.sport'), t('home.transport'), t('home.kids'), t('home.realEstate'), t('home.services'), t('home.animals'), t('home.construction'), t('home.free'), t('home.other'), t('home.work'), t('home.vacancies'), t('home.resume'), t('home.rent'), t('home.sale'), t('home.plants')];
 
   const handleFilterChange = (key: keyof FilterState, value: any) => {
     const newFilters = { ...localFilters, [key]: value };
@@ -119,7 +119,13 @@ const WebsiteFilterView: React.FC<WebsiteFilterViewProps> = ({
       [t('home.animals')]: 'animals',
       [t('home.construction')]: 'construction',
       [t('home.free')]: 'free',
-      [t('home.other')]: 'other'
+      [t('home.other')]: 'other',
+      [t('home.work')]: 'work',
+      [t('home.vacancies')]: 'vacancies',
+      [t('home.resume')]: 'resume',
+      [t('home.rent')]: 'rent',
+      [t('home.sale')]: 'sale',
+      [t('home.plants')]: 'plants'
     };
     
     return categoryMap[categoryName] || 'allListings';
@@ -139,7 +145,7 @@ const WebsiteFilterView: React.FC<WebsiteFilterViewProps> = ({
       ).slice(0, 10)
     : []; // Не показываем города при пустом поле
 
-  const filteredCategories = categories.slice(0, 4); // Показываем первые 4 категории
+  const filteredCategories = categories; // Показываем все категории
 
   return (
     <div className={`website-filter-container ${isOpen ? 'website-filter-visible' : 'website-filter-hidden'}`}>

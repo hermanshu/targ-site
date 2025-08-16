@@ -19,11 +19,12 @@ import {
   BriefcaseIcon,
   HomeModernIcon,
   SparklesIcon,
-    UserGroupIcon,
+  UserGroupIcon,
   ShoppingBagIcon,
   GiftIcon,
   EllipsisHorizontalIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -63,7 +64,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
       { name: t('home.transport'), key: 'transport', icon: TruckIcon, isEmoji: false },
       { name: t('home.sport'), key: 'sport', icon: TrophyIcon, isEmoji: false },
       { name: t('home.books'), key: 'books', icon: BookOpenIcon, isEmoji: false },
-      { name: t('home.kids'), key: 'kids', icon: HeartIcon, isEmoji: false },
+      { name: t('home.kids'), key: 'kids', icon: UserIcon, isEmoji: false },
       { name: t('home.hobby'), key: 'hobby', icon: SparklesIcon, isEmoji: false },
       { name: t('home.other'), key: 'other', icon: EllipsisHorizontalIcon, isEmoji: false }
     ];
@@ -149,13 +150,18 @@ const WebsiteAnnouncementsView: React.FC = () => {
     const isAllListingsSelected = selectedCategory === 'allListings';
     
     if (!isAllListingsSelected) {
-      // Фильтруем объявления по ключу категории
+      // Фильтруем объявления по ключу категории или подкатегории
       console.log('Filtering by category:', selectedCategory);
       console.log('Available listings categories:', Array.from(new Set(listings.map(l => l.category))));
+      console.log('Available listings subcategories:', Array.from(new Set(listings.map(l => l.subcategory).filter(Boolean))));
       
       filtered = filtered.filter(listing => {
-        const matches = listing.category === selectedCategory;
-        console.log(`Listing "${listing.title}" category: "${listing.category}" matches "${selectedCategory}": ${matches}`);
+        // Проверяем совпадение по основной категории или подкатегории
+        const matchesCategory = listing.category === selectedCategory;
+        const matchesSubcategory = listing.subcategory === selectedCategory;
+        const matches = matchesCategory || matchesSubcategory;
+        
+        console.log(`Listing "${listing.title}" category: "${listing.category}" subcategory: "${listing.subcategory}" matches "${selectedCategory}": ${matches}`);
         return matches;
       });
       
@@ -173,7 +179,39 @@ const WebsiteAnnouncementsView: React.FC = () => {
     }
 
     if (filterState.selectedCategory) {
-      filtered = filtered.filter(listing => listing.category === filterState.selectedCategory);
+      // Преобразуем название категории в ключ
+      const getCategoryKey = (categoryName: string): string => {
+        const categoryMap: { [key: string]: string } = {
+          'Любая категория': 'allListings',
+          'Электроника': 'electronics',
+          'Мебель': 'furniture',
+          'Одежда': 'fashion',
+          'Книги': 'books',
+          'Спорт': 'sport',
+          'Авто': 'transport',
+          'Детям': 'kids',
+          'Недвижимость': 'realEstate',
+          'Услуги': 'services',
+          'Животные': 'animals',
+          'Строительство и ремонт': 'construction',
+          'Бесплатно': 'free',
+          'Другое': 'other',
+          'Работа': 'work',
+          'Вакансии': 'vacancies',
+          'Резюме': 'resume',
+          'Аренда': 'rent',
+          'Продажа': 'sale',
+          'Растения': 'plants'
+        };
+        return categoryMap[categoryName] || categoryName;
+      };
+      
+      const categoryKey = getCategoryKey(filterState.selectedCategory);
+      filtered = filtered.filter(listing => {
+        const matchesCategory = listing.category === categoryKey;
+        const matchesSubcategory = listing.subcategory === categoryKey;
+        return matchesCategory || matchesSubcategory;
+      });
     }
 
     if (filterState.onlyWithPhoto) {

@@ -103,7 +103,11 @@ const AnnouncementsView: React.FC = () => {
 
     // Фильтр по категории
     if (selectedCategory !== 'Популярное' && selectedCategory !== 'Все категории') {
-      filtered = filtered.filter((listing: Listing) => listing.category === selectedCategory);
+      filtered = filtered.filter((listing: Listing) => {
+        const matchesCategory = listing.category === selectedCategory;
+        const matchesSubcategory = listing.subcategory === selectedCategory;
+        return matchesCategory || matchesSubcategory;
+      });
     }
 
     // Фильтры
@@ -114,7 +118,39 @@ const AnnouncementsView: React.FC = () => {
     }
 
     if (filterState.selectedCategory) {
-      filtered = filtered.filter((listing: Listing) => listing.category === filterState.selectedCategory);
+      // Преобразуем название категории в ключ
+      const getCategoryKey = (categoryName: string): string => {
+        const categoryMap: { [key: string]: string } = {
+          'Любая категория': 'allListings',
+          'Электроника': 'electronics',
+          'Мебель': 'furniture',
+          'Одежда': 'fashion',
+          'Книги': 'books',
+          'Спорт': 'sport',
+          'Авто': 'transport',
+          'Детям': 'kids',
+          'Недвижимость': 'realEstate',
+          'Услуги': 'services',
+          'Животные': 'animals',
+          'Строительство и ремонт': 'construction',
+          'Бесплатно': 'free',
+          'Другое': 'other',
+          'Работа': 'work',
+          'Вакансии': 'vacancies',
+          'Резюме': 'resume',
+          'Аренда': 'rent',
+          'Продажа': 'sale',
+          'Растения': 'plants'
+        };
+        return categoryMap[categoryName] || categoryName;
+      };
+      
+      const categoryKey = getCategoryKey(filterState.selectedCategory);
+      filtered = filtered.filter((listing: Listing) => {
+        const matchesCategory = listing.category === categoryKey;
+        const matchesSubcategory = listing.subcategory === categoryKey;
+        return matchesCategory || matchesSubcategory;
+      });
     }
 
     if (filterState.onlyWithPhoto) {

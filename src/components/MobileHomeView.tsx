@@ -23,7 +23,8 @@ import {
   ShoppingBagIcon,
   GiftIcon,
   EllipsisHorizontalIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -60,7 +61,7 @@ const MobileHomeView: React.FC = () => {
       { name: t('home.transport'), key: 'transport', icon: TruckIcon, isEmoji: false },
       { name: t('home.sport'), key: 'sport', icon: TrophyIcon, isEmoji: false },
       { name: t('home.books'), key: 'books', icon: BookOpenIcon, isEmoji: false },
-      { name: t('home.kids'), key: 'kids', icon: HeartIcon, isEmoji: false },
+      { name: t('home.kids'), key: 'kids', icon: UserIcon, isEmoji: false },
       { name: t('home.hobby'), key: 'hobby', icon: SparklesIcon, isEmoji: false },
       { name: t('home.other'), key: 'other', icon: EllipsisHorizontalIcon, isEmoji: false }
     ];
@@ -109,7 +110,11 @@ const MobileHomeView: React.FC = () => {
 
     // Фильтр по категории
     if (selectedCategory !== 'allListings') {
-      filtered = filtered.filter((listing: Listing) => listing.category === selectedCategory);
+      filtered = filtered.filter((listing: Listing) => {
+        const matchesCategory = listing.category === selectedCategory;
+        const matchesSubcategory = listing.subcategory === selectedCategory;
+        return matchesCategory || matchesSubcategory;
+      });
     }
 
     // Дополнительные фильтры
@@ -120,7 +125,39 @@ const MobileHomeView: React.FC = () => {
     }
 
     if (filterState.selectedCategory) {
-      filtered = filtered.filter((listing: Listing) => listing.category === filterState.selectedCategory);
+      // Преобразуем название категории в ключ
+      const getCategoryKey = (categoryName: string): string => {
+        const categoryMap: { [key: string]: string } = {
+          'Любая категория': 'allListings',
+          'Электроника': 'electronics',
+          'Мебель': 'furniture',
+          'Одежда': 'fashion',
+          'Книги': 'books',
+          'Спорт': 'sport',
+          'Авто': 'transport',
+          'Детям': 'kids',
+          'Недвижимость': 'realEstate',
+          'Услуги': 'services',
+          'Животные': 'animals',
+          'Строительство и ремонт': 'construction',
+          'Бесплатно': 'free',
+          'Другое': 'other',
+          'Работа': 'work',
+          'Вакансии': 'vacancies',
+          'Резюме': 'resume',
+          'Аренда': 'rent',
+          'Продажа': 'sale',
+          'Растения': 'plants'
+        };
+        return categoryMap[categoryName] || categoryName;
+      };
+      
+      const categoryKey = getCategoryKey(filterState.selectedCategory);
+      filtered = filtered.filter((listing: Listing) => {
+        const matchesCategory = listing.category === categoryKey;
+        const matchesSubcategory = listing.subcategory === categoryKey;
+        return matchesCategory || matchesSubcategory;
+      });
     }
 
     if (filterState.onlyWithPhoto) {
