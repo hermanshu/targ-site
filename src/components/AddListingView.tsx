@@ -71,6 +71,15 @@ const AddListingView: React.FC = () => {
     { value: 'other', label: t('home.other'), emoji: '📦' }
   ];
 
+  const cities = [
+    "Белград", "Нови Сад", "Ниш", "Крагуевац", "Суботица",
+    "Зренянин", "Панчево", "Чачак", "Кралево", "Нови Пазар",
+    "Крушевац", "Ужице", "Вране", "Шабац", "Сомбор",
+    "Пожаревац", "Смедерево", "Лесковац", "Валево", "Кикинда",
+    "Вршац", "Бор", "Прокупле", "Сремска Митровица", "Ягодина",
+    "Лозница", "Приеполе", "Пирот", "Златибор", "Копаоник"
+  ];
+
   const subcategories = {
     work: [
       { value: 'vacancies', label: t('home.vacancies'), emoji: '👥' },
@@ -334,8 +343,6 @@ const AddListingView: React.FC = () => {
 
     if (!formData.price.trim()) {
       newErrors.price = t('listings.enterPrice');
-    } else if (isNaN(Number(formData.price)) || Number(formData.price) <= 0) {
-      newErrors.price = t('validation.invalidPrice');
     }
 
     if (!formData.category) {
@@ -406,12 +413,8 @@ const AddListingView: React.FC = () => {
   };
 
   const formatPrice = (value: string) => {
-    // Удаляем все кроме цифр
-    const numericValue = value.replace(/\D/g, '');
-    if (numericValue) {
-      return new Intl.NumberFormat('ru-RU').format(Number(numericValue));
-    }
-    return '';
+    // Возвращаем значение как есть, без ограничений
+    return value;
   };
 
 
@@ -529,7 +532,9 @@ const AddListingView: React.FC = () => {
           <div className="form-section">
             <label className="form-label">
               <CurrencyDollarIcon className="label-icon" />
-              {t('listings.price')} *
+              {formData.category === 'work' || formData.subcategory === 'vacancies' ? 'Зарплата в месяц' : 
+               formData.subcategory === 'rent' ? 'Стоимость в месяц' : 
+               t('listings.price')} *
             </label>
             <div className="price-input-group">
               <input
@@ -587,7 +592,7 @@ const AddListingView: React.FC = () => {
                 onChange={(e) => handleSubcategoryChange(e.target.value)}
                 className={`form-select ${errors.subcategory ? 'input-error' : ''}`}
               >
-                <option value="">{t('listings.selectSubcategory')}</option>
+                <option value="">{t('validation.selectSubcategory')}</option>
                 {subcategories[formData.category as keyof typeof subcategories].map(subcategory => (
                   <option key={subcategory.value} value={subcategory.value}>
                     {subcategory.emoji} {subcategory.label}
@@ -648,13 +653,18 @@ const AddListingView: React.FC = () => {
             <MapPinIcon className="label-icon" />
             {t('listings.location')} *
           </label>
-          <input
-            type="text"
+          <select
             value={formData.location}
             onChange={(e) => handleInputChange('location', e.target.value)}
-            placeholder={t('listings.location')}
             className={`form-input ${errors.location ? 'input-error' : ''}`}
-          />
+          >
+            <option value="">{t('listings.selectCity')}</option>
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
           {errors.location && (
             <div className="error-message">{errors.location}</div>
           )}

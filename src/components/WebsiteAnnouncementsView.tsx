@@ -101,10 +101,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
   const [filterState, setFilterState] = useState<FilterState>({
     cityInput: '',
     selectedCategory: '',
-    selectedCondition: 'any',
     onlyWithPhoto: false,
-    selectedDelivery: 'any',
-    selectedSeller: 'any',
     minPrice: '',
     maxPrice: ''
   });
@@ -183,12 +180,24 @@ const WebsiteAnnouncementsView: React.FC = () => {
       filtered = filtered.filter(listing => listing.imageName !== '');
     }
 
-    if (filterState.selectedSeller !== 'any') {
-      filtered = filtered.filter(listing => {
-        if (filterState.selectedSeller === 'company') return listing.isCompany;
-        if (filterState.selectedSeller === 'private') return !listing.isCompany;
-        return true;
-      });
+    if (filterState.minPrice) {
+      const minPrice = parseFloat(filterState.minPrice);
+      if (!isNaN(minPrice)) {
+        filtered = filtered.filter(listing => {
+          const listingPrice = parseFloat(listing.price.toString());
+          return listingPrice >= minPrice;
+        });
+      }
+    }
+
+    if (filterState.maxPrice) {
+      const maxPrice = parseFloat(filterState.maxPrice);
+      if (!isNaN(maxPrice)) {
+        filtered = filtered.filter(listing => {
+          const listingPrice = parseFloat(listing.price.toString());
+          return listingPrice <= maxPrice;
+        });
+      }
     }
 
     return filtered;
@@ -301,10 +310,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
     setFilterState({
       cityInput: '',
       selectedCategory: '',
-      selectedCondition: 'any',
       onlyWithPhoto: false,
-      selectedDelivery: 'any',
-      selectedSeller: 'any',
       minPrice: '',
       maxPrice: ''
     });
@@ -491,6 +497,8 @@ const WebsiteAnnouncementsView: React.FC = () => {
         onFilterChange={handleFilterChange}
         onReset={handleFilterReset}
         onClose={() => setShowFilters(false)}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
 
       {/* Категории */}
@@ -541,7 +549,11 @@ const WebsiteAnnouncementsView: React.FC = () => {
       </div>
 
       {/* Виртуализированный список объявлений */}
-      <div className="website-listings-grid" style={{ height: 'calc(100vh - 400px)', minHeight: '500px' }}>
+      <div className="website-listings-grid" style={{ 
+        height: 'calc(100vh - 300px)', 
+        minHeight: '400px',
+        marginTop: '0'
+      }}>
         <ResponsiveListingsGrid
           listings={sortedListings}
           onFavoriteToggle={handleFavoriteToggle}

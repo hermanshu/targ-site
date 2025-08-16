@@ -9,6 +9,9 @@
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 20px;
     justify-items: center;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0 20px;
   }
 
   .listing-card {
@@ -100,13 +103,16 @@
 /* Десктопные стили для больших экранов */
 @media (min-width: 1400px) {
   .announcements-view {
-    max-width: 1800px;
+    margin: 0 auto;
+    padding: 60px 20px;
   }
 
   .listings-grid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
+    gap: 24px;
     justify-items: center;
+    margin: 0 auto;
+    padding: 40px 20px;
   }
 
   .listing-card {
@@ -116,6 +122,56 @@
 
   .listing-image-container {
     height: 220px;
+  }
+}
+
+/* Десктопные стили для очень больших экранов */
+@media (min-width: 1800px) {
+  .announcements-view {
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  .listings-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+    justify-items: center;
+    margin: 0 auto;
+    padding: 50px 40px;
+  }
+}
+
+/* Дополнительные стили для экстремально больших экранов */
+@media (min-width: 2000px) {
+  .announcements-view {
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+
+  .listings-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+    justify-items: center;
+    margin: 0 auto;
+    padding: 70px 40px;
+  }
+}
+
+/* Дополнительные стили для экстремально больших экранов */
+@media (min-width: 2000px) {
+  .announcements-view {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 100px 40px;
+  }
+
+  .listings-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 32px;
+    justify-items: center;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 60px 40px;
   }
 }
 

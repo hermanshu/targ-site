@@ -29,6 +29,7 @@ interface Chat {
     title: string;
     price: string;
     currency: string;
+    category: string;
     imageName?: string;
     contactMethod?: 'phone' | 'chat';
   };
@@ -161,6 +162,7 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
           title: listing.title,
           price: listing.price,
           currency: listing.currency,
+          category: listing.category,
           imageName: listing.imageName,
           contactMethod: listing.contactMethod
         }
@@ -425,7 +427,10 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
                     
                     <div className="mobile-chat-listing-info">
                       <span className="mobile-listing-title">{chat.listing.title}</span>
-                      <span className="mobile-listing-price">{chat.listing.price} {chat.listing.currency}</span>
+                      <span className="mobile-listing-price">
+                        {chat.listing.price} {chat.listing.currency}
+                        {(chat.listing.category === 'work' || chat.listing.category === 'vacancies' || chat.listing.category === 'rent') && ' / месяц'}
+                      </span>
                     </div>
                     
                     <div className="mobile-chat-message-row">

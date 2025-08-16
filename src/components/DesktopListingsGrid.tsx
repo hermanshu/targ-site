@@ -34,22 +34,25 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
   const columnCount = useMemo(() => {
     if (containerWidth === 0) return 4; // По умолчанию 4 столбца
     
-    // Для очень больших экранов (больше 1400px) - автоматически вычисляем оптимальное количество
-    if (containerWidth >= 1400) {
-      const optimalColumns = Math.floor((containerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
-      return Math.max(4, optimalColumns); // Минимум 4, максимум - сколько поместится
+    // Ограничиваем максимальную ширину контейнера для очень больших экранов
+    const maxContainerWidth = Math.min(containerWidth, 1800);
+    
+    // Для очень больших экранов (больше 1400px) - максимум 6 столбцов
+    if (maxContainerWidth >= 1400) {
+      const optimalColumns = Math.floor((maxContainerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
+      return Math.min(6, Math.max(4, optimalColumns)); // От 4 до 6 столбцов
     }
     
-    // Для больших экранов (больше 1200px) - минимум 3 столбца
-    if (containerWidth >= 1200) {
-      const optimalColumns = Math.floor((containerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
-      return Math.max(3, optimalColumns);
+    // Для больших экранов (больше 1200px) - максимум 5 столбцов
+    if (maxContainerWidth >= 1200) {
+      const optimalColumns = Math.floor((maxContainerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
+      return Math.min(5, Math.max(3, optimalColumns)); // От 3 до 5 столбцов
     }
     
-    // Для средних экранов (768px - 1199px) - минимум 2 столбца
-    if (containerWidth >= 768) {
-      const optimalColumns = Math.floor((containerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
-      return Math.max(2, optimalColumns);
+    // Для средних экранов (768px - 1199px) - максимум 4 столбца
+    if (maxContainerWidth >= 768) {
+      const optimalColumns = Math.floor((maxContainerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
+      return Math.min(4, Math.max(2, optimalColumns)); // От 2 до 4 столбцов
     }
     
     // Для мобильных устройств возвращаем 0 - будет использоваться мобильная версия
@@ -103,7 +106,15 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
   }
 
   return (
-    <div style={{ height: '100%', width: '100%' }}>
+    <div style={{ 
+      height: '100%', 
+      width: '100%',
+      maxWidth: '1800px',
+      margin: '0 auto',
+      padding: window.innerWidth >= 1800 ? '0 60px' : 
+               window.innerWidth >= 1400 ? '0 40px' : 
+               '0 20px'
+    }}>
       <AutoSizer onResize={handleResize}>
         {({ width, height }: { width: number; height: number }) => (
           <Grid

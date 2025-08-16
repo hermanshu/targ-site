@@ -30,6 +30,7 @@ interface Chat {
     title: string;
     price: string;
     currency: string;
+    category: string;
     imageName?: string;
     contactMethod?: 'phone' | 'chat';
   };
@@ -127,6 +128,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         title: 'iPhone 14 Pro Max',
         price: '1200',
         currency: 'EUR',
+        category: 'electronics',
         imageName: 'iphone',
         contactMethod: 'phone'
       }
@@ -143,6 +145,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         title: 'Квартира в центре',
         price: '150000',
         currency: 'EUR',
+        category: 'rent',
         imageName: 'apartment',
         contactMethod: 'chat'
       }
@@ -159,6 +162,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         title: 'BMW X5 2020',
         price: '45000',
         currency: 'EUR',
+        category: 'transport',
         imageName: 'bmw',
         contactMethod: 'phone'
       }
@@ -175,6 +179,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         title: 'MacBook Pro 2023',
         price: '2500',
         currency: 'EUR',
+        category: 'electronics',
         imageName: 'macbook',
         contactMethod: 'chat'
       }
@@ -191,6 +196,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         title: 'PlayStation 5',
         price: '500',
         currency: 'EUR',
+        category: 'electronics',
         imageName: 'ps5',
         contactMethod: 'phone'
       }
@@ -673,6 +679,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         title: listing.title,
         price: listing.price,
         currency: listing.currency,
+        category: listing.category,
         imageName: listing.imageName,
         contactMethod: listing.contactMethod
       }
@@ -809,7 +816,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                 
                 <div className="chat-listing-info">
                   <span className="listing-title">{chat.listing.title}</span>
-                  <span className="listing-price">{chat.listing.price} {chat.listing.currency}</span>
+                  <span className="listing-price">
+                    {chat.listing.price} {chat.listing.currency}
+                    {(chat.listing.category === 'work' || chat.listing.category === 'vacancies' || chat.listing.category === 'rent') && ' / месяц'}
+                  </span>
                 </div>
                 
                 <div className="chat-message-row">
@@ -872,7 +882,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                 </div>
                 <div className="listing-preview-info">
                   <h3 className="listing-preview-title">{selectedChat.listing.title}</h3>
-                  <span className="listing-preview-price">{selectedChat.listing.price} {selectedChat.listing.currency}</span>
+                  <span className="listing-preview-price">
+                    {selectedChat.listing.price} {selectedChat.listing.currency}
+                    {(selectedChat.listing.category === 'work' || selectedChat.listing.category === 'vacancies' || selectedChat.listing.category === 'rent') && ' / месяц'}
+                  </span>
                 </div>
                 <div className="listing-preview-arrow">→</div>
               </div>

@@ -246,6 +246,7 @@ export interface Translations {
     notSpecified: string;
     deliveryMethod: string;
     buyerWillPickup: string;
+    selectCity: string;
   };
 
   // Детали объявления
@@ -280,6 +281,18 @@ export interface Translations {
     linkCopied: string;
     copyError: string;
     reportSent: string;
+  };
+
+  // Приветственное окно
+  welcome: {
+    title: string;
+    description: string;
+    selectLanguage: string;
+    startExploring: string;
+    feature1: string;
+    feature2: string;
+    feature3: string;
+    feature4: string;
   };
 
   // Сообщения
@@ -750,6 +763,7 @@ export const translations: Translations = {
     notSpecified: 'Не указано',
     deliveryMethod: 'Способ доставки',
     buyerWillPickup: 'Покупатель заберет сам',
+    selectCity: 'Выберите город',
   },
 
   listingDetail: {
@@ -784,6 +798,17 @@ export const translations: Translations = {
     copyError: 'Ошибка копирования',
     reportSent: 'Жалоба отправлена',
   },
+
+    welcome: {
+      title: 'Добро пожаловать!',
+      description: 'Ты попал на мультиязычную платформу объявлений товаров и услуг. Мы рады видеть вас на нашей платформе. Здесь вы можете найти и разместить объявления о продаже и покупке товаров, услуг и недвижимости.',
+      selectLanguage: 'Выберите язык для начала',
+      startExploring: 'Перейти к объявлениям',
+      feature1: 'Легкость использования - простой интерфейс и понятные инструкции',
+      feature2: 'Большой выбор - объявления из множества категорий',
+      feature3: 'Надежность - безопасность данных и надежные сервисы',
+      feature4: 'Поддержка 24/7 - наша команда всегда готова помочь',
+    },
 
     messages: {
       title: 'Сообщения',

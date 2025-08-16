@@ -192,7 +192,10 @@ const MyListingsView: React.FC = () => {
 
               <div className="listing-content">
                 <h3 className="listing-title">{listing.title}</h3>
-                <div className="listing-price">{listing.price} {listing.currency}</div>
+                <div className="listing-price">
+                  {listing.price} {listing.currency}
+                  {(listing.category === 'work' || listing.category === 'vacancies' || listing.category === 'rent') && ' / месяц'}
+                </div>
                 <div className="listing-location">
                   <MapPinIcon className="location-icon" />
                   {listing.city}

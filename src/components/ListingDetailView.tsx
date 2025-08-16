@@ -490,7 +490,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
           >
             {listing.imageName ? (
               <img 
-                src={`/images/photo${currentPhotoIndex === 0 ? '' : currentPhotoIndex}.jpg`} 
+                src={`/images/${listing.imageName}.jpg`} 
                 alt={listing.title}
                 className="detail-image"
                 onClick={handleImageClick}
@@ -505,38 +505,8 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
               <span>{t('listingDetail.noPhoto')}</span>
             </div>
             {listing.imageName && (
-              <>
-                <div className="image-overlay" onClick={handleImageClick}>
-                </div>
-                
-                {/* Кнопки навигации по фото */}
-                <button 
-                  className="photo-nav-button prev" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePrevPhoto();
-                  }}
-                >
-                  <ChevronLeftIcon className="photo-nav-icon" />
-                </button>
-                
-                <button 
-                  className="photo-nav-button next" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleNextPhoto();
-                  }}
-                >
-                  <ChevronRightIcon className="photo-nav-icon" />
-                </button>
-                
-                {/* Индикатор фото */}
-                <div className="photo-indicator">
-                  <span className="photo-counter">
-                    {currentPhotoIndex + 1} / 4
-                  </span>
-                </div>
-              </>
+              <div className="image-overlay" onClick={handleImageClick}>
+              </div>
             )}
           </div>
         </div>
@@ -548,6 +518,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
             <h1 className="detail-title">{listing.title}</h1>
             <div className="detail-price">
               {listing.price} {listing.currency}
+              {(listing.category === 'work' || listing.category === 'vacancies' || listing.category === 'rent') && ' / месяц'}
             </div>
           </div>
 

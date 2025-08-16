@@ -16,6 +16,7 @@ import ListingDetailView from './ListingDetailView';
 import NotificationsSettingsView from './NotificationsSettingsView';
 import HelpAndSupportView from './HelpAndSupportView';
 import ReviewsView from './ReviewsView';
+import WelcomeModal from './WelcomeModal';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
@@ -275,12 +276,28 @@ const MainTabViewContent: React.FC<{
   onLogout: () => void;
 }> = ({ isAuthenticated, onLogout }) => {
   const location = useLocation();
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
 
   // Определяем, нужно ли добавить фон профиля
   const shouldShowProfileBackground = !isAuthenticated && location.pathname === '/profile';
 
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false);
+  };
+
+  // Показываем приветственное окно при каждом обновлении страницы для тестирования
+  useEffect(() => {
+    setShowWelcomeModal(true);
+  }, []);
+
   return (
     <div className="main-container">
+      {/* Приветственное модальное окно */}
+      <WelcomeModal 
+        isVisible={showWelcomeModal} 
+        onClose={handleCloseWelcomeModal} 
+      />
+      
       <div className={`content-area ${shouldShowProfileBackground ? 'profile-background' : ''}`}>
         <Routes>
           <Route path="/" element={

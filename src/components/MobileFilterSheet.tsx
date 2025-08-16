@@ -22,8 +22,12 @@ interface MobileFilterSheetProps {
 }
 
 const cities = [
-  "Belgrade", "Novi Sad", "Niš", "Kragujevac", "Subotica",
-  "Zrenjanin", "Pančevo", "Čačak", "Kraljevo", "Novi Pazar"
+  "Белград", "Нови Сад", "Ниш", "Крагуевац", "Суботица",
+  "Зренянин", "Панчево", "Чачак", "Кралево", "Нови Пазар",
+  "Крушевац", "Ужице", "Вране", "Шабац", "Сомбор",
+  "Пожаревац", "Смедерево", "Лесковац", "Валево", "Кикинда",
+  "Вршац", "Бор", "Прокупле", "Сремска Митровица", "Ягодина",
+  "Лозница", "Приеполе", "Пирот", "Златибор", "Копаоник"
 ];
 
 const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({ 

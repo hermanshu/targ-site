@@ -100,12 +100,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         )}
         
-                {/* Бейдж категории */}
+        {/* Бейдж категории */}
         <div className="category-badge">
           <CategoryIcon className="category-icon-hero" />
         </div>
-        
-
 
         {/* Кнопка избранного поверх изображения */}
         <button 
@@ -120,11 +118,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
             <HeartIcon className="heart-icon" />
           )}
         </button>
-      </div>
 
-      {/* Плашка с ценой */}
-      <div className="price-bar">
-        <span className="price-text">{listing.price} {listing.currency}</span>
+        {/* Плашка с ценой */}
+        <div className="price-bar">
+          <span className="price-text">
+            {listing.price} {listing.currency}
+            {(listing.category === 'work' || listing.category === 'vacancies' || listing.category === 'rent') && ' / месяц'}
+          </span>
+        </div>
       </div>
 
       {/* Текстовая часть */}
