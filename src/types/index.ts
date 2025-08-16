@@ -1,5 +1,6 @@
 // Модели данных, основанные на Swift коде
 
+// Основные типы
 export interface Listing {
   id: string;
   title: string;
