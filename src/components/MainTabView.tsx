@@ -18,6 +18,7 @@ import HelpAndSupportView from './HelpAndSupportView';
 import ReviewsView from './ReviewsView';
 import WelcomeModal from './WelcomeModal';
 import SellerProfileView from './SellerProfileView';
+import SortSheet from './SortSheet';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
@@ -523,6 +524,8 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showSortSheet, setShowSortSheet] = useState(false);
+  const [selectedSort, setSelectedSort] = useState('newest');
 
   // Функция для подсчета непрочитанных сообщений
   const calculateUnreadMessages = () => {
@@ -720,7 +723,12 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
       <div className={`content-area ${shouldShowProfileBackground ? 'profile-background' : ''}`}>
         <Routes>
           <Route path="/" element={
-            window.innerWidth <= 767 ? <MobileHomeView /> : <WebsiteAnnouncementsView />
+            window.innerWidth <= 767 ? <MobileHomeView /> : <WebsiteAnnouncementsView 
+              showSortSheet={showSortSheet}
+              setShowSortSheet={setShowSortSheet}
+              selectedSort={selectedSort}
+              setSelectedSort={setSelectedSort}
+            />
           } />
           <Route path="/add" element={<AddListingViewWrapper />} />
           <Route path="/favorites" element={<FavoritesViewWrapper />} />
@@ -746,6 +754,14 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
         </Routes>
       </div>
       <TabBar />
+      
+      {/* Модальное окно сортировки - на том же уровне, что и панель навигации */}
+      <SortSheet
+        isOpen={showSortSheet}
+        onClose={() => setShowSortSheet(false)}
+        selectedSort={selectedSort}
+        onSortSelect={setSelectedSort}
+      />
     </div>
   );
 };

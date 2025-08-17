@@ -50,11 +50,12 @@ code {
   display: none; /* Скрываем по умолчанию */
   justify-content: space-around;
   padding: 12px 0;
-  z-index: 1000;
+  z-index: 100001;
   margin: 0;
   box-shadow: 
     0 -8px 32px rgba(0, 0, 0, 0.1),
     0 -2px 8px rgba(0, 0, 0, 0.05);
+  transition: backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Анимированная линза */
@@ -790,6 +791,38 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* Гарантированное отображение панели навигации поверх модальных окон */
+.website-navigation-panel {
+  z-index: 999999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.tab-bar {
+  z-index: 999999 !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(30px) !important;
+}
+
+/* Убеждаемся, что все элементы навигации видны */
+.website-nav-container,
+.website-nav-item,
+.website-language-button,
+.website-nav-logo,
+.website-nav-center,
+.website-language-selector {
+  z-index: 1000000 !important;
+  position: relative !important;
 }
 
 .detail-image-container {
@@ -2832,10 +2865,11 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 30;
+  z-index: 100001;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .website-nav-container {
@@ -4496,7 +4530,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .sort-sheet-overlay,
 .filter-overlay {
   position: fixed;
-  top: 0;
+  top: 72px; /* Отступ для панели навигации */
   left: 0;
   right: 0;
   bottom: 0;
@@ -4505,7 +4539,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 99999;
+  z-index: 10;
   animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding-bottom: 80px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -4516,6 +4550,8 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(20px);
 }
+
+
 
 .sort-sheet,
 .filter-sheet {
@@ -4531,7 +4567,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   box-shadow: 
     0 -8px 32px rgba(0, 0, 0, 0.2),
     0 -2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 100000;
+  z-index: 11;
   margin-bottom: 80px;
   transform: translateY(-100%);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -4909,42 +4945,33 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Стили для веб-версии фильтров */
 .website-filter-container {
+  position: fixed;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 16px;
-  margin: 10px 20px 8px 20px;
+  margin: 0;
   padding: 24px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: visible;
   border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    max-height: 1000px;
-  }
-}
-
-.website-filter-container {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 1000px;
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
+  width: calc(100% - 40px);
+  max-width: 1800px;
+  z-index: 15;
 }
 
 .website-filter-hidden {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-10px);
-  padding: 0 16px;
-  margin: 0 20px;
+  transform: translateX(-50%) translateY(-10px);
+  padding: 0 24px;
+  margin: 0;
   pointer-events: none;
 }
 
@@ -5444,6 +5471,16 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     height: calc(100vh - 195px) !important;
     max-width: 1400px !important;
   }
+  
+  .website-listings-grid.with-filters {
+    top: 220px !important;
+    height: calc(100vh - 220px) !important;
+  }
+  
+  .website-filter-container,
+  .website-category-container {
+    max-width: 1400px !important;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -5459,6 +5496,16 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     height: calc(100vh - 195px) !important;
     max-width: 1600px !important;
   }
+  
+  .website-listings-grid.with-filters {
+    top: 220px !important;
+    height: calc(100vh - 220px) !important;
+  }
+  
+  .website-filter-container,
+  .website-category-container {
+    max-width: 1600px !important;
+  }
 }
 
 @media (min-width: 1400px) {
@@ -5472,6 +5519,16 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .website-listings-grid {
     top: 195px !important;
     height: calc(100vh - 195px) !important;
+    max-width: 1800px !important;
+  }
+  
+  .website-listings-grid.with-filters {
+    top: 220px !important;
+    height: calc(100vh - 220px) !important;
+  }
+  
+  .website-filter-container,
+  .website-category-container {
     max-width: 1800px !important;
   }
 }
@@ -6188,10 +6245,14 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Стили для веб-версии категорий (как фильтры) */
 .website-category-container {
+  position: fixed;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-50%);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 16px;
-  margin: 10px 20px 8px 20px;
+  margin: 0;
   padding: 24px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
   overflow: visible;
@@ -6199,15 +6260,18 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 1000px;
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
+  width: calc(100% - 40px);
+  max-width: 1800px;
+  z-index: 15;
 }
 
 .website-category-hidden {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-10px);
-  padding: 0 16px;
-  margin: 0 20px;
+  transform: translateX(-50%) translateY(-10px);
+  padding: 0 24px;
+  margin: 0;
   pointer-events: none;
 }
 
@@ -6399,6 +6463,13 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   height: calc(100vh - 195px);
   width: calc(100% - 40px);
   max-width: 1800px;
+  transition: top 0.3s ease;
+}
+
+.website-listings-grid.with-filters {
+  top: 800px !important;
+  height: calc(100vh - 800px) !important;
+  transition: top 0.3s ease, height 0.3s ease !important;
 }
 
 /* Стили для подтверждения email */

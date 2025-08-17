@@ -41,7 +41,19 @@ import ScrollToTopButton from './ScrollToTopButton';
 
 import { Listing } from '../types';
 
-const WebsiteAnnouncementsView: React.FC = () => {
+interface WebsiteAnnouncementsViewProps {
+  showSortSheet?: boolean;
+  setShowSortSheet?: (show: boolean) => void;
+  selectedSort?: string;
+  setSelectedSort?: (sort: string) => void;
+}
+
+const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({ 
+  showSortSheet: externalShowSortSheet, 
+  setShowSortSheet: externalSetShowSortSheet,
+  selectedSort: externalSelectedSort,
+  setSelectedSort: externalSetSelectedSort
+}) => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
@@ -101,7 +113,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
 
   const [showFilters, setShowFilters] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
-  const [showSortSheet, setShowSortSheet] = useState(false);
+  const [internalShowSortSheet, setInternalShowSortSheet] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [filterState, setFilterState] = useState<FilterState>({
@@ -111,9 +123,17 @@ const WebsiteAnnouncementsView: React.FC = () => {
     minPrice: '',
     maxPrice: ''
   });
-  const [selectedSort, setSelectedSort] = useState('newest');
+  const [internalSelectedSort, setInternalSelectedSort] = useState('newest');
+  
+  // Используем внешние пропсы, если они предоставлены, иначе внутренние состояния
+  const showSortSheet = externalShowSortSheet !== undefined ? externalShowSortSheet : internalShowSortSheet;
+  const setShowSortSheet = externalSetShowSortSheet || setInternalShowSortSheet;
+  const selectedSort = externalSelectedSort !== undefined ? externalSelectedSort : internalSelectedSort;
+  const setSelectedSort = externalSetSelectedSort || setInternalSelectedSort;
 
   const [listings, setListings] = useState<Listing[]>([]);
+
+
 
 
   // Получаем данные из контекста
@@ -394,6 +414,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
       setExpandedCategory(null); // Закрываем выпадающий список
       setActiveMainCategory(null);
       setShowCategories(false); // Закрываем панель категорий
+      setShowFilters(false); // Закрываем фильтры
       
       // Если выбрали "Все объявления", сбрасываем активную основную категорию
       if (category.key === 'allListings') {
@@ -458,7 +479,12 @@ const WebsiteAnnouncementsView: React.FC = () => {
               />
               <button 
                 className={`website-filter-toggle-button ${isFilterActive ? 'active' : ''}`}
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={() => {
+                  setShowFilters(!showFilters);
+                  if (showCategories) {
+                    setShowCategories(false);
+                  }
+                }}
               >
                 <FunnelIcon className="website-filter-icon" />
               </button>
@@ -506,7 +532,12 @@ const WebsiteAnnouncementsView: React.FC = () => {
             {/* Кнопка выбора категории */}
             <button
               className="website-category-select-button"
-              onClick={() => setShowCategories(!showCategories)}
+              onClick={() => {
+                setShowCategories(!showCategories);
+                if (showFilters) {
+                  setShowFilters(false);
+                }
+              }}
             >
               <span className="category-select-text">
                 {showCategories ? 'Скрыть категории' : 'Выбрать категорию'}
@@ -533,7 +564,10 @@ const WebsiteAnnouncementsView: React.FC = () => {
         filterState={filterState}
         onFilterChange={handleFilterChange}
         onReset={handleFilterReset}
-        onClose={() => setShowFilters(false)}
+        onClose={() => {
+          setShowFilters(false);
+          setShowCategories(false);
+        }}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
@@ -545,17 +579,21 @@ const WebsiteAnnouncementsView: React.FC = () => {
         subcategories={subcategories}
         selectedCategory={selectedCategory}
         onCategorySelect={setSelectedCategory}
-        onClose={() => setShowCategories(false)}
+        onClose={() => {
+          setShowCategories(false);
+          setShowFilters(false);
+        }}
         expandedCategory={expandedCategory}
         onCategoryExpand={setExpandedCategory}
       />
 
       {/* Виртуализированный список объявлений */}
-      <div className="website-listings-grid" style={{ 
-        height: 'calc(100vh - 300px)', 
-        minHeight: '400px',
-        marginTop: showCategories ? '0' : '0'
-      }}>
+      <div 
+        className={`website-listings-grid ${(showCategories || showFilters) ? 'with-filters' : ''}`}
+        style={{
+          transition: 'top 0.3s ease, height 0.3s ease'
+        }}
+      >
         <ResponsiveListingsGrid
           listings={sortedListings}
           onFavoriteToggle={handleFavoriteToggle}
@@ -568,13 +606,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
         />
       </div>
 
-      {/* Модальное окно сортировки */}
-      <SortSheet
-        isOpen={showSortSheet}
-        onClose={() => setShowSortSheet(false)}
-        selectedSort={selectedSort}
-        onSortSelect={handleSortSelect}
-      />
+
 
       {/* Кнопка "Наверх" */}
       <ScrollToTopButton />

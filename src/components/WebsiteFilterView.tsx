@@ -148,7 +148,12 @@ const WebsiteFilterView: React.FC<WebsiteFilterViewProps> = ({
   const filteredCategories = categories; // Показываем все категории
 
   return (
-    <div className={`website-filter-container ${isOpen ? 'website-filter-visible' : 'website-filter-hidden'}`}>
+    <div 
+      className={`website-filter-container ${isOpen ? 'website-filter-visible' : 'website-filter-hidden'}`}
+      style={{
+        transition: 'all 0.3s ease'
+      }}
+    >
       <div className="website-filter-content">
         {/* Первая строка: Город, Цена и кнопки */}
         <div className="website-filter-row">

@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 1000000;
   animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -23,6 +23,7 @@
   max-height: 85vh;
   overflow-y: auto;
   position: relative;
+  z-index: 1000001;
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.15),
     0 8px 32px rgba(0, 0, 0, 0.1),

@@ -56,7 +56,12 @@ const WebsiteCategoryView: React.FC<WebsiteCategoryViewProps> = ({
   };
 
   return (
-    <div className={`website-category-container ${isOpen ? 'website-category-visible' : 'website-category-hidden'}`}>
+    <div 
+      className={`website-category-container ${isOpen ? 'website-category-visible' : 'website-category-hidden'}`}
+      style={{
+        transition: 'all 0.3s ease'
+      }}
+    >
       <div className="website-category-content">
         <div className="website-category-grid">
           {categories.map((category) => {
