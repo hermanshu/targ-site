@@ -60,6 +60,9 @@ export interface Translations {
     sortExpensive: string;
     sortPopular: string;
     sortWithPhoto: string;
+    emptyState: string;
+    noResultsFound: string;
+    noResultsDescription: string;
   };
 
   // Профиль
@@ -151,6 +154,17 @@ export interface Translations {
     languageChange: string;
     languageChangeDescription: string;
     logoutFromAccount: string;
+    phone: string;
+    editProfile: string;
+    saveChanges: string;
+    cancelEdit: string;
+    nameUpdated: string;
+    emailUpdated: string;
+    phoneUpdated: string;
+    enterPhone: string;
+    phoneRequired: string;
+    phoneInvalid: string;
+    emailChangeNote: string;
     };
 
   // Объявления
@@ -278,6 +292,7 @@ export interface Translations {
     reportListing: string;
     reportDescription: string;
     call: string;
+    directCall: string;
     linkCopied: string;
     copyError: string;
     reportSent: string;
@@ -633,6 +648,9 @@ export const translations: Translations = {
       sortExpensive: 'Сначала дорогие',
       sortPopular: 'По популярности',
       sortWithPhoto: 'Сначала с фото',
+      emptyState: 'Тут еще пусто',
+      noResultsFound: 'Ничего не найдено',
+      noResultsDescription: 'Попробуйте изменить поисковый запрос или фильтры',
     },
 
     profile: {
@@ -723,6 +741,17 @@ export const translations: Translations = {
       languageChange: 'Смена языка',
     languageChangeDescription: 'Изменить язык интерфейса',
       logoutFromAccount: 'Выйти из аккаунта',
+      phone: 'Телефон',
+      editProfile: 'Редактировать профиль',
+      saveChanges: 'Сохранить изменения',
+      cancelEdit: 'Отменить редактирование',
+      nameUpdated: 'Имя успешно обновлено',
+      emailUpdated: 'Email успешно обновлен',
+      phoneUpdated: 'Телефон успешно обновлен',
+      enterPhone: 'Введите номер телефона',
+      phoneRequired: 'Телефон обязателен',
+      phoneInvalid: 'Неверный формат телефона',
+      emailChangeNote: 'Изменение email потребует повторной верификации',
   },
 
     listings: {
@@ -849,6 +878,7 @@ export const translations: Translations = {
     reportListing: 'Пожаловаться на объявление',
     reportDescription: 'Пожаловаться на это объявление',
     call: 'Позвонить',
+    directCall: 'Прямой звонок',
     linkCopied: 'Ссылка скопирована',
     copyError: 'Ошибка копирования',
     reportSent: 'Жалоба отправлена',

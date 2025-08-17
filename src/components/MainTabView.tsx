@@ -225,6 +225,7 @@ const TabBar = () => {
   const { t } = useTranslation();
   const tabRefs = useRef<(HTMLAnchorElement | HTMLButtonElement | null)[]>([]);
   const [lensStyle, setLensStyle] = useState({ left: '0px', width: '0px' });
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
   const tabs = useMemo(() => {
     const baseTabs = [
@@ -272,6 +273,133 @@ const TabBar = () => {
     const timeoutId = setTimeout(updateLensPosition, 100);
     return () => clearTimeout(timeoutId);
   }, [location.pathname, tabs]);
+
+  // Функция для подсчета непрочитанных сообщений
+  const calculateUnreadMessages = () => {
+    try {
+      const chatsData = localStorage.getItem('targ-chats');
+      if (chatsData) {
+        const chats = JSON.parse(chatsData);
+        const totalUnread = chats.reduce((sum: number, chat: any) => sum + (chat.unreadCount || 0), 0);
+        setUnreadMessagesCount(totalUnread);
+      }
+    } catch (error) {
+      console.error('Ошибка при подсчете непрочитанных сообщений:', error);
+    }
+  };
+
+  // Обновляем счетчик при изменении localStorage
+  useEffect(() => {
+    // Принудительно инициализируем тестовые данные, если их нет
+    const existingChats = localStorage.getItem('targ-chats');
+    if (!existingChats) {
+      const testChats = [
+        {
+          id: '1',
+          name: 'Алексей Петров',
+          lastMessage: 'Здравствуйте! Интересует ваш товар',
+          timestamp: '14:30',
+          unreadCount: 5,
+          isOnline: true,
+          listing: {
+            id: '1',
+            title: 'iPhone 14 Pro Max',
+            price: '1200',
+            currency: 'EUR',
+            category: 'electronics',
+            imageName: 'iphone',
+            contactMethod: 'phone'
+          }
+        },
+        {
+          id: '2',
+          name: 'Мария Сидорова',
+          lastMessage: 'Спасибо за быструю доставку!',
+          timestamp: '12:15',
+          unreadCount: 0,
+          isOnline: false,
+          listing: {
+            id: '2',
+            title: 'Квартира в центре',
+            price: '150000',
+            currency: 'EUR',
+            category: 'realEstate',
+            subcategory: 'rent',
+            imageName: 'apartment',
+            contactMethod: 'chat'
+          }
+        },
+        {
+          id: '3',
+          name: 'Дмитрий Козлов',
+          lastMessage: 'Можете ли вы снизить цену?',
+          timestamp: 'Вчера',
+          unreadCount: 1,
+          isOnline: true,
+          listing: {
+            id: '3',
+            title: 'BMW X5 2020',
+            price: '45000',
+            currency: 'EUR',
+            category: 'transport',
+            imageName: 'bmw',
+            contactMethod: 'phone'
+          }
+        },
+        {
+          id: '4',
+          name: 'Анна Волкова',
+          lastMessage: 'Когда будете дома?',
+          timestamp: 'Пн',
+          unreadCount: 3,
+          isOnline: false,
+          listing: {
+            id: '4',
+            title: 'MacBook Pro 2023',
+            price: '2500',
+            currency: 'EUR',
+            category: 'electronics',
+            imageName: 'macbook',
+            contactMethod: 'chat'
+          }
+        },
+        {
+          id: '5',
+          name: 'Сергей Иванов',
+          lastMessage: 'Отличное предложение!',
+          timestamp: 'Пн',
+          unreadCount: 7,
+          isOnline: true,
+          listing: {
+            id: '5',
+            title: 'PlayStation 5',
+            price: '500',
+            currency: 'EUR',
+            category: 'electronics',
+            imageName: 'ps5',
+            contactMethod: 'phone'
+          }
+        }
+      ];
+      localStorage.setItem('targ-chats', JSON.stringify(testChats));
+    }
+
+    calculateUnreadMessages();
+    
+    const handleStorageChange = () => {
+      calculateUnreadMessages();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Также слушаем изменения в текущем окне
+    const interval = setInterval(calculateUnreadMessages, 5000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   return (
     <div className="tab-bar">
@@ -325,7 +453,9 @@ const TabBar = () => {
                 }
               }}
             >
-              <Icon style={{ width: '24px', height: '24px' }} />
+              <div style={{ position: 'relative' }}>
+                <Icon style={{ width: '24px', height: '24px' }} />
+              </div>
               <span style={{ marginTop: '4px' }}>{tab.name}</span>
             </button>
           );
@@ -338,7 +468,15 @@ const TabBar = () => {
             to={tab.href}
             className={`tab-item ${isActive ? 'active' : ''}`}
           >
-            <Icon style={{ width: '24px', height: '24px' }} />
+            <div style={{ position: 'relative' }}>
+              <Icon style={{ width: '24px', height: '24px' }} />
+              {tab.href === '/messages' && unreadMessagesCount > 0 && (
+                <div className="unread-badge">
+                  {unreadMessagesCount > 99 ? '99+' : unreadMessagesCount}
+                </div>
+              )}
+
+            </div>
             <span style={{ marginTop: '4px' }}>{tab.name}</span>
           </Link>
         );
@@ -369,12 +507,44 @@ const MainTabView: React.FC = () => {
   );
 };
 
-const MainTabViewContent: React.FC<{
-  isAuthenticated: boolean;
-  onLogout: () => void;
-}> = ({ isAuthenticated, onLogout }) => {
+const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => void }> = ({ isAuthenticated, onLogout }) => {
   const location = useLocation();
+  const { t } = useTranslation();
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+
+  // Функция для подсчета непрочитанных сообщений
+  const calculateUnreadMessages = () => {
+    try {
+      const chatsData = localStorage.getItem('chats');
+      if (chatsData) {
+        const chats = JSON.parse(chatsData);
+        const totalUnread = chats.reduce((sum: number, chat: any) => sum + (chat.unreadCount || 0), 0);
+        setUnreadMessagesCount(totalUnread);
+      }
+    } catch (error) {
+      console.error('Ошибка при подсчете непрочитанных сообщений:', error);
+    }
+  };
+
+  // Обновляем счетчик при изменении localStorage
+  useEffect(() => {
+    calculateUnreadMessages();
+    
+    const handleStorageChange = () => {
+      calculateUnreadMessages();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Также слушаем изменения в текущем окне
+    const interval = setInterval(calculateUnreadMessages, 5000);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
 
   // Определяем, нужно ли добавить фон профиля
   const shouldShowProfileBackground = !isAuthenticated && location.pathname === '/profile';

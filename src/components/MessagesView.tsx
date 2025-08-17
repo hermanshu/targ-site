@@ -9,8 +9,7 @@ import {
   XMarkIcon,
   TrashIcon,
   NoSymbolIcon,
-  ExclamationTriangleIcon,
-  PhoneIcon
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import ListingDetailView from './ListingDetailView';
 import { Listing } from '../types';
@@ -98,6 +97,9 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const [selectedReportType, setSelectedReportType] = useState<string>('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [showFullscreenImage, setShowFullscreenImage] = useState(false);
+  const [fullscreenImageSrc, setFullscreenImageSrc] = useState('');
+  const [fullscreenImageAlt, setFullscreenImageAlt] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -122,7 +124,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       name: 'Алексей Петров',
       lastMessage: 'Здравствуйте! Интересует ваш товар',
       timestamp: '14:30',
-      unreadCount: 2,
+      unreadCount: 5,
       isOnline: true,
       listing: {
         id: '1',
@@ -176,7 +178,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       name: 'Анна Волкова',
       lastMessage: 'Когда будете дома?',
       timestamp: 'Пн',
-      unreadCount: 0,
+      unreadCount: 3,
       isOnline: false,
       listing: {
         id: '4',
@@ -194,7 +196,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       name: 'Сергей Иванов',
       lastMessage: 'Отличное предложение!',
       timestamp: 'Пн',
-      unreadCount: 3,
+      unreadCount: 7,
       isOnline: true,
       listing: {
         id: '5',
@@ -692,24 +694,29 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       }
     };
     
-    // Проверяем в localStorage, существует ли уже чат
+    // Проверяем в localStorage, существует ли уже чат с этим продавцом
     const savedChats = JSON.parse(localStorage.getItem('targ-chats') || '[]');
-    const existingChatInStorage = savedChats.find((chat: Chat) => chat.id === newChat.id);
     
-    if (existingChatInStorage) {
+    // Проверяем по ID чата (продавец) И по ID объявления
+    const existingChatBySeller = savedChats.find((chat: Chat) => chat.id === newChat.id);
+    const existingChatByListing = savedChats.find((chat: Chat) => chat.listing.id === listing.id);
+    
+    if (existingChatBySeller || existingChatByListing) {
+      const existingChat = existingChatBySeller || existingChatByListing;
       console.log('Чат уже существует в localStorage, просто переходим к нему');
-      setSelectedChat(existingChatInStorage);
-      loadChatMessages(existingChatInStorage.id);
+      setSelectedChat(existingChat);
+      loadChatMessages(existingChat.id);
       setSelectedListing(null);
       return;
     }
     
     // Используем функциональное обновление состояния для проверки существующих чатов
     setChatList(prevChats => {
-      // Проверяем, существует ли уже чат с этим продавцом
-      const existingChatIndex = prevChats.findIndex((chat: Chat) => chat.id === newChat.id);
+      // Проверяем, существует ли уже чат с этим продавцом ИЛИ с этим объявлением
+      const existingChatBySellerIndex = prevChats.findIndex((chat: Chat) => chat.id === newChat.id);
+      const existingChatByListingIndex = prevChats.findIndex((chat: Chat) => chat.listing.id === listing.id);
       
-      if (existingChatIndex === -1) {
+      if (existingChatBySellerIndex === -1 && existingChatByListingIndex === -1) {
         console.log('Создаем новый чат');
         // Добавляем новый чат в начало списка
         const newChats = [newChat, ...prevChats];
@@ -722,9 +729,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         return newChats;
       } else {
         console.log('Чат уже существует, перемещаем в начало');
-        // Перемещаем существующий чат в начало списка
+        // Находим существующий чат (по продавцу или по объявлению)
+        const existingIndex = existingChatBySellerIndex !== -1 ? existingChatBySellerIndex : existingChatByListingIndex;
         const updatedChats = [...prevChats];
-        const movedChat = updatedChats.splice(existingChatIndex, 1)[0];
+        const movedChat = updatedChats.splice(existingIndex, 1)[0];
         const newChats = [movedChat, ...updatedChats];
         saveChatsToStorage(newChats);
         
@@ -762,6 +770,17 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       />
     );
   }
+
+  // Функции для полноэкранного просмотра изображений
+  const handleImageClick = (imageSrc: string, imageAlt: string) => {
+    setFullscreenImageSrc(imageSrc);
+    setFullscreenImageAlt(imageAlt);
+    setShowFullscreenImage(true);
+  };
+
+  const handleCloseFullscreen = () => {
+    setShowFullscreenImage(false);
+  };
 
   return (
     <div className="telegram-layout">
@@ -899,9 +918,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
               
               {/* Кнопки действий */}
               <div className="chat-actions">
-                <button className="action-button">
-                  <PhoneIcon className="action-icon" />
-                </button>
                 <div className="chat-menu-container" ref={menuRef}>
                   <button 
                     className="chat-menu-button"
@@ -963,17 +979,28 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                       <div className="message-attachments">
                         {message.attachments.map((attachment, index) => (
                           <div key={index} className="attachment-image">
-                            <img src={attachment} alt={t('favorites.attachment')} />
+                            <img 
+                              src={attachment} 
+                              alt={t('favorites.attachment')}
+                              onClick={() => handleImageClick(attachment, t('favorites.attachment'))}
+                              style={{ cursor: 'pointer' }}
+                            />
                           </div>
                         ))}
                       </div>
                     )}
                     {message.text && <p className="message-text">{message.text}</p>}
-                    <span className="message-time">{message.timestamp}</span>
-                    {message.isOwn && (
-                      <span className={`read-indicator ${message.isRead ? 'read' : 'unread'}`}>
-                        {message.isRead ? '✓✓' : '✓'}
-                      </span>
+                    {message.isOwn ? (
+                      <div className="message-status">
+                        <span className={`read-indicator ${message.isRead ? 'read' : 'unread'}`}>
+                          {message.isRead ? '✓✓' : '✓'}
+                        </span>
+                        <span className="message-time">{message.timestamp}</span>
+                      </div>
+                    ) : (
+                      <div className="message-status other">
+                        <span className="message-time">{message.timestamp}</span>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1240,6 +1267,24 @@ const MessagesView: React.FC<MessagesViewProps> = ({
               <div className="success-icon">✓</div>
               <p className="modal-message">{successMessage}</p>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Полноэкранный просмотр изображений */}
+      {showFullscreenImage && (
+        <div className="fullscreen-image-overlay" onClick={handleCloseFullscreen}>
+          <div className="fullscreen-image-container" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={fullscreenImageSrc}
+              alt={fullscreenImageAlt}
+              className="fullscreen-image"
+            />
+            
+            {/* Кнопка закрытия */}
+            <button className="fullscreen-close-button" onClick={handleCloseFullscreen}>
+              <XMarkIcon className="fullscreen-close-icon" />
+            </button>
           </div>
         </div>
       )}

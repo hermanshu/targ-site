@@ -274,6 +274,11 @@ const WebsiteAnnouncementsView: React.FC = () => {
     value !== '' && value !== 'any' && value !== false
   );
 
+  // Определяем, применялись ли фильтры или поиск
+  const hasActiveFilters = useMemo(() => {
+    return Boolean(searchText) || isFilterActive || selectedCategory !== 'allListings';
+  }, [searchText, isFilterActive, selectedCategory]);
+
   const handleFavoriteToggle = (listing: Listing) => {
     if (!currentUser) {
       // Редирект на профиль для авторизации
@@ -599,6 +604,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
           hasMore={hasMore}
           onLoadMore={loadMoreListings}
           isLoading={isLoading}
+          hasFilters={hasActiveFilters}
         />
       </div>
 

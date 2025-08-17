@@ -11,6 +11,7 @@ interface AuthContextType {
   sendPasswordReset: (email: string) => Promise<void>;
   resendVerificationEmail: () => Promise<void>;
   verifyEmailCode: (code: string) => Promise<void>;
+  updateUserProfile: (updates: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -226,6 +227,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const updateUserProfile = async (updates: Partial<User>) => {
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      if (!currentUser) {
+        throw new Error('NO_CURRENT_USER');
+      }
+
+      // Обновляем пользователя в мок-данных
+      const userIndex = mockUsers.findIndex(u => u.id === currentUser.id);
+      if (userIndex !== -1) {
+        mockUsers[userIndex] = { ...mockUsers[userIndex], ...updates };
+        saveMockUsers(mockUsers);
+      }
+
+      // Обновляем текущего пользователя
+      const updatedUser = { ...currentUser, ...updates };
+      setCurrentUser(updatedUser);
+      setUserProfile(updatedUser);
+      
+      // Сохраняем в localStorage
+      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+      
+    } catch (error: any) {
+      throw new Error(error.message || 'NETWORK_ERROR');
+    }
+  };
+
   const value = {
     currentUser,
     userProfile,
@@ -235,7 +264,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signOut,
     sendPasswordReset,
     resendVerificationEmail,
-    verifyEmailCode
+    verifyEmailCode,
+    updateUserProfile
   };
 
   return (

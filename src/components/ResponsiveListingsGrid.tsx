@@ -13,6 +13,7 @@ interface ResponsiveListingsGridProps {
   hasMore: boolean;
   onLoadMore: () => void;
   isLoading: boolean;
+  hasFilters?: boolean;
 }
 
 const ResponsiveListingsGrid: React.FC<ResponsiveListingsGridProps> = (props) => {

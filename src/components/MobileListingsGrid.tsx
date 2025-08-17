@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Listing } from '../types';
 import ListingCard from './ListingCard';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface MobileListingsGridProps {
   listings: Listing[];
@@ -10,6 +11,7 @@ interface MobileListingsGridProps {
   hasMore: boolean;
   onLoadMore: () => void;
   isLoading: boolean;
+  hasFilters?: boolean;
 }
 
 const MobileListingsGrid: React.FC<MobileListingsGridProps> = ({
@@ -19,9 +21,11 @@ const MobileListingsGrid: React.FC<MobileListingsGridProps> = ({
   onCardClick,
   hasMore,
   onLoadMore,
-  isLoading
+  isLoading,
+  hasFilters = false
 }) => {
   const [showAll, setShowAll] = useState(false);
+  const { t } = useTranslation();
   
   // Количество объявлений для показа изначально
   const INITIAL_COUNT = 10;
@@ -31,6 +35,38 @@ const MobileListingsGrid: React.FC<MobileListingsGridProps> = ({
   
   // Проверяем, есть ли скрытые объявления
   const hasHidden = listings.length > INITIAL_COUNT;
+
+  // Если нет объявлений, показываем соответствующее сообщение
+  if (listings.length === 0 && !isLoading) {
+    return (
+      <div className="mobile-listings-container">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '200px',
+          color: 'rgba(100, 116, 139, 0.7)',
+          fontSize: '16px',
+          fontWeight: '500',
+          textAlign: 'center'
+        }}>
+          <div style={{ marginBottom: '8px' }}>
+            {hasFilters ? t('home.noResultsFound') : t('home.emptyState')}
+          </div>
+          {hasFilters && (
+            <div style={{
+              fontSize: '14px',
+              color: 'rgba(100, 116, 139, 0.5)',
+              fontWeight: '400'
+            }}>
+              {t('home.noResultsDescription')}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   // Обработчик прокрутки для загрузки новых данных
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {

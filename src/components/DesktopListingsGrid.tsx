@@ -3,6 +3,7 @@ import { FixedSizeGrid as Grid } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { Listing } from '../types';
 import ListingCard from './ListingCard';
+import { useTranslation } from '../hooks/useTranslation';
 
 interface DesktopListingsGridProps {
   listings: Listing[];
@@ -12,6 +13,7 @@ interface DesktopListingsGridProps {
   hasMore: boolean;
   onLoadMore: () => void;
   isLoading: boolean;
+  hasFilters?: boolean;
 }
 
 const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
@@ -21,9 +23,11 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
   onCardClick,
   hasMore,
   onLoadMore,
-  isLoading
+  isLoading,
+  hasFilters = false
 }) => {
   const [containerWidth, setContainerWidth] = useState(0);
+  const { t } = useTranslation();
 
   // Десктопные размеры карточки
   const CARD_WIDTH = 240; // Оптимизировано для 4+ столбцов
@@ -103,6 +107,44 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
   // Если это мобильный экран, не рендерим ничего
   if (columnCount === 0) {
     return null;
+  }
+
+  // Если нет объявлений, показываем соответствующее сообщение
+  if (listings.length === 0 && !isLoading) {
+    return (
+      <div style={{ 
+        height: '100%', 
+        width: '100%',
+        maxWidth: '1800px',
+        margin: '0 auto',
+        padding: window.innerWidth >= 1800 ? '0 60px' : 
+                 window.innerWidth >= 1400 ? '0 40px' : 
+                 '0 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div style={{
+          textAlign: 'center',
+          color: 'rgba(100, 116, 139, 0.7)',
+          fontSize: '18px',
+          fontWeight: '500'
+        }}>
+          <div style={{ marginBottom: '8px' }}>
+            {hasFilters ? t('home.noResultsFound') : t('home.emptyState')}
+          </div>
+          {hasFilters && (
+            <div style={{
+              fontSize: '14px',
+              color: 'rgba(100, 116, 139, 0.5)',
+              fontWeight: '400'
+            }}>
+              {t('home.noResultsDescription')}
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (
