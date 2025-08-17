@@ -130,6 +130,8 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
   const saveChatsToStorage = (chats: Chat[]) => {
     try {
       localStorage.setItem('targ-chats', JSON.stringify(chats));
+      // Отправляем кастомное событие для обновления счетчика
+      window.dispatchEvent(new Event('targ-chats-updated'));
     } catch (e) {
       console.error('Ошибка при сохранении чатов в localStorage:', e);
     }

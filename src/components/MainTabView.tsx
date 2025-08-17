@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { HomeIcon, PlusIcon, HeartIcon, ChatBubbleLeftRightIcon, UserIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, PlusIcon, HeartIcon, ChatBubbleLeftRightIcon, UserIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { HomeIcon as HomeIconSolid, PlusIcon as PlusIconSolid, HeartIcon as HeartIconSolid, ChatBubbleLeftRightIcon as ChatIconSolid, UserIcon as UserIconSolid } from '@heroicons/react/24/solid';
 import WebsiteAnnouncementsView from './WebsiteAnnouncementsView';
 import MobileHomeView from './MobileHomeView';
@@ -21,6 +21,7 @@ import SellerProfileView from './SellerProfileView';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { Listing } from '../types';
 
@@ -517,8 +518,11 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { currentUser } = useAuth();
+  const { currentLanguage, setLanguage, languages } = useLanguage();
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   // Функция для подсчета непрочитанных сообщений
   const calculateUnreadMessages = () => {
@@ -529,11 +533,13 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
     }
     
     try {
-      const chatsData = localStorage.getItem('chats');
+      const chatsData = localStorage.getItem('targ-chats');
       if (chatsData) {
         const chats = JSON.parse(chatsData);
         const totalUnread = chats.reduce((sum: number, chat: any) => sum + (chat.unreadCount || 0), 0);
         setUnreadMessagesCount(totalUnread);
+      } else {
+        setUnreadMessagesCount(0);
       }
     } catch (error) {
       console.error('Ошибка при подсчете непрочитанных сообщений:', error);
@@ -548,23 +554,57 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
       calculateUnreadMessages();
     };
 
+    // Слушаем изменения localStorage
     window.addEventListener('storage', handleStorageChange);
     
+    // Создаем кастомное событие для обновления счетчика
+    const handleCustomStorageChange = () => {
+      calculateUnreadMessages();
+    };
+    
+    window.addEventListener('targ-chats-updated', handleCustomStorageChange);
+    
     // Также слушаем изменения в текущем окне
-    const interval = setInterval(calculateUnreadMessages, 5000);
+    const interval = setInterval(calculateUnreadMessages, 2000);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('targ-chats-updated', handleCustomStorageChange);
       clearInterval(interval);
     };
   }, [isAuthenticated]);
 
   // Определяем, нужно ли добавить фон профиля
-  const shouldShowProfileBackground = !isAuthenticated && location.pathname === '/profile';
+  const shouldShowProfileBackground = !isAuthenticated && (location.pathname === '/profile' || location.pathname === '/messages' || location.pathname === '/favorites');
+  
+  const currentLanguageOption = languages.find(lang => lang.code === currentLanguage);
 
   const handleCloseWelcomeModal = () => {
     setShowWelcomeModal(false);
   };
+
+  const handleLanguageSelect = (languageCode: string) => {
+    setLanguage(languageCode as any);
+    setShowLanguageMenu(false);
+  };
+
+  // Закрытие выпадающего меню языка при клике вне его
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.website-language-selector')) {
+        setShowLanguageMenu(false);
+      }
+    };
+
+    if (showLanguageMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLanguageMenu]);
 
   // Показываем приветственное окно при каждом обновлении страницы для тестирования
   useEffect(() => {
@@ -582,47 +622,98 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
       {/* Навигационная панель для десктопа */}
       <div className="website-navigation-panel">
         <div className="website-nav-container">
-          <button 
-            className={`website-nav-item ${location.pathname === '/' ? 'active' : ''}`}
-            onClick={() => navigate('/')}
-          >
-            <HomeIcon className="website-nav-icon" />
-            <span className="website-nav-text">{t('navigation.home')}</span>
-          </button>
+          {/* Логотип */}
+          <div className="website-nav-logo">
+            <img 
+              src="/images/logo.png" 
+              alt="TARG Logo" 
+              className="website-nav-logo-img"
+              onError={(e) => {
+                console.error('Ошибка загрузки логотипа:', e);
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          </div>
           
-          <button 
-            className={`website-nav-item ${location.pathname === '/messages' ? 'active' : ''}`}
-            onClick={() => navigate('/messages')}
-          >
-            <ChatBubbleLeftRightIcon className="website-nav-icon" />
-            <span className="website-nav-text">{t('navigation.messages')}</span>
-          </button>
-          
-          <button 
-            className={`website-nav-item ${location.pathname === '/favorites' ? 'active' : ''}`}
-            onClick={() => navigate('/favorites')}
-          >
-            <HeartIcon className="website-nav-icon" />
-            <span className="website-nav-text">{t('navigation.favorites')}</span>
-          </button>
-          
-          {isAuthenticated && (
+          {/* Центральная группа кнопок навигации */}
+          <div className="website-nav-center">
             <button 
-              className={`website-nav-item ${location.pathname === '/add' ? 'active' : ''}`}
-              onClick={() => navigate('/add')}
+              className={`website-nav-item ${location.pathname === '/' ? 'active' : ''}`}
+              onClick={() => navigate('/')}
             >
-              <PlusIcon className="website-nav-icon" />
-              <span className="website-nav-text">{t('navigation.addListing')}</span>
+              <HomeIcon className="website-nav-icon" />
+              <span className="website-nav-text">{t('navigation.home')}</span>
             </button>
-          )}
+            
+            <button 
+              className={`website-nav-item ${location.pathname === '/messages' ? 'active' : ''}`}
+              onClick={() => navigate('/messages')}
+            >
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <ChatBubbleLeftRightIcon className="website-nav-icon" />
+                {currentUser && unreadMessagesCount > 0 && (
+                  <div className="website-unread-badge">
+                    {unreadMessagesCount > 99 ? '99+' : unreadMessagesCount}
+                  </div>
+                )}
+              </div>
+              <span className="website-nav-text">{t('navigation.messages')}</span>
+            </button>
+            
+            <button 
+              className={`website-nav-item ${location.pathname === '/favorites' ? 'active' : ''}`}
+              onClick={() => navigate('/favorites')}
+            >
+              <HeartIcon className="website-nav-icon" />
+              <span className="website-nav-text">{t('navigation.favorites')}</span>
+            </button>
+            
+            {isAuthenticated && (
+              <button 
+                className={`website-nav-item ${location.pathname === '/add' ? 'active' : ''}`}
+                onClick={() => navigate('/add')}
+              >
+                <svg className="website-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span className="website-nav-text">{t('navigation.addListing')}</span>
+              </button>
+            )}
+            
+            <button 
+              className={`website-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}
+              onClick={() => navigate('/profile')}
+            >
+              <UserIcon className="website-nav-icon" />
+              <span className="website-nav-text">{t('navigation.profile')}</span>
+            </button>
+          </div>
           
-          <button 
-            className={`website-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}
-            onClick={() => navigate('/profile')}
-          >
-            <UserIcon className="website-nav-icon" />
-            <span className="website-nav-text">{t('navigation.profile')}</span>
-          </button>
+          {/* Кнопка переключения языка */}
+          <div className="website-language-selector">
+            <button 
+              className="website-language-button"
+              onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+            >
+              <GlobeAltIcon className="website-language-icon" />
+              <span className="website-language-text">{currentLanguageOption?.flag}</span>
+            </button>
+            
+            {showLanguageMenu && (
+              <div className="website-language-dropdown">
+                {languages.map((language) => (
+                  <button
+                    key={language.code}
+                    className={`website-language-option ${currentLanguage === language.code ? 'active' : ''}`}
+                    onClick={() => handleLanguageSelect(language.code)}
+                  >
+                    <span className="website-language-flag">{language.flag}</span>
+                    <span className="website-language-name">{language.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       

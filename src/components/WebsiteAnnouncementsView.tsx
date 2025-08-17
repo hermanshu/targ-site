@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MagnifyingGlassIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { 
   HomeIcon,
   WrenchScrewdriverIcon, 
@@ -34,6 +34,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
 import ListingDetailView from './ListingDetailView';
 import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
+import WebsiteCategoryView from './WebsiteCategoryView';
 import SortSheet from './SortSheet';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
 import ScrollToTopButton from './ScrollToTopButton';
@@ -45,7 +46,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { getPublishedListings, loadMoreListings, isLoading, hasMore, incrementViews } = useListings();
-  const { currentLanguage, setLanguage, languages } = useLanguage();
+  const { currentLanguage } = useLanguage();
   const { t } = useTranslation();
 
 
@@ -99,6 +100,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
   const [activeMainCategory, setActiveMainCategory] = useState<string | null>(null);
 
   const [showFilters, setShowFilters] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
   const [showSortSheet, setShowSortSheet] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
@@ -112,7 +114,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
   const [selectedSort, setSelectedSort] = useState('newest');
 
   const [listings, setListings] = useState<Listing[]>([]);
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+
 
   // Получаем данные из контекста
   useEffect(() => {
@@ -268,7 +270,7 @@ const WebsiteAnnouncementsView: React.FC = () => {
   }, [filteredListings, selectedSort]);
 
   const currentSortOption = sortOptions.find(option => option.id === selectedSort);
-  const currentLanguageOption = languages.find(lang => lang.code === currentLanguage);
+
 
   const isFilterActive = Object.values(filterState).some(value => 
     value !== '' && value !== 'any' && value !== false
@@ -389,8 +391,9 @@ const WebsiteAnnouncementsView: React.FC = () => {
     } else if (category) {
       // Если это обычная категория, выбираем её
       setSelectedCategory(category.key);
-      setExpandedCategory(null);
+      setExpandedCategory(null); // Закрываем выпадающий список
       setActiveMainCategory(null);
+      setShowCategories(false); // Закрываем панель категорий
       
       // Если выбрали "Все объявления", сбрасываем активную основную категорию
       if (category.key === 'allListings') {
@@ -416,30 +419,10 @@ const WebsiteAnnouncementsView: React.FC = () => {
       }
     }
     setExpandedCategory(null);
+    setShowCategories(false); // Закрываем панель категорий
   };
 
-  const handleLanguageSelect = (languageCode: string) => {
-    setLanguage(languageCode as any);
-    setShowLanguageMenu(false);
-  };
 
-  // Закрытие выпадающего меню языка при клике вне его
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (!target.closest('.website-language-selector')) {
-        setShowLanguageMenu(false);
-      }
-    };
-
-    if (showLanguageMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showLanguageMenu]);
 
 
 
@@ -459,23 +442,9 @@ const WebsiteAnnouncementsView: React.FC = () => {
 
   return (
     <div className="website-announcements-view">
-      {/* Логотип и поисковая строка */}
+      {/* Поисковая строка с фильтрами и категориями */}
       <div className="website-header-section">
-        {/* Логотип */}
-        <div className="website-logo-container">
-          <img 
-            src="/images/logo.png" 
-            alt="TARG Logo" 
-            className="website-logo"
-            onError={(e) => {
-              console.error('Ошибка загрузки логотипа:', e);
-              e.currentTarget.style.display = 'none';
-            }}
-
-          />
-        </div>
-        
-        {/* Поисковая строка с фильтрами */}
+        {/* Поисковая строка с фильтрами и категориями */}
         <div className="website-search-section">
           <div className="website-search-bar-with-filters">
             <div className="website-search-input-group">
@@ -495,6 +464,58 @@ const WebsiteAnnouncementsView: React.FC = () => {
               </button>
             </div>
             
+            {/* Выбранная категория */}
+            <div className="website-category-button-container">
+              {(() => {
+                // Сначала ищем основную категорию
+                let selectedCategoryData = categories.find(cat => cat.key === selectedCategory);
+                let displayName = selectedCategoryData?.name || categories[0].name;
+                let IconComponent = selectedCategoryData?.icon || categories[0].icon;
+                
+                // Если не нашли основную категорию, ищем подкатегорию
+                if (!selectedCategoryData) {
+                  for (const [mainCategoryName, subcats] of Object.entries(subcategories)) {
+                    const subcategory = subcats.find(sub => sub.key === selectedCategory);
+                    if (subcategory) {
+                      // Находим основную категорию для этой подкатегории
+                      const mainCategory = categories.find(cat => cat.name === mainCategoryName);
+                      if (mainCategory) {
+                        selectedCategoryData = mainCategory;
+                        displayName = subcategory.name; // Показываем название подкатегории
+                        IconComponent = subcategory.icon;
+                      }
+                      break;
+                    }
+                  }
+                }
+                
+                const IconComponentFinal = IconComponent as React.ComponentType<{ className?: string }>;
+                
+                return (
+                  <button
+                    className="website-category-button active"
+                    onClick={() => handleCategoryClick(selectedCategoryData?.name || categories[0].name)}
+                  >
+                    <IconComponentFinal className="website-category-icon-hero" />
+                    <span className="website-category-name">{displayName}</span>
+                  </button>
+                );
+              })()}
+            </div>
+            
+            {/* Кнопка выбора категории */}
+            <button
+              className="website-category-select-button"
+              onClick={() => setShowCategories(!showCategories)}
+            >
+              <span className="category-select-text">
+                {showCategories ? 'Скрыть категории' : 'Выбрать категорию'}
+              </span>
+              <ChevronDownIcon 
+                className={`category-select-chevron ${showCategories ? 'expanded' : ''}`} 
+              />
+            </button>
+            
             <button 
               className={`website-sort-button ${selectedSort !== 'newest' ? 'active' : ''}`}
               onClick={() => setShowSortSheet(true)}
@@ -503,32 +524,6 @@ const WebsiteAnnouncementsView: React.FC = () => {
               <span className="website-sort-text">{currentSortOption?.title}</span>
             </button>
           </div>
-        </div>
-        
-        {/* Кнопка переключения языка */}
-        <div className="website-language-selector">
-          <button 
-            className="website-language-button"
-            onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-          >
-            <GlobeAltIcon className="website-language-icon" />
-            <span className="website-language-text">{currentLanguageOption?.flag}</span>
-          </button>
-          
-          {showLanguageMenu && (
-            <div className="website-language-dropdown">
-              {languages.map((language) => (
-                <button
-                  key={language.code}
-                  className={`website-language-option ${currentLanguage === language.code ? 'active' : ''}`}
-                  onClick={() => handleLanguageSelect(language.code)}
-                >
-                  <span className="website-language-flag">{language.flag}</span>
-                  <span className="website-language-name">{language.name}</span>
-                </button>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -543,58 +538,23 @@ const WebsiteAnnouncementsView: React.FC = () => {
         onCategoryChange={setSelectedCategory}
       />
 
-      {/* Категории */}
-      <div className="website-categories-section">
-        <div className="website-categories-scroll">
-          {categories.map((category) => {
-            const isExpanded = expandedCategory === category.name;
-            const hasSubcategories = category.hasSubcategories;
-            const IconComponent = category.icon as React.ComponentType<{ className?: string }>;
-            
-            return (
-              <React.Fragment key={category.name}>
-                <button
-                  className={`website-category-button ${selectedCategory === category.key || activeMainCategory === category.name ? 'active' : ''}`}
-                  onClick={() => handleCategoryClick(category.name)}
-                >
-                  <IconComponent className="website-category-icon-hero" />
-                  <span className="website-category-name">{category.name}</span>
-                  {hasSubcategories && (
-                    <ChevronDownIcon 
-                      className={`website-category-chevron ${isExpanded ? 'expanded' : ''}`} 
-                    />
-                  )}
-                </button>
-                
-                {/* Подкатегории */}
-                {hasSubcategories && isExpanded && (
-                  <>
-                    {subcategories[category.name as keyof typeof subcategories]?.map((subcategory) => {
-                      const SubIconComponent = subcategory.icon as React.ComponentType<{ className?: string }>;
-                      return (
-                        <button
-                          key={subcategory.name}
-                          className={`website-subcategory-button ${selectedCategory === subcategory.key ? 'active' : ''}`}
-                          onClick={() => handleSubcategoryClick(subcategory.name)}
-                        >
-                          <SubIconComponent className="website-subcategory-icon" />
-                          <span className="website-subcategory-name">{subcategory.name}</span>
-                        </button>
-                      );
-                    })}
-                  </>
-                )}
-              </React.Fragment>
-            );
-          })}
-        </div>
-      </div>
+      {/* Выпадающие категории */}
+      <WebsiteCategoryView
+        isOpen={showCategories}
+        categories={categories}
+        subcategories={subcategories}
+        selectedCategory={selectedCategory}
+        onCategorySelect={setSelectedCategory}
+        onClose={() => setShowCategories(false)}
+        expandedCategory={expandedCategory}
+        onCategoryExpand={setExpandedCategory}
+      />
 
       {/* Виртуализированный список объявлений */}
       <div className="website-listings-grid" style={{ 
         height: 'calc(100vh - 300px)', 
         minHeight: '400px',
-        marginTop: '0'
+        marginTop: showCategories ? '0' : '0'
       }}>
         <ResponsiveListingsGrid
           listings={sortedListings}
