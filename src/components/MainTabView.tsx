@@ -515,6 +515,7 @@ const MainTabView: React.FC = () => {
 
 const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => void }> = ({ isAuthenticated, onLogout }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
@@ -577,6 +578,53 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
         isVisible={showWelcomeModal} 
         onClose={handleCloseWelcomeModal} 
       />
+      
+      {/* Навигационная панель для десктопа */}
+      <div className="website-navigation-panel">
+        <div className="website-nav-container">
+          <button 
+            className={`website-nav-item ${location.pathname === '/' ? 'active' : ''}`}
+            onClick={() => navigate('/')}
+          >
+            <HomeIcon className="website-nav-icon" />
+            <span className="website-nav-text">{t('navigation.home')}</span>
+          </button>
+          
+          <button 
+            className={`website-nav-item ${location.pathname === '/messages' ? 'active' : ''}`}
+            onClick={() => navigate('/messages')}
+          >
+            <ChatBubbleLeftRightIcon className="website-nav-icon" />
+            <span className="website-nav-text">{t('navigation.messages')}</span>
+          </button>
+          
+          <button 
+            className={`website-nav-item ${location.pathname === '/favorites' ? 'active' : ''}`}
+            onClick={() => navigate('/favorites')}
+          >
+            <HeartIcon className="website-nav-icon" />
+            <span className="website-nav-text">{t('navigation.favorites')}</span>
+          </button>
+          
+          {isAuthenticated && (
+            <button 
+              className={`website-nav-item ${location.pathname === '/add' ? 'active' : ''}`}
+              onClick={() => navigate('/add')}
+            >
+              <PlusIcon className="website-nav-icon" />
+              <span className="website-nav-text">{t('navigation.addListing')}</span>
+            </button>
+          )}
+          
+          <button 
+            className={`website-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}
+            onClick={() => navigate('/profile')}
+          >
+            <UserIcon className="website-nav-icon" />
+            <span className="website-nav-text">{t('navigation.profile')}</span>
+          </button>
+        </div>
+      </div>
       
       <div className={`content-area ${shouldShowProfileBackground ? 'profile-background' : ''}`}>
         <Routes>

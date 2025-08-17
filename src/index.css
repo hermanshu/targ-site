@@ -41,7 +41,7 @@ code {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(30px);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
-  display: flex;
+  display: none; /* Скрываем по умолчанию */
   justify-content: space-around;
   padding: 12px 0;
   z-index: 1000;
@@ -2798,6 +2798,65 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   color: #1f2937;
 }
 
+/* Навигационная панель для десктопа */
+.website-navigation-panel {
+  display: none;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.website-nav-container {
+  max-width: calc(100vw - 96px);
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.website-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.website-nav-item:hover {
+  background: rgba(167, 139, 250, 0.1);
+  color: #a78bfa;
+  transform: translateY(-1px);
+}
+
+.website-nav-item.active {
+  background: rgba(167, 139, 250, 0.15);
+  color: #a78bfa;
+  border: 1px solid rgba(167, 139, 250, 0.3);
+}
+
+.website-nav-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.website-nav-text {
+  font-weight: 500;
+}
+
 /* Стили для главной страницы с объявлениями */
 .announcements-view {
   padding: 24px 0;
@@ -3134,7 +3193,22 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 }
 
+@media (min-width: 768px) {
+  .website-navigation-panel {
+    display: block;
+  }
+  
+  /* Убираем отступ снизу для контента на десктопе */
+  .listing-detail-container {
+    padding-bottom: 0;
+  }
+}
+
 @media (min-width: 1200px) {
+  .website-navigation-panel {
+    display: block;
+  }
+  
   .announcements-view {
     padding: 32px 0;
   }
@@ -3179,6 +3253,11 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 }
 
 @media (min-width: 1600px) {
+  .website-nav-container {
+    max-width: calc(100vw - 160px);
+    padding: 0 80px;
+  }
+  
   .announcements-view {
     padding: 40px 0;
   }
@@ -5913,6 +5992,11 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Мобильные устройства (до 768px) */
 @media (max-width: 768px) {
+  /* Показываем нижнюю панель навигации только на мобильных */
+  .tab-bar {
+    display: flex;
+  }
+  
   .website-header-section {
     flex-direction: column;
     gap: 8px;
