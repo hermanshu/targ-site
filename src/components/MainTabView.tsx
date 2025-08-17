@@ -276,6 +276,12 @@ const TabBar = () => {
 
   // Функция для подсчета непрочитанных сообщений
   const calculateUnreadMessages = () => {
+    // Не подсчитываем сообщения для неавторизованных пользователей
+    if (!currentUser) {
+      setUnreadMessagesCount(0);
+      return;
+    }
+    
     try {
       const chatsData = localStorage.getItem('targ-chats');
       if (chatsData) {
@@ -399,7 +405,7 @@ const TabBar = () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
     };
-  }, []);
+  }, [currentUser]);
 
   return (
     <div className="tab-bar">
@@ -470,7 +476,7 @@ const TabBar = () => {
           >
             <div style={{ position: 'relative' }}>
               <Icon style={{ width: '24px', height: '24px' }} />
-              {tab.href === '/messages' && unreadMessagesCount > 0 && (
+              {tab.href === '/messages' && currentUser && unreadMessagesCount > 0 && (
                 <div className="unread-badge">
                   {unreadMessagesCount > 99 ? '99+' : unreadMessagesCount}
                 </div>
@@ -515,6 +521,12 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
 
   // Функция для подсчета непрочитанных сообщений
   const calculateUnreadMessages = () => {
+    // Не подсчитываем сообщения для неавторизованных пользователей
+    if (!isAuthenticated) {
+      setUnreadMessagesCount(0);
+      return;
+    }
+    
     try {
       const chatsData = localStorage.getItem('chats');
       if (chatsData) {
@@ -544,7 +556,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
     };
-  }, []);
+  }, [isAuthenticated]);
 
   // Определяем, нужно ли добавить фон профиля
   const shouldShowProfileBackground = !isAuthenticated && location.pathname === '/profile';

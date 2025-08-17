@@ -414,7 +414,7 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
                       {chat.name.charAt(0)}
                     </div>
                     {chat.isOnline && <div className="mobile-online-indicator" />}
-                    {chat.unreadCount > 0 && (
+                    {currentUser && chat.unreadCount > 0 && (
                       <div className="mobile-unread-badge">
                         {chat.unreadCount}
                       </div>

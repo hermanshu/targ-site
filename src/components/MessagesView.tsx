@@ -15,6 +15,8 @@ import ListingDetailView from './ListingDetailView';
 import { Listing } from '../types';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useAuth } from '../contexts/AuthContext';
+import AuthRequiredView from './AuthRequiredView';
 
 interface Chat {
   id: string;
@@ -56,6 +58,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentUser } = useAuth();
+  const { t } = useTranslation();
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messageText, setMessageText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -106,7 +110,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const processedRequestsRef = useRef<Set<string>>(new Set());
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
-  const { t } = useTranslation();
 
   // Функция для сохранения чатов в localStorage
   const saveChatsToStorage = (chats: Chat[]) => {
@@ -757,6 +760,16 @@ const MessagesView: React.FC<MessagesViewProps> = ({
     }
   };
 
+  // Проверяем авторизацию после всех хуков
+  if (!currentUser) {
+    return (
+      <AuthRequiredView 
+        title={t('messages.messagesUnavailable')}
+        description={t('messages.signInToChat')}
+      />
+    );
+  }
+
   // Если выбрано объявление для просмотра, показываем детальную страницу
   if (selectedListing) {
     return (
@@ -827,7 +840,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                   {chat.name.charAt(0)}
                 </div>
                 {chat.isOnline && <div className="online-indicator" />}
-                {chat.unreadCount > 0 && (
+                {currentUser && chat.unreadCount > 0 && (
                   <div className="unread-badge">
                     {chat.unreadCount}
                   </div>
