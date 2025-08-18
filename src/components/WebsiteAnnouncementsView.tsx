@@ -108,7 +108,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
   const [searchText, setSearchText] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('allListings');
-  const [activeMainCategory, setActiveMainCategory] = useState<string | null>(null);
+  // Удаляем неиспользуемую переменную activeMainCategory
 
   const [showFilters, setShowFilters] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
@@ -155,7 +155,6 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   // Обновляем selectedCategory при изменении языка только при первой загрузке
   useEffect(() => {
     setSelectedCategory('allListings');
-    setActiveMainCategory(null);
   }, []);
 
 
@@ -423,19 +422,12 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     if (category?.hasSubcategories) {
       // Если у категории есть подкатегории, переключаем их отображение
       setExpandedCategory(expandedCategory === categoryName ? null : categoryName);
-      setActiveMainCategory(categoryName);
     } else if (category) {
       // Если это обычная категория, выбираем её
       setSelectedCategory(category.key);
       setExpandedCategory(null); // Закрываем выпадающий список
-      setActiveMainCategory(null);
       setShowCategories(false); // Закрываем панель категорий
       setShowFilters(false); // Закрываем фильтры
-      
-      // Если выбрали "Все объявления", сбрасываем активную основную категорию
-      if (category.key === 'allListings') {
-        setActiveMainCategory(null);
-      }
     }
   };
 

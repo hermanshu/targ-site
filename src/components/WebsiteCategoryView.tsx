@@ -36,7 +36,7 @@ const WebsiteCategoryView: React.FC<WebsiteCategoryViewProps> = ({
   expandedCategory,
   onCategoryExpand
 }) => {
-  const { t } = useTranslation();
+  // Удаляем неиспользуемую переменную t
 
   const handleCategoryClick = (category: Category) => {
     if (category.hasSubcategories) {

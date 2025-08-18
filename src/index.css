@@ -24,14 +24,6 @@ code {
 }
 
 /* Кастомные стили для приложения */
-.turquoise-bg {
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-}
-
-.turquoise-text {
-  color: #a78bfa;
-}
-
 .glass-panel {
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(10px);
@@ -3427,26 +3419,6 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .listings-grid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
-  
-  /* Захардкодим позиционирование плашки с ценой */
-  .listing-card .price-bar {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    transform: none !important;
-  }
-  
-  .listing-card .listing-image-container {
-    position: relative !important;
-    margin-bottom: 0 !important;
-  }
-  
-  .listing-card .listing-content {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
 }
 
 @media (min-width: 768px) {
@@ -3489,26 +3461,6 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   
   .listing-card {
     max-width: 360px;
-  }
-  
-  /* Захардкодим позиционирование плашки с ценой */
-  .listing-card .price-bar {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    transform: none !important;
-  }
-  
-  .listing-card .listing-image-container {
-    position: relative !important;
-    margin-bottom: 0 !important;
-  }
-  
-  .listing-card .listing-content {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
   }
 }
 
@@ -3576,57 +3528,9 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 32px;
   }
-  
-  /* Захардкодим позиционирование плашки с ценой */
-  .listing-card .price-bar {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    transform: none !important;
-  }
-  
-  .listing-card .listing-image-container {
-    position: relative !important;
-    margin-bottom: 0 !important;
-  }
-  
-  .listing-card .listing-content {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-  }
 }
 
-/* Глобальные захардкоженные стили для плашки с ценой */
-.listing-card .price-bar {
-  position: absolute !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  top: auto !important;
-  transform: none !important;
-  margin: 0 !important;
-  padding: 12px 16px !important;
-  background: rgba(20, 184, 166, 0.9) !important;
-  backdrop-filter: blur(20px) !important;
-  border-radius: 0 0 16px 16px !important;
-  z-index: 2 !important;
-}
 
-.listing-card .listing-image-container {
-  position: relative !important;
-  margin: 0 !important;
-  margin-bottom: 0 !important;
-  padding-bottom: 100% !important;
-  overflow: hidden !important;
-}
-
-.listing-card .listing-content {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  padding: 0 20px 20px 20px !important;
-}
 
 /* Стили для страницы "Мои объявления" */
 .my-listings-page {
@@ -9072,56 +8976,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     gap: 12px;
   }
   
-  /* ЗАХАРДКОЖЕНО позиционирование плашки с ценой в избранном на мобильных */
-  .favorites-grid .listing-card {
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: visible !important;
-    box-shadow: 
-      0 12px 40px rgba(0, 0, 0, 0.15),
-      0 4px 16px rgba(0, 0, 0, 0.1),
-      0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    z-index: 1 !important;
-  }
-  
-  .favorites-grid .listing-card .listing-image-container {
-    position: relative !important;
-    width: 100% !important;
-    height: 0 !important;
-    padding-bottom: 75% !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    border-radius: 16px 16px 0 0 !important;
-  }
-  
-  .favorites-grid .listing-card .price-bar {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    background: rgba(94, 234, 212, 0.85) !important;
-    backdrop-filter: blur(20px) !important;
-    padding: 12px 16px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-radius: 0 0 16px 16px !important;
-    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
-    z-index: 2 !important;
-    margin: 0 !important;
-    transform: none !important;
-  }
-  
-  .favorites-grid .listing-card .listing-content {
-    margin: 0 !important;
-    padding: 0 20px 20px 20px !important;
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    position: relative !important;
-    z-index: 2 !important;
-    top: 0 !important;
-  }
+
   
   .announcements-header {
     flex-direction: column;
@@ -9146,114 +9001,12 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .announcements-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
-  
-  /* ЗАХАРДКОЖЕНО позиционирование плашки с ценой в избранном на планшетах */
-  .favorites-grid .listing-card {
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: visible !important;
-    box-shadow: 
-      0 12px 40px rgba(0, 0, 0, 0.15),
-      0 4px 16px rgba(0, 0, 0, 0.1),
-      0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    z-index: 1 !important;
-  }
-  
-  .favorites-grid .listing-card .listing-image-container {
-    position: relative !important;
-    width: 100% !important;
-    height: 0 !important;
-    padding-bottom: 75% !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    border-radius: 16px 16px 0 0 !important;
-  }
-  
-  .favorites-grid .listing-card .price-bar {
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: auto !important;
-    background: rgba(94, 234, 212, 0.85) !important;
-    backdrop-filter: blur(20px) !important;
-    padding: 12px 16px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-radius: 0 0 16px 16px !important;
-    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
-    z-index: 2 !important;
-    margin: 0 !important;
-    transform: none !important;
-  }
-  
-  .favorites-grid .listing-card .listing-content {
-    margin: 0 !important;
-    padding: 0 20px 20px 20px !important;
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    position: relative !important;
-    z-index: 2 !important;
-    top: 0 !important;
-  }
 }
 
 @media (min-width: 1025px) {
   .favorites-grid,
   .announcements-grid {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  }
-  
-  /* ЗАХАРДКОЖЕНО позиционирование плашки с ценой в избранном на десктопах */
-  .favorites-grid .listing-card {
-    display: flex !important;
-    flex-direction: column !important;
-    overflow: visible !important;
-    box-shadow: 
-      0 12px 40px rgba(0, 0, 0, 0.15),
-      0 4px 16px rgba(0, 0, 0, 0.1),
-      0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    z-index: 1 !important;
-  }
-  
-  .favorites-grid .listing-card .listing-image-container {
-    position: relative !important;
-    width: 100% !important;
-    height: 0 !important;
-    padding-bottom: 75% !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    border-radius: 16px 16px 0 0 !important;
-  }
-  
-  .favorites-grid .listing-card .price-bar {
-    position: absolute !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    background: rgba(94, 234, 212, 0.85) !important;
-    backdrop-filter: blur(20px) !important;
-    padding: 12px 16px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-radius: 0 0 16px 16px !important;
-    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
-    z-index: 2 !important;
-    margin: 0 !important;
-    transform: none !important;
-  }
-  
-  .favorites-grid .listing-card .listing-content {
-    margin: 0 !important;
-    padding: 0 20px 20px 20px !important;
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    position: relative !important;
-    z-index: 2 !important;
-    top: 0 !important;
   }
 }
 
