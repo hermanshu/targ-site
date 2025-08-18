@@ -241,7 +241,7 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
             }}>
               <input
                 type="text"
-                placeholder={t('filters.minPrice')}
+                placeholder="От (EUR)"
                 value={localFilters.minPrice}
                 onChange={(e) => handleFilterChange('minPrice', e.target.value)}
                 style={{
@@ -255,7 +255,7 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
               />
               <input
                 type="text"
-                placeholder={t('filters.maxPrice')}
+                placeholder="До (EUR)"
                 value={localFilters.maxPrice}
                 onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
                 style={{

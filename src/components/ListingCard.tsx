@@ -15,8 +15,9 @@ import {
   BriefcaseIcon,
   UserGroupIcon,
   HomeModernIcon,
-  UserIcon,
-  SwatchIcon
+  SwatchIcon,
+  SunIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 import { Listing } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
@@ -55,11 +56,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
       'electronics': DevicePhoneMobileIcon,
       'sport': TrophyIcon,
       'books': BookOpenIcon,
-      'kids': UserIcon,
+      'kids': AcademicCapIcon,
       'homeAndGarden': HomeIcon,
       'fashion': ShoppingBagIcon,
       'work': BriefcaseIcon,
-      'plants': SparklesIcon,
+      'plants': SunIcon,
       'hobby': SparklesIcon,
       'vacancies': UserGroupIcon,
       'resume': BriefcaseIcon,

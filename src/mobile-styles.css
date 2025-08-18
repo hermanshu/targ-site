@@ -154,7 +154,7 @@
     bottom: 4px;
     left: 4px;
     right: 4px;
-    background: rgba(20, 184, 166, 0.9);
+    background: rgba(94, 234, 212, 0.9);
     border-radius: 4px;
     padding: 3px 4px;
     z-index: 5;
@@ -163,7 +163,7 @@
   .price-bar .price-text {
     font-size: 10px;
     font-weight: 700;
-    color: white;
+    color: rgba(15, 23, 42, 0.95);
   }
 
   /* Индикатор загрузки */

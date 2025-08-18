@@ -24,18 +24,17 @@ import {
   GiftIcon,
   EllipsisHorizontalIcon,
   ChevronDownIcon,
-  UserIcon,
-  SwatchIcon
+  SwatchIcon,
+  SunIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
-import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
 import ListingDetailView from './ListingDetailView';
 import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import WebsiteCategoryView from './WebsiteCategoryView';
-import SortSheet from './SortSheet';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
 import ScrollToTopButton from './ScrollToTopButton';
 
@@ -58,7 +57,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { getPublishedListings, loadMoreListings, isLoading, hasMore, incrementViews } = useListings();
-  const { currentLanguage } = useLanguage();
+
   const { t } = useTranslation();
 
 
@@ -72,7 +71,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
       { name: t('home.services'), key: 'services', icon: WrenchScrewdriverIcon, isEmoji: false },
       { name: t('home.work'), key: 'work', icon: BriefcaseIcon, isEmoji: false, hasSubcategories: true },
       { name: t('home.realEstate'), key: 'realEstate', icon: BuildingOfficeIcon, isEmoji: false, hasSubcategories: true },
-      { name: t('home.plants'), key: 'plants', icon: SparklesIcon, isEmoji: false },
+      { name: t('home.plants'), key: 'plants', icon: SunIcon, isEmoji: false },
       { name: t('home.animals'), key: 'animals', icon: HeartIcon, isEmoji: false },
       { name: t('home.construction'), key: 'construction', icon: WrenchScrewdriverIcon, isEmoji: false },
       { name: t('home.free'), key: 'free', icon: GiftIcon, isEmoji: false },
@@ -80,7 +79,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
       { name: t('home.transport'), key: 'transport', icon: TruckIcon, isEmoji: false },
       { name: t('home.sport'), key: 'sport', icon: TrophyIcon, isEmoji: false },
       { name: t('home.books'), key: 'books', icon: BookOpenIcon, isEmoji: false },
-      { name: t('home.kids'), key: 'kids', icon: UserIcon, isEmoji: false },
+      { name: t('home.kids'), key: 'kids', icon: AcademicCapIcon, isEmoji: false },
       { name: t('home.hobby'), key: 'hobby', icon: SparklesIcon, isEmoji: false },
       { name: t('home.other'), key: 'other', icon: EllipsisHorizontalIcon, isEmoji: false }
     ];
@@ -133,8 +132,19 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
   const [listings, setListings] = useState<Listing[]>([]);
 
-
-
+  // Функция для конвертации цены в EUR для сравнения
+  const convertPriceToEUR = (price: string, currency: string): number => {
+    const numericPrice = parseFloat(price.replace(/[^\d.]/g, ''));
+    if (isNaN(numericPrice)) return 0;
+    
+    if (currency === 'EUR') {
+      return numericPrice;
+    } else if (currency === 'RSD') {
+      // 1 EUR = 117 RSD
+      return numericPrice / 117;
+    }
+    return numericPrice; // По умолчанию считаем как EUR
+  };
 
   // Получаем данные из контекста
   useEffect(() => {
@@ -223,21 +233,27 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     }
 
     if (filterState.minPrice) {
-      const minPrice = parseFloat(filterState.minPrice);
-      if (!isNaN(minPrice)) {
+      const minPriceEUR = parseFloat(filterState.minPrice);
+      if (!isNaN(minPriceEUR)) {
         filtered = filtered.filter(listing => {
-          const listingPrice = parseFloat(listing.price.toString());
-          return listingPrice >= minPrice;
+          // Пропускаем объявления с "Договорная" ценой
+          if (listing.price === "Договорная") return false;
+          
+          const listingPriceEUR = convertPriceToEUR(listing.price.toString(), listing.currency || 'EUR');
+          return listingPriceEUR >= minPriceEUR;
         });
       }
     }
 
     if (filterState.maxPrice) {
-      const maxPrice = parseFloat(filterState.maxPrice);
-      if (!isNaN(maxPrice)) {
+      const maxPriceEUR = parseFloat(filterState.maxPrice);
+      if (!isNaN(maxPriceEUR)) {
         filtered = filtered.filter(listing => {
-          const listingPrice = parseFloat(listing.price.toString());
-          return listingPrice <= maxPrice;
+          // Пропускаем объявления с "Договорная" ценой
+          if (listing.price === "Договорная") return false;
+          
+          const listingPriceEUR = convertPriceToEUR(listing.price.toString(), listing.currency || 'EUR');
+          return listingPriceEUR <= maxPriceEUR;
         });
       }
     }
@@ -263,8 +279,8 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
           if (a.price === "Договорная") return 1;
           if (b.price === "Договорная") return -1;
           
-          const priceA = parseFloat(a.price.replace(/[^\d.]/g, ''));
-          const priceB = parseFloat(b.price.replace(/[^\d.]/g, ''));
+          const priceA = convertPriceToEUR(a.price, a.currency || 'EUR');
+          const priceB = convertPriceToEUR(b.price, b.currency || 'EUR');
           return priceA - priceB;
         });
       case 'expensive':
@@ -274,8 +290,8 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
           if (a.price === "Договорная") return 1;
           if (b.price === "Договорная") return -1;
           
-          const priceA = parseFloat(a.price.replace(/[^\d.]/g, ''));
-          const priceB = parseFloat(b.price.replace(/[^\d.]/g, ''));
+          const priceA = convertPriceToEUR(a.price, a.currency || 'EUR');
+          const priceB = convertPriceToEUR(b.price, b.currency || 'EUR');
           return priceB - priceA;
         });
       case 'withPhoto':
@@ -423,25 +439,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     }
   };
 
-  const handleSubcategoryClick = (subcategoryName: string) => {
-    // Находим подкатегорию в списке и получаем её ключ
-    const subcategory = Object.values(subcategories).flat().find(sub => sub.name === subcategoryName);
-    
-    if (subcategory) {
-      setSelectedCategory(subcategory.key);
-      
-      // Находим основную категорию для этой подкатегории
-      const mainCategory = Object.entries(subcategories).find(([mainCat, subs]) => 
-        subs.some(sub => sub.name === subcategoryName)
-      );
-      
-      if (mainCategory) {
-        setActiveMainCategory(mainCategory[0]);
-      }
-    }
-    setExpandedCategory(null);
-    setShowCategories(false); // Закрываем панель категорий
-  };
+
 
 
 
@@ -490,8 +488,16 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
               </button>
             </div>
             
-            {/* Выбранная категория */}
-            <div className="website-category-button-container">
+            {/* Кнопка выбора категории - показывает выбранную категорию */}
+            <button
+              className="website-category-select-button"
+              onClick={() => {
+                setShowCategories(!showCategories);
+                if (showFilters) {
+                  setShowFilters(false);
+                }
+              }}
+            >
               {(() => {
                 // Сначала ищем основную категорию
                 let selectedCategoryData = categories.find(cat => cat.key === selectedCategory);
@@ -518,33 +524,25 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
                 const IconComponentFinal = IconComponent as React.ComponentType<{ className?: string }>;
                 
                 return (
-                  <button
-                    className="website-category-button active"
-                    onClick={() => handleCategoryClick(selectedCategoryData?.name || categories[0].name)}
-                  >
+                  <>
                     <IconComponentFinal className="website-category-icon-hero" />
-                    <span className="website-category-name">{displayName}</span>
-                  </button>
+                    <span className="category-select-text">{displayName}</span>
+                    <ChevronDownIcon 
+                      className={`category-select-chevron ${showCategories ? 'expanded' : ''}`} 
+                    />
+                  </>
                 );
               })()}
-            </div>
+            </button>
             
-            {/* Кнопка выбора категории */}
-            <button
-              className="website-category-select-button"
-              onClick={() => {
-                setShowCategories(!showCategories);
-                if (showFilters) {
-                  setShowFilters(false);
-                }
-              }}
+            {/* Кнопка с количеством объявлений */}
+            <button 
+              className="website-category-count-button"
+              onClick={() => handleCategoryClick(selectedCategory)}
             >
-              <span className="category-select-text">
-                {showCategories ? 'Скрыть категории' : 'Выбрать категорию'}
+              <span className="category-count-text">
+                {sortedListings.length} {t('home.listings')}
               </span>
-              <ChevronDownIcon 
-                className={`category-select-chevron ${showCategories ? 'expanded' : ''}`} 
-              />
             </button>
             
             <button 

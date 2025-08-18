@@ -209,7 +209,7 @@ const FilterView: React.FC<FilterViewProps> = ({
             <div className="price-inputs">
               <input
                 type="text"
-                placeholder={t('favorites.from')}
+                placeholder="От (EUR)"
                 value={localFilters.minPrice}
                 onChange={(e) => handleFilterChange('minPrice', e.target.value)}
                 className="price-input"
@@ -217,7 +217,7 @@ const FilterView: React.FC<FilterViewProps> = ({
               <span className="price-separator">—</span>
               <input
                 type="text"
-                placeholder={t('favorites.to')}
+                placeholder="До (EUR)"
                 value={localFilters.maxPrice}
                 onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
                 className="price-input"

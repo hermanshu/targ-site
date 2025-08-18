@@ -16,7 +16,9 @@ import {
   ArrowDownIcon,
   ArrowUpIcon,
   StarIcon,
-  PhotoIcon
+  PhotoIcon,
+  SunIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 import ListingCard from './ListingCard';
 import FilterView, { FilterState } from './FilterView';
@@ -42,7 +44,8 @@ const AnnouncementsView: React.FC = () => {
     { name: "Электроника", icon: DevicePhoneMobileIcon, isEmoji: false },
     { name: "Спорт", icon: TrophyIcon, isEmoji: false },
     { name: "Книги", icon: BookOpenIcon, isEmoji: false },
-    { name: "Детям", icon: HeartIcon, isEmoji: false },
+    { name: "Детям", icon: AcademicCapIcon, isEmoji: false },
+    { name: "Растения", icon: SunIcon, isEmoji: false },
     { name: "Животные", icon: HeartIcon, isEmoji: false },
     { name: "Строительство и ремонт", icon: WrenchScrewdriverIcon, isEmoji: false },
     { name: "Бесплатно", icon: GiftIcon, isEmoji: false },

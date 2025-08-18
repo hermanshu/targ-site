@@ -17,7 +17,8 @@ import {
   ShoppingBagIcon,
   GiftIcon,
   EllipsisHorizontalIcon,
-  UserIcon
+  SunIcon,
+  AcademicCapIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -46,7 +47,7 @@ const MobileHomeView: React.FC = () => {
       { name: t('home.services'), key: 'services', icon: WrenchScrewdriverIcon, isEmoji: false },
       { name: t('home.work'), key: 'work', icon: BriefcaseIcon, isEmoji: false, hasSubcategories: true },
       { name: t('home.realEstate'), key: 'realEstate', icon: BuildingOfficeIcon, isEmoji: false, hasSubcategories: true },
-      { name: t('home.plants'), key: 'plants', icon: SparklesIcon, isEmoji: false },
+      { name: t('home.plants'), key: 'plants', icon: SunIcon, isEmoji: false },
       { name: t('home.animals'), key: 'animals', icon: HeartIcon, isEmoji: false },
       { name: t('home.construction'), key: 'construction', icon: WrenchScrewdriverIcon, isEmoji: false },
       { name: t('home.free'), key: 'free', icon: GiftIcon, isEmoji: false },
@@ -54,7 +55,7 @@ const MobileHomeView: React.FC = () => {
       { name: t('home.transport'), key: 'transport', icon: TruckIcon, isEmoji: false },
       { name: t('home.sport'), key: 'sport', icon: TrophyIcon, isEmoji: false },
       { name: t('home.books'), key: 'books', icon: BookOpenIcon, isEmoji: false },
-      { name: t('home.kids'), key: 'kids', icon: UserIcon, isEmoji: false },
+      { name: t('home.kids'), key: 'kids', icon: AcademicCapIcon, isEmoji: false },
       { name: t('home.hobby'), key: 'hobby', icon: SparklesIcon, isEmoji: false },
       { name: t('home.other'), key: 'other', icon: EllipsisHorizontalIcon, isEmoji: false }
     ];

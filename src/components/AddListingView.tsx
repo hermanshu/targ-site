@@ -7,12 +7,94 @@ import {
   CurrencyDollarIcon,
   DocumentTextIcon,
   TagIcon,
-  PhotoIcon
+  PhotoIcon,
+  ChevronDownIcon,
+  ChevronUpIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
+
+// Кастомный компонент выпадающего списка
+interface CustomSelectProps {
+  value: string;
+  onChange: (value: string) => void;
+  options: { value: string; label: string; emoji?: string }[];
+  placeholder: string;
+  error?: boolean;
+  className?: string;
+}
+
+const CustomSelect: React.FC<CustomSelectProps> = ({ 
+  value, 
+  onChange, 
+  options, 
+  placeholder, 
+  error = false,
+  className = ""
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const selectedOption = options.find(option => option.value === value);
+
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className={`custom-select-container ${className}`} ref={dropdownRef}>
+      <button
+        type="button"
+        className={`custom-select-button ${error ? 'error' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="custom-select-text">
+          {selectedOption ? (
+            <>
+              {selectedOption.emoji && <span className="custom-select-emoji">{selectedOption.emoji}</span>}
+              {selectedOption.label}
+            </>
+          ) : (
+            placeholder
+          )}
+        </span>
+        {isOpen ? (
+          <ChevronUpIcon className="custom-select-chevron" />
+        ) : (
+          <ChevronDownIcon className="custom-select-chevron" />
+        )}
+      </button>
+      
+      {isOpen && (
+        <div className="custom-select-dropdown">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`custom-select-option ${option.value === value ? 'active' : ''}`}
+              onClick={() => {
+                onChange(option.value);
+                setIsOpen(false);
+              }}
+            >
+              {option.emoji && <span className="custom-select-emoji">{option.emoji}</span>}
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface FormData {
   title: string;
@@ -57,11 +139,11 @@ const AddListingView: React.FC = () => {
     { value: 'services', label: t('home.services'), emoji: '🔧' },
     { value: 'work', label: t('home.work'), emoji: '💼', hasSubcategories: true },
     { value: 'real-estate', label: t('home.realEstate'), emoji: '🏢', hasSubcategories: true },
-    { value: 'plants', label: t('home.plants'), emoji: '✨' },
+    { value: 'plants', label: t('home.plants'), emoji: '☀️' },
     { value: 'transport', label: t('home.transport'), emoji: '🚗' },
     { value: 'sport', label: t('home.sport'), emoji: '⚽' },
     { value: 'books', label: t('home.books'), emoji: '📚' },
-    { value: 'kids', label: t('home.kids'), emoji: '👶' },
+    { value: 'kids', label: t('home.kids'), emoji: '🎓' },
     { value: 'furniture', label: t('home.furniture'), emoji: '🪑' },
     { value: 'hobby', label: t('home.hobby'), emoji: '🎨' },
     { value: 'animals', label: t('home.animals'), emoji: '🐾' },
@@ -204,6 +286,14 @@ const AddListingView: React.FC = () => {
   };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
+    // Проверяем, если пользователь пытается выбрать телефон, но у него нет номера
+    if (field === 'contactMethod' && value === 'phone' && !currentUser?.phone) {
+      // Автоматически переключаем на чат
+      setFormData(prev => ({ ...prev, [field]: 'chat' }));
+      alert(t('listings.fillPhoneInProfile'));
+      return;
+    }
+    
     setFormData(prev => ({ ...prev, [field]: value }));
     // Очищаем ошибку при изменении поля
     if (errors[field]) {
@@ -286,7 +376,7 @@ const AddListingView: React.FC = () => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     const validFiles = files.filter(file => {
-      const isValidType = file.type.startsWith('image/');
+      const isValidType = file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png';
       const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
       
       if (!isValidType) {
@@ -302,7 +392,7 @@ const AddListingView: React.FC = () => {
       return true;
     });
 
-    if (formData.images.length + validFiles.length > 10) {
+    if (formData.images.length + validFiles.length > 5) {
       alert(t('listings.maxPhotoCount'));
       return;
     }
@@ -360,6 +450,8 @@ const AddListingView: React.FC = () => {
 
     if (!formData.contactMethod) {
       newErrors.contactMethod = t('validation.selectContactMethod');
+    } else if (formData.contactMethod === 'phone' && !currentUser?.phone) {
+      newErrors.contactMethod = t('listings.fillPhoneInProfile');
     }
 
     setErrors(newErrors);
@@ -460,14 +552,14 @@ const AddListingView: React.FC = () => {
                 </div>
               ))}
               
-              {formData.images.length < 10 && (
+              {formData.images.length < 5 && (
                 <div 
                   className="image-upload-placeholder"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <CameraIcon className="upload-icon" />
                   <span>{t('listings.addPhotoText')}</span>
-                  <small>{String(formData.images.length)}/10</small>
+                  <small>{String(formData.images.length)}/5</small>
                 </div>
               )}
             </div>
@@ -476,7 +568,7 @@ const AddListingView: React.FC = () => {
               ref={fileInputRef}
               type="file"
               multiple
-              accept="image/*"
+              accept="image/jpeg,image/jpg,image/png"
               onChange={handleImageUpload}
               style={{ display: 'none' }}
             />
@@ -540,23 +632,13 @@ const AddListingView: React.FC = () => {
                formData.subcategory === 'rent' ? 'Стоимость в месяц' : 
                t('listings.price')} *
             </label>
-            <div className="price-input-group">
-              <input
-                type="text"
-                value={formData.price}
-                onChange={(e) => handleInputChange('price', formatPrice(e.target.value))}
-                placeholder="0"
-                className={`form-input ${errors.price ? 'input-error' : ''}`}
-              />
-              <select
-                value={formData.currency}
-                onChange={(e) => handleInputChange('currency', e.target.value as 'EUR' | 'RSD')}
-                className="currency-select"
-              >
-                <option value="EUR">EUR</option>
-                <option value="RSD">RSD</option>
-              </select>
-            </div>
+            <input
+              type="text"
+              value={formData.price}
+              onChange={(e) => handleInputChange('price', formatPrice(e.target.value))}
+              placeholder="0"
+              className={`form-input ${errors.price ? 'input-error' : ''}`}
+            />
             {errors.price && (
               <div className="error-message">{errors.price}</div>
             )}
@@ -564,51 +646,58 @@ const AddListingView: React.FC = () => {
 
           <div className="form-section">
             <label className="form-label">
+              <CurrencyDollarIcon className="label-icon" />
+              {t('listings.currency')}
+            </label>
+            <CustomSelect
+              value={formData.currency}
+              onChange={(value) => handleInputChange('currency', value as 'EUR' | 'RSD')}
+              options={[
+                { value: 'EUR', label: 'EUR' },
+                { value: 'RSD', label: 'RSD' }
+              ]}
+              placeholder="Выберите валюту"
+              className="currency-select"
+            />
+          </div>
+
+          <div className="form-section">
+            <label className="form-label">
               <TagIcon className="label-icon" />
               {t('listings.category')} *
             </label>
-            <select
+            <CustomSelect
               value={formData.category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              className={`form-select ${errors.category ? 'input-error' : ''}`}
-            >
-              <option value="">{t('listings.selectCategory')}</option>
-              {categories.map(category => (
-                <option key={category.value} value={category.value}>
-                  {category.emoji} {category.label}
-                </option>
-              ))}
-            </select>
+              onChange={handleCategoryChange}
+              options={[{ value: '', label: t('listings.selectCategory') }, ...categories]}
+              placeholder={t('listings.selectCategory')}
+              error={!!errors.category}
+            />
             {errors.category && (
               <div className="error-message">{errors.category}</div>
             )}
           </div>
-
-          {/* Подкатегории */}
-          {formData.category && subcategories[formData.category as keyof typeof subcategories] && (
-            <div className="form-section">
-              <label className="form-label">
-                <TagIcon className="label-icon" />
-                {t('listings.subcategory')} *
-              </label>
-              <select
-                value={formData.subcategory}
-                onChange={(e) => handleSubcategoryChange(e.target.value)}
-                className={`form-select ${errors.subcategory ? 'input-error' : ''}`}
-              >
-                <option value="">{t('validation.selectSubcategory')}</option>
-                {subcategories[formData.category as keyof typeof subcategories].map(subcategory => (
-                  <option key={subcategory.value} value={subcategory.value}>
-                    {subcategory.emoji} {subcategory.label}
-                  </option>
-                ))}
-              </select>
-              {errors.subcategory && (
-                <div className="error-message">{errors.subcategory}</div>
-              )}
-            </div>
-          )}
         </div>
+
+        {/* Подкатегории */}
+        {formData.category && subcategories[formData.category as keyof typeof subcategories] && (
+          <div className="form-section">
+            <label className="form-label">
+              <TagIcon className="label-icon" />
+              {t('listings.subcategory')} *
+            </label>
+            <CustomSelect
+              value={formData.subcategory}
+              onChange={handleSubcategoryChange}
+              options={[{ value: '', label: t('validation.selectSubcategory') }, ...(subcategories[formData.category as keyof typeof subcategories] || [])]}
+              placeholder={t('validation.selectSubcategory')}
+              error={!!errors.subcategory}
+            />
+            {errors.subcategory && (
+              <div className="error-message">{errors.subcategory}</div>
+            )}
+          </div>
+        )}
 
         {/* Характеристики */}
         {(formData.category && categoryCharacteristics[formData.category as keyof typeof categoryCharacteristics]) ||
@@ -657,18 +746,13 @@ const AddListingView: React.FC = () => {
             <MapPinIcon className="label-icon" />
             {t('listings.location')} *
           </label>
-          <select
-            value={formData.location}
-            onChange={(e) => handleInputChange('location', e.target.value)}
-            className={`form-input ${errors.location ? 'input-error' : ''}`}
-          >
-            <option value="">{t('listings.selectCity')}</option>
-            {cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
+                      <CustomSelect
+              value={formData.location}
+              onChange={(value) => handleInputChange('location', value)}
+              options={[{ value: '', label: t('listings.selectCity') }, ...cities.map(city => ({ value: city, label: city }))]}
+              placeholder={t('listings.selectCity')}
+              error={!!errors.location}
+            />
           {errors.location && (
             <div className="error-message">{errors.location}</div>
           )}
@@ -680,11 +764,14 @@ const AddListingView: React.FC = () => {
           <div className="contact-method-buttons">
             <button
               type="button"
-              className={`contact-method-button ${formData.contactMethod === 'phone' ? 'active' : ''}`}
-              onClick={() => handleInputChange('contactMethod', 'phone')}
+              className={`contact-method-button ${formData.contactMethod === 'phone' ? 'active' : ''} ${!currentUser?.phone ? 'disabled' : ''}`}
+              onClick={() => currentUser?.phone ? handleInputChange('contactMethod', 'phone') : null}
+              disabled={!currentUser?.phone}
             >
               <span className="method-text">{t('listings.phone')}</span>
-              <span className="method-hint">{t('listings.fromProfile')} {currentUser?.phone || t('listings.notSpecified')}</span>
+              <span className="method-hint">
+                {currentUser?.phone ? `${t('listings.fromProfile')} ${currentUser?.phone}` : t('listings.fillPhoneInProfile')}
+              </span>
             </button>
             <button
               type="button"

@@ -63,6 +63,7 @@ export interface Translations {
     emptyState: string;
     noResultsFound: string;
     noResultsDescription: string;
+    listings: string;
   };
 
   // Профиль
@@ -258,9 +259,16 @@ export interface Translations {
     enterCharacteristic: string;
     fromProfile: string;
     notSpecified: string;
+    fillPhoneInProfile: string;
     deliveryMethod: string;
     buyerWillPickup: string;
+    sellerWillDeliver: string;
     selectCity: string;
+    editListing: string;
+    updateListing: string;
+    listingUpdatedSuccess: string;
+    errorUpdatingListing: string;
+    existingImages: string;
   };
 
   // Детали объявления
@@ -651,6 +659,7 @@ export const translations: Translations = {
       emptyState: 'Тут еще пусто',
       noResultsFound: 'Ничего не найдено',
       noResultsDescription: 'Попробуйте изменить поисковый запрос или фильтры',
+      listings: 'объявлений',
     },
 
     profile: {
@@ -762,7 +771,7 @@ export const translations: Translations = {
       characteristics: 'Характеристики',
       delivery: 'Доставка',
     pickup: 'Самовывоз',
-    sellerDelivery: 'Доставка продавцом',
+    sellerDelivery: 'Продавец доставит',
       // Характеристики товаров
       characteristicBrand: 'Бренд',
       characteristicModel: 'Модель',
@@ -777,7 +786,7 @@ export const translations: Translations = {
     characteristicExperience: 'Опыт',
     characteristicSchedule: 'График',
       characteristicPlantType: 'Тип растения',
-    maxPhotoCount: 'Максимальное количество фото',
+    maxPhotoCount: 'Максимальное количество фото: 5',
     listingCreatedSuccess: 'Объявление успешно создано',
     errorCreatingListing: 'Ошибка при создании объявления',
     conditionNew: 'Новое',
@@ -797,11 +806,11 @@ export const translations: Translations = {
     removeImage: 'Удалить фотографию',
     uploadHint: 'Перетащите фотографии сюда или нажмите для выбора',
     createListing: 'Создать объявление',
-    photosRequired: 'Фотографии (обязательно)',
+    photosRequired: 'Фотографии',
     addPhotoText: 'Добавить фото',
-    photoOptionalNote: 'Фотографии не обязательны, но рекомендуются',
+    photoOptionalNote: 'Объявления с фотографиями получают больше охватов, но опубликовать объявление можно и без нее',
     maxFileSizeNote: 'Максимальный размер файла: 5 МБ',
-    supportedFormatsNote: 'Поддерживаемые форматы: JPG, PNG, GIF',
+    supportedFormatsNote: 'Поддерживаемые форматы: JPG, PNG',
     enterTitle: 'Введите название объявления',
     enterDescription: 'Введите описание объявления',
     enterPrice: 'Введите цену',
@@ -845,9 +854,16 @@ export const translations: Translations = {
     enterCharacteristic: 'Введите',
     fromProfile: 'Из профиля',
     notSpecified: 'Не указано',
+    fillPhoneInProfile: 'Заполните телефон в профиле',
     deliveryMethod: 'Способ доставки',
     buyerWillPickup: 'Покупатель заберет сам',
+    sellerWillDeliver: 'Доставлю сам',
     selectCity: 'Выберите город',
+    editListing: 'Редактировать объявление',
+    updateListing: 'Обновить объявление',
+    listingUpdatedSuccess: 'Объявление успешно обновлено',
+    errorUpdatingListing: 'Ошибка при обновлении объявления',
+    existingImages: 'Существующие изображения',
   },
 
   listingDetail: {
@@ -859,7 +875,7 @@ export const translations: Translations = {
     views: 'просмотров',
     delivery: 'Доставка',
     pickup: 'Самовывоз',
-    sellerDelivery: 'Доставка продавцом',
+    sellerDelivery: 'Продавец доставит',
     description: 'Описание',
     characteristics: 'Характеристики',
     company: 'Компания',
@@ -1142,8 +1158,8 @@ export const translations: Translations = {
     applyFilters: 'Применить фильтры',
     city: 'Город',
     priceRange: 'Диапазон цен',
-    minPrice: 'Мин. цена',
-    maxPrice: 'Макс. цена',
+    minPrice: 'От (EUR)',
+    maxPrice: 'До (EUR)',
     anyCategory: 'Любая категория',
     onlyWithPhoto: 'Только с фото',
     delivery: 'Доставка',
