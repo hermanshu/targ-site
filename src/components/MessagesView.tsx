@@ -389,7 +389,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       }
       setAttachments([]);
     }
-  }, [selectedChat, initialMessages]);
+  }, [selectedChat, initialMessages, loadChatMessages]);
 
   // Автопрокрутка к последнему сообщению
   useEffect(() => {
@@ -628,8 +628,9 @@ const MessagesView: React.FC<MessagesViewProps> = ({
 
   // Очистка обработанных запросов при размонтировании
   useEffect(() => {
+    const currentRef = processedRequestsRef.current;
     return () => {
-      processedRequestsRef.current.clear();
+      currentRef.clear();
     };
   }, []);
 

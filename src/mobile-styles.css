@@ -1,5 +1,12 @@
+/* ПОДСВЕТКА ЯЧЕЕК СЕТКИ ОБЪЯВЛЕНИЙ */
+
+/* ТЕСТОВЫЕ СТИЛИ ДЛЯ ВЕБ-ВЕРСИИ */
+
+/* ТЕСТОВЫЕ СТИЛИ ДЛЯ ДЕСКТОПНОЙ ВЕРСИИ */
+
 /* Мобильные стили для карточек объявлений */
 @media (max-width: 767px) {
+
   /* Скрываем десктопный фильтр на мобильных */
   .filter-overlay {
     display: none;
@@ -25,18 +32,18 @@
     height: calc(100vh - 160px); /* Уменьшили высоту, так как убрали логотип */
     width: 100%;
     overflow-y: auto;
-    padding: 12px 16px;
+    padding: 16px;
     box-sizing: border-box;
     background: #f9fafb;
   }
 
   /* Сетка объявлений */
   .mobile-listings-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    width: 100%;
-    max-width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
   /* Элемент карточки */
@@ -69,12 +76,17 @@
 
   .listing-content {
     padding: 6px;
+    padding-top: 12px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
   }
 
   .listing-title {
     font-size: 11px;
     font-weight: 600;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
     line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -88,7 +100,7 @@
   }
 
   .listing-location {
-    margin-top: 3px;
+    margin-top: 6px;
   }
 
   .location-text {

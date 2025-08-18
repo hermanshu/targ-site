@@ -920,7 +920,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .detail-image-container {
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 200px;
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -3356,11 +3356,11 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .listings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  padding: 0 48px;
+  gap: 16px;
+  padding: 0 16px;
   margin: 0 auto;
   width: 100%;
-  max-width: calc(100vw - 96px);
+  max-width: calc(100vw - 32px);
   justify-content: center;
 }
 
@@ -3368,24 +3368,24 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Стили для карточки объявления */
 .listing-card {
-  background: rgba(255, 255, 255, 0.25) !important;
-  backdrop-filter: blur(20px) !important;
-  border-radius: 24px !important;
-  overflow: hidden !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.05) !important;
-  cursor: pointer !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  position: relative !important;
-  width: 100% !important;
-  height: fit-content !important;
-  max-width: 320px !important;
-  justify-self: center !important;
-  margin: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
+    0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  width: 100%;
+  height: fit-content;
+  max-width: 320px;
+  justify-self: center;
+  margin: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .listing-card::before {
@@ -3432,6 +3432,25 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .listing-detail-container {
     padding-bottom: 0;
   }
+  
+  /* Захардкодим позиционирование плашки с ценой */
+  .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
 }
 
 @media (min-width: 1200px) {
@@ -3461,6 +3480,25 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   
   .listing-card {
     max-width: 360px;
+  }
+  
+  /* Захардкодим позиционирование плашки с ценой */
+  .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
   }
 }
 
@@ -3500,10 +3538,19 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   /* Захардкодим позиционирование плашки с ценой */
   .listing-card .price-bar {
     position: absolute !important;
-    bottom: 0 !important;
+    top: 200px !important;
     left: 0 !important;
     right: 0 !important;
-    top: auto !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
     transform: none !important;
   }
   
@@ -3513,7 +3560,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .listing-card .listing-content {
-    margin-top: 0 !important;
+    margin-top: 12px !important;
     padding-top: 0 !important;
   }
 }
@@ -3527,6 +3574,25 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .listings-grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 32px;
+  }
+  
+  /* Захардкодим позиционирование плашки с ценой */
+  .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
   }
 }
 
@@ -4352,9 +4418,8 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .listing-image-container {
   position: relative !important;
   width: 100% !important;
-  height: 0 !important;
-  padding-bottom: 100% !important;
-  overflow: hidden !important;
+  height: 200px !important;
+  overflow: visible !important;
   margin: 0 !important;
   border-radius: 16px 16px 0 0 !important;
   display: block !important;
@@ -4363,7 +4428,9 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .listing-image {
   width: 100%;
   height: 100%;
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .listing-image img {
@@ -4382,6 +4449,9 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   background: #f3f4f6;
   color: #6b7280;
   gap: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .listing-image-placeholder.hidden {
@@ -4418,9 +4488,10 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .price-bar {
   position: absolute !important;
-  top: 100% !important;
+  top: 200px !important;
   left: 0 !important;
   right: 0 !important;
+  bottom: auto !important;
   background: rgba(94, 234, 212, 0.85) !important;
   backdrop-filter: blur(20px) !important;
   padding: 12px 16px !important;
@@ -4431,7 +4502,6 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   z-index: 2 !important;
   margin: 0 !important;
   transform: none !important;
-  bottom: auto !important;
 }
 
 .price-text {
@@ -4441,9 +4511,62 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
 }
 
+/* Мобильные стили для плашки цены - поверх изображения */
+@media (max-width: 767px) {
+  .price-bar {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    background: rgba(94, 234, 212, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 8px 12px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  
+  .price-text {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: rgba(15, 23, 42, 0.95) !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+  }
+  
+  /* Мобильные стили для плашки цены в избранном */
+  .favorites-grid .listing-card .price-bar,
+  .favorites-container .favorites-grid .listing-card .price-bar {
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    background: rgba(94, 234, 212, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 8px 12px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+}
+
 .listing-content {
-  padding: 0 20px 20px 20px !important;
-  position: relative !important;
+  padding: 0 20px 20px 20px;
+  position: relative;
+  padding-top: 25px;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .listing-header {
@@ -4451,20 +4574,27 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   justify-content: space-between;
   align-items: flex-start;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+  margin-top: 50px;
+  min-height: 40px;
+  flex: 1;
 }
 
 .listing-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: rgba(30, 41, 59, 0.95);
-  line-height: 1.4;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: rgba(30, 41, 59, 0.95) !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: normal !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  word-wrap: break-word !important;
+  hyphens: auto !important;
 }
 
 .favorite-button {
@@ -4513,7 +4643,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 }
 
 .listing-location {
-  margin-top: 4px;
+  margin-top: auto;
 }
 
 .location-text {
@@ -6210,12 +6340,52 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  z-index: 100;
+  z-index: 1000000;
   margin-top: 8px;
   padding: 8px;
-  max-height: 400px;
-  overflow-y: auto;
+  max-height: none;
+  height: auto;
+  overflow: visible;
+  overflow-y: visible;
+  overflow-x: visible;
   min-width: 200px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: top center;
+  opacity: 1;
+  transform: scaleY(1);
+  will-change: transform, opacity;
+}
+
+/* Скрытое состояние выпадающего списка */
+.website-categories-dropdown.hidden {
+  opacity: 0;
+  transform: scaleY(0.95);
+  pointer-events: none;
+}
+
+/* Адаптивные размеры для разных экранов */
+@media (max-width: 1200px) {
+  .website-categories-dropdown {
+    max-height: none;
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 768px) {
+  .website-categories-dropdown {
+    max-height: none;
+    height: auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 480px) {
+  .website-categories-dropdown {
+    max-height: none;
+    height: auto;
+    overflow: visible;
+  }
 }
 
 .website-category-dropdown-item {
@@ -6281,32 +6451,37 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   position: fixed;
   top: 220px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(0);
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-radius: 16px;
   margin: 0;
   padding: 24px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 6px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: visible;
+  overflow-y: visible;
+  overflow-x: visible;
   border: 1px solid rgba(255, 255, 255, 0.4);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  max-height: 600px;
+  max-height: none;
+  height: auto;
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  will-change: transform, opacity;
   width: calc(100% - 40px);
   max-width: 1800px;
-  z-index: 15;
+  z-index: 1000000;
+  transform-origin: top center;
 }
 
 .website-category-hidden {
   max-height: 0;
   opacity: 0;
-  transform: translateX(-50%) translateY(-10px);
+  transform: translateX(-50%) translateY(-20px) scaleY(0.95);
   padding: 0 24px;
   margin: 0;
   pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
 }
 
 .website-category-header {
@@ -6886,6 +7061,25 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     padding-bottom: 100%;
     margin-bottom: 0;
   }
+  
+  /* Захардкодим позиционирование плашки с ценой */
+  .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
 
   .sort-sheet,
   .filter-sheet {
@@ -6944,6 +7138,25 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     height: 0;
     padding-bottom: 100%;
     margin-bottom: 0;
+  }
+  
+  /* Захардкодим позиционирование плашки с ценой */
+  .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
   }
 
   .listing-content {
@@ -7015,6 +7228,25 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .listings-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 32px;
+  }
+  
+  /* Захардкодим позиционирование плашки с ценой */
+  .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
   }
 
   .listing-image-container {
@@ -8802,19 +9034,18 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .favorites-grid .listing-card .listing-image-container {
   position: relative !important;
   width: 100% !important;
-  height: 0 !important;
-  padding-bottom: 75% !important;
-  overflow: hidden !important;
+  height: 200px !important;
+  overflow: visible !important;
   margin: 0 !important;
   border-radius: 16px 16px 0 0 !important;
 }
 
 .favorites-grid .listing-card .price-bar {
   position: absolute !important;
-  bottom: 0 !important;
+  top: 200px !important;
   left: 0 !important;
   right: 0 !important;
-  top: auto !important;
+  bottom: auto !important;
   background: rgba(94, 234, 212, 0.85) !important;
   backdrop-filter: blur(20px) !important;
   padding: 12px 16px !important;
@@ -9001,12 +9232,52 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   .announcements-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   }
+  
+  /* Захардкодим позиционирование плашки с ценой в избранном */
+  .favorites-grid .listing-card .price-bar,
+  .favorites-container .favorites-grid .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
 }
 
 @media (min-width: 1025px) {
   .favorites-grid,
   .announcements-grid {
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+  
+  /* Захардкодим позиционирование плашки с ценой в избранном */
+  .favorites-grid .listing-card .price-bar,
+  .favorites-container .favorites-grid .listing-card .price-bar {
+    position: absolute !important;
+    top: 200px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: rgba(94, 234, 212, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 12px 16px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin: 0 !important;
+    transform: none !important;
   }
 }
 
@@ -9032,19 +9303,18 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .favorites-container .favorites-grid .listing-card .listing-image-container {
   position: relative !important;
   width: 100% !important;
-  height: 0 !important;
-  padding-bottom: 75% !important;
-  overflow: hidden !important;
+  height: 200px !important;
+  overflow: visible !important;
   margin: 0 !important;
   border-radius: 16px 16px 0 0 !important;
 }
 
 .favorites-container .favorites-grid .listing-card .price-bar {
   position: absolute !important;
-  bottom: 0 !important;
+  top: 200px !important;
   left: 0 !important;
   right: 0 !important;
-  top: auto !important;
+  bottom: auto !important;
   background: rgba(94, 234, 212, 0.85) !important;
   backdrop-filter: blur(20px) !important;
   padding: 12px 16px !important;
@@ -9058,7 +9328,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 }
 
 .favorites-container .favorites-grid .listing-card .listing-content {
-  margin: 0 !important;
+  margin: 12px 0 0 0 !important;
   padding: 0 20px 20px 20px !important;
   flex: 1 !important;
   display: flex !important;
@@ -10038,11 +10308,6 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   transition: all 0.2s ease;
-}
-
-.notification-item:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .notification-item-content {

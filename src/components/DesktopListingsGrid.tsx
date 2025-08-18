@@ -1,6 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { FixedSizeGrid as Grid } from 'react-window';
-import AutoSizer from 'react-virtualized-auto-sizer';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Listing } from '../types';
 import ListingCard from './ListingCard';
 import { useTranslation } from '../hooks/useTranslation';
@@ -31,77 +29,37 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
 
   // Десктопные размеры карточки
   const CARD_WIDTH = 240; // Оптимизировано для 4+ столбцов
-  const CARD_HEIGHT = 320;
-  const CARD_MARGIN = 16;
+  const GRID_GAP = 20; // Отступ между карточками (уменьшен еще больше)
 
-  // Вычисляем количество колонок с оптимизацией для больших экранов
+  // Фиксированное количество колонок для десктопной версии
   const columnCount = useMemo(() => {
     if (containerWidth === 0) return 4; // По умолчанию 4 столбца
     
-    // Ограничиваем максимальную ширину контейнера для очень больших экранов
-    const maxContainerWidth = Math.min(containerWidth, 1800);
-    
-    // Для очень больших экранов (больше 1400px) - максимум 6 столбцов
-    if (maxContainerWidth >= 1400) {
-      const optimalColumns = Math.floor((maxContainerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
-      return Math.min(6, Math.max(4, optimalColumns)); // От 4 до 6 столбцов
-    }
-    
-    // Для больших экранов (больше 1200px) - максимум 5 столбцов
-    if (maxContainerWidth >= 1200) {
-      const optimalColumns = Math.floor((maxContainerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
-      return Math.min(5, Math.max(3, optimalColumns)); // От 3 до 5 столбцов
-    }
-    
-    // Для средних экранов (768px - 1199px) - максимум 4 столбца
-    if (maxContainerWidth >= 768) {
-      const optimalColumns = Math.floor((maxContainerWidth + CARD_MARGIN) / (CARD_WIDTH + CARD_MARGIN));
-      return Math.min(4, Math.max(2, optimalColumns)); // От 2 до 4 столбцов
+    // Для всех десктопных экранов (768px и больше) - фиксированное количество колонок
+    if (containerWidth >= 768) {
+      // Вычисляем оптимальное количество колонок на основе ширины экрана
+      const availableWidth = containerWidth - 32; // Учитываем padding контейнера
+      const optimalColumns = Math.floor(availableWidth / (CARD_WIDTH + GRID_GAP));
+      
+      // Ограничиваем от 3 до 7 колонок
+      return Math.min(7, Math.max(3, optimalColumns));
     }
     
     // Для мобильных устройств возвращаем 0 - будет использоваться мобильная версия
     return 0;
   }, [containerWidth]);
 
-  // Вычисляем количество строк
-  const rowCount = useMemo(() => {
-    if (columnCount === 0) return 0;
-    return Math.ceil(listings.length / columnCount);
-  }, [listings.length, columnCount]);
 
-  // Обработчик прокрутки для загрузки новых данных
-  const handleScroll = useCallback(({ scrollTop, scrollHeight, clientHeight }: any) => {
-    if (hasMore && !isLoading && scrollTop + clientHeight >= scrollHeight - 200) {
-      onLoadMore();
-    }
-  }, [hasMore, isLoading, onLoadMore]);
 
-  // Рендер ячейки
-  const Cell = useCallback(({ columnIndex, rowIndex, style }: any) => {
-    const index = rowIndex * columnCount + columnIndex;
-    const listing = listings[index];
-
-    if (!listing) {
-      return <div style={style} />;
-    }
-
-    return (
-      <div style={style}>
-        <div style={{ padding: CARD_MARGIN / 2 }}>
-          <ListingCard
-            listing={listing}
-            onFavoriteToggle={onFavoriteToggle}
-            isFavorite={isFavorite(listing.id)}
-            onCardClick={onCardClick}
-          />
-        </div>
-      </div>
-    );
-  }, [listings, columnCount, onFavoriteToggle, isFavorite, onCardClick]);
-
-  // Обработчик изменения размера контейнера
-  const handleResize = useCallback(({ width }: { width: number; height: number }) => {
-    setContainerWidth(width);
+  // Получаем ширину окна напрямую
+  useEffect(() => {
+    const updateWidth = () => {
+      setContainerWidth(window.innerWidth);
+    };
+    
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
   }, []);
 
   // Если это мобильный экран, не рендерим ничего
@@ -153,25 +111,23 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
       width: '100%',
       maxWidth: '1800px',
       margin: '0 auto',
-      padding: window.innerWidth >= 1800 ? '0 60px' : 
-               window.innerWidth >= 1400 ? '0 40px' : 
-               '0 20px'
+      padding: '16px',
+      display: 'grid',
+      gridTemplateColumns: `repeat(${columnCount}, ${CARD_WIDTH}px)`,
+      gap: `${GRID_GAP}px`,
+      alignItems: 'start',
+      justifyContent: 'center'
     }}>
-      <AutoSizer onResize={handleResize}>
-        {({ width, height }: { width: number; height: number }) => (
-          <Grid
-            columnCount={columnCount}
-            columnWidth={CARD_WIDTH + CARD_MARGIN}
-            height={height}
-            rowCount={rowCount}
-            rowHeight={CARD_HEIGHT + CARD_MARGIN}
-            width={width}
-            onScroll={handleScroll}
-          >
-            {Cell}
-          </Grid>
-        )}
-      </AutoSizer>
+      {listings.map((listing, index) => (
+        <div key={listing.id}>
+          <ListingCard
+            listing={listing}
+            onFavoriteToggle={onFavoriteToggle}
+            isFavorite={isFavorite(listing.id)}
+            onCardClick={onCardClick}
+          />
+        </div>
+      ))}
       
       {/* Индикатор загрузки */}
       {isLoading && (

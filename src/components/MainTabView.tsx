@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { HomeIcon, PlusIcon, HeartIcon, ChatBubbleLeftRightIcon, UserIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { HomeIcon as HomeIconSolid, PlusIcon as PlusIconSolid, HeartIcon as HeartIconSolid, ChatBubbleLeftRightIcon as ChatIconSolid, UserIcon as UserIconSolid } from '@heroicons/react/24/solid';
@@ -277,7 +277,7 @@ const TabBar = () => {
   }, [location.pathname, tabs]);
 
   // Функция для подсчета непрочитанных сообщений
-  const calculateUnreadMessages = () => {
+  const calculateUnreadMessages = useCallback(() => {
     // Не подсчитываем сообщения для неавторизованных пользователей
     if (!currentUser) {
       setUnreadMessagesCount(0);
@@ -294,7 +294,7 @@ const TabBar = () => {
     } catch (error) {
       console.error('Ошибка при подсчете непрочитанных сообщений:', error);
     }
-  };
+  }, [currentUser]);
 
   // Обновляем счетчик при изменении localStorage
   useEffect(() => {
@@ -407,7 +407,7 @@ const TabBar = () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
     };
-  }, [currentUser]);
+  }, [currentUser, calculateUnreadMessages]);
 
   return (
     <div className="tab-bar">
@@ -528,7 +528,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const [selectedSort, setSelectedSort] = useState('newest');
 
   // Функция для подсчета непрочитанных сообщений
-  const calculateUnreadMessages = () => {
+  const calculateUnreadMessages = useCallback(() => {
     // Не подсчитываем сообщения для неавторизованных пользователей
     if (!isAuthenticated) {
       setUnreadMessagesCount(0);
@@ -547,7 +547,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
     } catch (error) {
       console.error('Ошибка при подсчете непрочитанных сообщений:', error);
     }
-  };
+  }, [isAuthenticated]);
 
   // Обновляем счетчик при изменении localStorage
   useEffect(() => {
@@ -575,7 +575,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
       window.removeEventListener('targ-chats-updated', handleCustomStorageChange);
       clearInterval(interval);
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, calculateUnreadMessages]);
 
   // Определяем, нужно ли добавить фон профиля
   const shouldShowProfileBackground = !isAuthenticated && (location.pathname === '/profile' || location.pathname === '/messages' || location.pathname === '/favorites');

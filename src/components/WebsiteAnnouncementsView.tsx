@@ -112,7 +112,6 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
   const [showFilters, setShowFilters] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
-  const [internalShowSortSheet, setInternalShowSortSheet] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [filterState, setFilterState] = useState<FilterState>({
@@ -122,13 +121,10 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     minPrice: '',
     maxPrice: ''
   });
-  const [internalSelectedSort, setInternalSelectedSort] = useState('newest');
+
   
   // Используем внешние пропсы, если они предоставлены, иначе внутренние состояния
-  const showSortSheet = externalShowSortSheet !== undefined ? externalShowSortSheet : internalShowSortSheet;
-  const setShowSortSheet = externalSetShowSortSheet || setInternalShowSortSheet;
-  const selectedSort = externalSelectedSort !== undefined ? externalSelectedSort : internalSelectedSort;
-  const setSelectedSort = externalSetSelectedSort || setInternalSelectedSort;
+  const selectedSort = externalSelectedSort !== undefined ? externalSelectedSort : 'newest';
 
   const [listings, setListings] = useState<Listing[]>([]);
 
@@ -412,9 +408,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     });
   };
 
-  const handleSortSelect = (sortId: string) => {
-    setSelectedSort(sortId);
-  };
+
 
   const handleCategoryClick = (categoryName: string) => {
     const category = categories.find(cat => cat.name === categoryName);
@@ -539,7 +533,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
             
             <button 
               className={`website-sort-button ${selectedSort !== 'newest' ? 'active' : ''}`}
-              onClick={() => setShowSortSheet(true)}
+                              onClick={() => externalSetShowSortSheet?.(true)}
             >
               <ArrowDownIcon className="website-sort-icon" />
               <span className="website-sort-text">{currentSortOption?.title}</span>

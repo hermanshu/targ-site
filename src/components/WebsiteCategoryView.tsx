@@ -1,6 +1,5 @@
 import React from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from '../hooks/useTranslation';
 
 interface Category {
   name: string;
