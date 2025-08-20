@@ -24,6 +24,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { Listing } from '../types';
 
 // Временные компоненты для демонстрации
@@ -521,6 +522,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const { t } = useTranslation();
   const { currentUser } = useAuth();
   const { currentLanguage, setLanguage, languages } = useLanguage();
+  const isMobile = useIsMobile();
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -753,7 +755,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
           <Route path="/seller" element={<SellerProfileViewWrapper />} />
         </Routes>
       </div>
-      <TabBar />
+      {isMobile && <TabBar />}
       
       {/* Модальное окно сортировки - на том же уровне, что и панель навигации */}
       <SortSheet

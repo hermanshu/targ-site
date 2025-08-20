@@ -14,6 +14,7 @@ interface ResponsiveListingsGridProps {
   onLoadMore: () => void;
   isLoading: boolean;
   hasFilters?: boolean;
+  pagination?: React.ReactNode;
 }
 
 const ResponsiveListingsGrid: React.FC<ResponsiveListingsGridProps> = (props) => {

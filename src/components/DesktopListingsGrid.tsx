@@ -12,6 +12,7 @@ interface DesktopListingsGridProps {
   onLoadMore: () => void;
   isLoading: boolean;
   hasFilters?: boolean;
+  pagination?: React.ReactNode;
 }
 
 const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
@@ -22,7 +23,8 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
   hasMore,
   onLoadMore,
   isLoading,
-  hasFilters = false
+  hasFilters = false,
+  pagination
 }) => {
   const [containerWidth, setContainerWidth] = useState(0);
   const { t } = useTranslation();
@@ -42,7 +44,14 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
       const optimalColumns = Math.floor(availableWidth / (CARD_WIDTH + GRID_GAP));
       
       // Ограничиваем от 3 до 7 колонок
-      return Math.min(7, Math.max(3, optimalColumns));
+      let columns = Math.min(7, Math.max(3, optimalColumns));
+      
+      // На больших экранах убираем один столбец для создания отступа
+      if (containerWidth >= 1400) {
+        columns = Math.max(3, columns - 1);
+      }
+      
+      return columns;
     }
     
     // Для мобильных устройств возвращаем 0 - будет использоваться мобильная версия
@@ -112,37 +121,39 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
       maxWidth: '1800px',
       margin: '0 auto',
       padding: '16px',
-      display: 'grid',
-      gridTemplateColumns: `repeat(${columnCount}, ${CARD_WIDTH}px)`,
-      gap: `${GRID_GAP}px`,
-      alignItems: 'start',
-      justifyContent: 'center'
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
     }}>
-      {listings.map((listing, index) => (
-        <div key={listing.id}>
-          <ListingCard
-            listing={listing}
-            onFavoriteToggle={onFavoriteToggle}
-            isFavorite={isFavorite(listing.id)}
-            onCardClick={onCardClick}
-          />
-        </div>
-      ))}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${columnCount}, ${CARD_WIDTH}px)`,
+        gap: `${GRID_GAP}px`,
+        alignItems: 'start',
+        justifyContent: 'center',
+        marginBottom: '20px'
+      }}>
+        {listings.map((listing, index) => (
+          <div key={listing.id}>
+            <ListingCard
+              listing={listing}
+              onFavoriteToggle={onFavoriteToggle}
+              isFavorite={isFavorite(listing.id)}
+              onCardClick={onCardClick}
+            />
+          </div>
+        ))}
+      </div>
       
-      {/* Индикатор загрузки */}
-      {isLoading && (
+      {/* Пагинация как элемент сетки */}
+      {pagination && (
         <div style={{
-          position: 'absolute',
-          bottom: 20,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          padding: '12px 24px',
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          color: 'white',
-          borderRadius: '8px',
-          fontSize: '14px'
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px'
         }}>
-          Загрузка...
+          {pagination}
         </div>
       )}
     </div>

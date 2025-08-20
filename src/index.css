@@ -42,7 +42,7 @@ code {
   display: none; /* Скрываем по умолчанию */
   justify-content: space-around;
   padding: 12px 0;
-  z-index: 100001;
+  z-index: 100;
   margin: 0;
   box-shadow: 
     0 -8px 32px rgba(0, 0, 0, 0.1),
@@ -749,12 +749,62 @@ code {
 
 /* Скрываем панель навигации при открытом полноэкранном просмотре */
 .fullscreen-image-overlay ~ .tab-bar,
-.fullscreen-image-overlay ~ * .tab-bar {
+.fullscreen-image-overlay ~ * .tab-bar,
+.fullscreen-image-overlay ~ .website-navigation-panel,
+.fullscreen-image-overlay ~ * .website-navigation-panel,
+.fullscreen-image-overlay ~ .detail-header,
+.fullscreen-image-overlay ~ * .detail-header {
   display: none !important;
 }
 
 /* Альтернативный способ скрытия панели навигации */
-body:has(.fullscreen-image-overlay) .tab-bar {
+body:has(.fullscreen-image-overlay) .tab-bar,
+body:has(.fullscreen-image-overlay) .website-navigation-panel,
+body:has(.fullscreen-image-overlay) .detail-header {
+  display: none !important;
+}
+
+/* Скрываем панель навигации при открытых модальных окнах */
+.contact-modal-overlay ~ .tab-bar,
+.contact-modal-overlay ~ * .tab-bar,
+.contact-modal-overlay ~ .website-navigation-panel,
+.contact-modal-overlay ~ * .website-navigation-panel,
+.contact-modal-overlay ~ .detail-header,
+.contact-modal-overlay ~ * .detail-header,
+.modal-overlay ~ .tab-bar,
+.modal-overlay ~ * .tab-bar,
+.modal-overlay ~ .website-navigation-panel,
+.modal-overlay ~ * .website-navigation-panel,
+.modal-overlay ~ .detail-header,
+.modal-overlay ~ * .detail-header,
+.sort-sheet-overlay ~ .tab-bar,
+.sort-sheet-overlay ~ * .tab-bar,
+.sort-sheet-overlay ~ .website-navigation-panel,
+.sort-sheet-overlay ~ * .website-navigation-panel,
+.sort-sheet-overlay ~ .detail-header,
+.sort-sheet-overlay ~ * .detail-header,
+.filter-overlay ~ .tab-bar,
+.filter-overlay ~ * .tab-bar,
+.filter-overlay ~ .website-navigation-panel,
+.filter-overlay ~ * .website-navigation-panel,
+.filter-overlay ~ .detail-header,
+.filter-overlay ~ * .detail-header {
+  display: none !important;
+}
+
+/* Альтернативный способ скрытия панели навигации при модальных окнах */
+body:has(.contact-modal-overlay) .tab-bar,
+body:has(.contact-modal-overlay) .website-navigation-panel,
+body:has(.contact-modal-overlay) .detail-header,
+body:has(.modal-overlay) .tab-bar,
+body:has(.modal-overlay) .website-navigation-panel,
+body:has(.modal-overlay) .detail-header,
+body:has(.sort-sheet-overlay) .tab-bar,
+body:has(.sort-sheet-overlay) .website-navigation-panel,
+body:has(.sort-sheet-overlay) .detail-header,
+body:has(.filter-overlay) .tab-bar,
+body:has(.filter-overlay) .website-navigation-panel,
+body:has(.filter-overlay) .detail-header {
   display: none !important;
 }
 
@@ -887,23 +937,23 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Гарантированное отображение панели навигации поверх модальных окон */
 .website-navigation-panel {
-  z-index: 100 !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  background: rgba(255, 255, 255, 0.25) !important;
-  backdrop-filter: blur(10px) !important;
+  z-index: 100;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
 }
 
 .tab-bar {
-  z-index: 100 !important;
-  position: fixed !important;
-  bottom: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px) !important;
+  z-index: 100;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
 }
 
 /* Убеждаемся, что все элементы навигации видны */
@@ -913,8 +963,8 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .website-nav-logo,
 .website-nav-center,
 .website-language-selector {
-  z-index: 101 !important;
-  position: relative !important;
+  z-index: 101;
+  position: relative;
 }
 
 .detail-image-container {
@@ -2902,7 +2952,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100001;
+  z-index: 100;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.05);
@@ -3045,33 +3095,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Отключаем свечение логотипа при открытом модальном окне */
-.contact-modal-overlay ~ .website-nav-logo-img {
-  filter: blur(5px) !important;
-  drop-shadow: none !important;
-}
 
-/* Отключаем свечение кнопки выбора языка при открытом модальном окне */
-.contact-modal-overlay ~ .website-language-button {
-  box-shadow: none !important;
-  transform: none !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-}
-
-.contact-modal-overlay ~ .website-language-button::before {
-  opacity: 0 !important;
-  background: none !important;
-}
-
-.contact-modal-overlay ~ .website-language-button:hover {
-  box-shadow: none !important;
-  transform: none !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-}
-
-.contact-modal-overlay ~ .website-language-button:hover::before {
-  opacity: 0 !important;
-}
 
 /* Стили для главной страницы с объявлениями */
 .announcements-view {
@@ -4649,7 +4673,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .sort-sheet-overlay,
 .filter-overlay {
   position: fixed;
-  top: 72px; /* Отступ для панели навигации */
+  top: 0; /* Покрываем весь экран */
   left: 0;
   right: 0;
   bottom: 0;
@@ -4658,7 +4682,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 10;
+  z-index: 1000; /* Высокий z-index для покрытия всего */
   animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding-bottom: 80px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -5587,14 +5611,16 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .website-listings-grid {
-    top: 195px !important;
-    height: calc(100vh - 195px) !important;
+    top: 175px !important; /* Уменьшено с 195px до 175px для устранения отступа */
+    height: calc(100vh - 175px) !important;
     max-width: 1400px !important;
+    bottom: 0 !important;
   }
   
   .website-listings-grid.with-filters {
-    top: 220px !important;
-    height: calc(100vh - 220px) !important;
+    top: 200px !important; /* Уменьшено с 220px до 200px */
+    height: calc(100vh - 200px) !important;
+    bottom: 0 !important;
   }
   
   .website-filter-container,
@@ -5612,14 +5638,16 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .website-listings-grid {
-    top: 195px !important;
-    height: calc(100vh - 195px) !important;
+    top: 175px !important; /* Уменьшено с 195px до 175px для устранения отступа */
+    height: calc(100vh - 175px) !important;
     max-width: 1600px !important;
+    bottom: 0 !important;
   }
   
   .website-listings-grid.with-filters {
-    top: 220px !important;
-    height: calc(100vh - 220px) !important;
+    top: 200px !important; /* Уменьшено с 220px до 200px */
+    height: calc(100vh - 200px) !important;
+    bottom: 0 !important;
   }
   
   .website-filter-container,
@@ -5637,14 +5665,16 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .website-listings-grid {
-    top: 195px !important;
-    height: calc(100vh - 195px) !important;
+    top: 175px !important; /* Уменьшено с 195px до 175px для устранения отступа */
+    height: calc(100vh - 175px) !important;
     max-width: 1800px !important;
+    bottom: 0 !important;
   }
   
   .website-listings-grid.with-filters {
-    top: 220px !important;
-    height: calc(100vh - 220px) !important;
+    top: 200px !important; /* Уменьшено с 220px до 200px */
+    height: calc(100vh - 200px) !important;
+    bottom: 0 !important;
   }
   
   .website-filter-container,
@@ -5901,67 +5931,6 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   overflow-x: auto;
   white-space: pre-wrap;
   word-break: break-word;
-}
-
-/* Кнопка "Наверх" */
-.scroll-to-top-button {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  background: rgba(139, 92, 246, 0.9);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 50%;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 8px 32px rgba(139, 92, 246, 0.3),
-    0 4px 16px rgba(139, 92, 246, 0.2);
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.3s ease forwards;
-}
-
-.scroll-to-top-button:hover {
-  background: rgba(139, 92, 246, 1);
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 40px rgba(139, 92, 246, 0.4),
-    0 6px 20px rgba(139, 92, 246, 0.3);
-}
-
-.scroll-to-top-icon {
-  width: 24px;
-  height: 24px;
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Скрываем кнопку на мобильных устройствах */
-@media (max-width: 767px) {
-  .scroll-to-top-button {
-    bottom: 120px;
-    right: 16px;
-    width: 44px;
-    height: 44px;
-  }
-  
-  .scroll-to-top-icon {
-    width: 20px;
-    height: 20px;
-  }
 }
 
 /* Стили для кнопки переключения языка */
@@ -6640,10 +6609,53 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   transition: top 0.3s ease;
 }
 
+/* Специальные стили для страницы "Мои объявления" */
+.my-listings-page .website-listings-grid {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  bottom: auto !important;
+  height: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  z-index: auto !important;
+  padding: 20px;
+  overflow-y: visible;
+}
+
+@media (min-width: 768px) {
+  .website-listings-grid {
+    bottom: 0 !important; /* На десктопе TabBar скрыт, убираем отступ */
+    height: calc(100vh - 175px) !important; /* Обновлено с 195px до 175px */
+  }
+}
+
+@media (max-width: 767px) {
+  .website-listings-grid {
+    bottom: 84px; /* Высота TabBar: 12px padding-top + 60px высота + 12px padding-bottom */
+    height: calc(100vh - 195px - 84px);
+  }
+}
+
 .website-listings-grid.with-filters {
   top: 400px !important;
   height: calc(100vh - 400px) !important;
   transition: top 0.3s ease, height 0.3s ease !important;
+}
+
+@media (min-width: 768px) {
+  .website-listings-grid.with-filters {
+    bottom: 0 !important; /* На десктопе TabBar скрыт, убираем отступ */
+    height: calc(100vh - 200px) !important; /* Обновлено для соответствия новому top */
+  }
+}
+
+@media (max-width: 767px) {
+  .website-listings-grid.with-filters {
+    bottom: 84px !important;
+    height: calc(100vh - 400px - 84px) !important;
+  }
 }
 
 /* Стили для подтверждения email */
@@ -6788,8 +6800,8 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* АДАПТИВНЫЕ СТИЛИ */
 
-/* Мобильные устройства (до 768px) */
-@media (max-width: 768px) {
+/* Мобильные устройства (до 767px) */
+@media (max-width: 767px) {
   /* Показываем нижнюю панель навигации только на мобильных */
   .tab-bar {
     display: flex;
@@ -9441,115 +9453,38 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Стили для модального окна выбора способа связи */
 .contact-modal-overlay {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(10px) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  z-index: 1000 !important;
-  padding: 20px !important;
-  filter: none !important;
-  animation: fadeIn 0.2s ease-out !important;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes modalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Принудительно скрываем все элементы под модальным окном */
-.contact-modal-overlay ~ * {
-  filter: blur(5px) !important;
-  pointer-events: none !important;
-}
-
-/* Исключаем само модальное окно из блюра */
-.contact-modal-overlay,
-.contact-modal-overlay * {
-  filter: none !important;
-  pointer-events: auto !important;
-}
-
-/* Принудительно понижаем z-index всех элементов навигации */
-.contact-modal-overlay ~ .website-navigation-panel,
-.contact-modal-overlay ~ .website-nav-container,
-.contact-modal-overlay ~ .website-nav-item,
-.contact-modal-overlay ~ .website-language-button,
-.contact-modal-overlay ~ .website-nav-logo,
-.contact-modal-overlay ~ .website-nav-center,
-.contact-modal-overlay ~ .website-language-selector,
-.contact-modal-overlay ~ .tab-bar {
-  z-index: 1 !important;
-  filter: blur(5px) !important;
-  pointer-events: none !important;
-}
-
-/* Отключаем свечение активных элементов навигации при открытом модальном окне */
-.contact-modal-overlay ~ .website-nav-item.active {
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.contact-modal-overlay ~ .website-nav-item.active::before {
-  opacity: 0 !important;
-  background: none !important;
-}
-
-.contact-modal-overlay ~ .website-nav-logo {
-  filter: blur(5px) !important;
-}
-
-.contact-modal-overlay ~ .website-nav-logo-img {
-  filter: blur(5px) !important;
-}
-
-/* Принудительно понижаем z-index всех элементов с высоким z-index */
-.contact-modal-overlay ~ [style*="z-index"],
-.contact-modal-overlay ~ [class*="z-index"] {
-  z-index: 1 !important;
-  filter: blur(5px) !important;
-  pointer-events: none !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .contact-modal-content {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  border-radius: 24px !important;
-  padding: 32px !important;
-  max-width: 400px !important;
-  width: 100% !important;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 32px;
+  max-width: 400px;
+  width: 100%;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 4px 16px rgba(0, 0, 0, 0.05),
     0 2px 8px rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  position: relative !important;
-  z-index: 1001 !important;
-  filter: none !important;
-  animation: modalSlideIn 0.3s ease-out !important;
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1001;
+  filter: none;
+  animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .contact-modal-header {
@@ -9776,13 +9711,13 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 @media (max-width: 768px) {
   .contact-modal-overlay {
-    padding: 16px !important;
-    z-index: 1000 !important;
+    padding: 16px;
+    z-index: 1000;
   }
   
   .contact-modal-content {
-    max-width: none !important;
-    z-index: 1001 !important;
+    max-width: none;
+    z-index: 1001;
   }
   
   .contact-modal-header {
@@ -9844,6 +9779,221 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     bottom: 80px;
   }
 }
+
+/* Стили пагинации */
+.pagination-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 32px 40px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 1000px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-info {
+  text-align: center;
+}
+
+.pagination-text {
+  font-size: 14px;
+  color: rgba(30, 41, 59, 0.7);
+  font-weight: 500;
+}
+
+.pagination-navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(30, 41, 59, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(30, 41, 59, 0.8);
+}
+
+.pagination-button:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(30, 41, 59, 0.3);
+  color: rgba(30, 41, 59, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-button.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: rgba(30, 41, 59, 0.1);
+}
+
+.pagination-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.pagination-pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(30, 41, 59, 0.2);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(30, 41, 59, 0.8);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.pagination-page:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(30, 41, 59, 0.3);
+  color: rgba(30, 41, 59, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-page.active {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.pagination-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: rgba(30, 41, 59, 0.5);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Стили для выбора количества элементов на странице */
+.pagination-items-per-page {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.pagination-select {
+  padding: 8px 12px;
+  border: 1px solid rgba(30, 41, 59, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(30, 41, 59, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+.pagination-select:hover {
+  background: rgba(255, 255, 255, 1);
+  border-color: rgba(30, 41, 59, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Контейнер пагинации для веб-версии */
+.website-pagination-container {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  z-index: 10;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    padding: 24px 16px;
+    margin: 16px;
+    border-radius: 16px 16px 0 0;
+    gap: 16px;
+  }
+
+  .pagination-navigation {
+    gap: 4px;
+  }
+
+  .pagination-button,
+  .pagination-page {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 10px;
+  }
+
+  .pagination-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .pagination-text {
+    font-size: 13px;
+  }
+
+  .pagination-items-per-page {
+    gap: 8px;
+  }
+
+  .pagination-select {
+    padding: 6px 10px;
+    font-size: 13px;
+    min-width: 50px;
+  }
+
+  .website-pagination-container {
+    padding: 16px;
+  }
+}
+
+
 
 /* Компактные стили заголовка только для форм авторизации */
 .profile-container:has(.auth-form-container) .profile-header {
@@ -10080,7 +10230,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(-10px);
+    transform: scale(0.95) translateY(-20px);
   }
   to {
     opacity: 1;

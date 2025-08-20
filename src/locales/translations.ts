@@ -66,6 +66,18 @@ export interface Translations {
     listings: string;
   };
 
+  // Пагинация
+  pagination: {
+    showing: string;
+    of: string;
+    items: string;
+    previous: string;
+    next: string;
+    page: string;
+    itemsPerPage: string;
+    selectItemsPerPage: string;
+  };
+
   // Профиль
   profile: {
     title: string;
@@ -1126,6 +1138,17 @@ export const translations: Translations = {
     expensiveFirst: 'Сначала дорогие',
     mostPopular: 'По популярности',
     withPhotoFirst: 'Сначала с фото',
+  },
+
+  pagination: {
+    showing: 'Показано',
+    of: 'из',
+    items: 'объявлений',
+    previous: 'Предыдущая',
+    next: 'Следующая',
+    page: 'Страница',
+    itemsPerPage: 'На странице',
+    selectItemsPerPage: 'Выберите количество объявлений на странице',
   },
 
     sorting: {

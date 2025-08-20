@@ -36,7 +36,8 @@ import ListingDetailView from './ListingDetailView';
 import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import WebsiteCategoryView from './WebsiteCategoryView';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
-import ScrollToTopButton from './ScrollToTopButton';
+
+import Pagination from './Pagination';
 
 import { Listing } from '../types';
 
@@ -56,7 +57,11 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
-  const { getPublishedListings, loadMoreListings, isLoading, hasMore, incrementViews } = useListings();
+  const { getPublishedListings, isLoading, incrementViews } = useListings();
+
+  // Состояние пагинации
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const { t } = useTranslation();
 
@@ -299,6 +304,28 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
         return sorted;
     }
   }, [filteredListings, selectedSort]);
+
+  // Пагинация объявлений
+  const paginatedListings = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedListings.slice(startIndex, endIndex);
+  }, [sortedListings, currentPage, itemsPerPage]);
+
+  // Вычисляем общее количество страниц
+  const totalPages = Math.ceil(sortedListings.length / itemsPerPage);
+
+  // Сбрасываем на первую страницу при изменении фильтров или количества элементов на странице
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchText, selectedCategory, filterState, selectedSort, itemsPerPage]);
+
+
+
+  // Обработчик изменения страницы
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const currentSortOption = sortOptions.find(option => option.id === selectedSort);
 
@@ -579,21 +606,33 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
         }}
       >
         <ResponsiveListingsGrid
-          listings={sortedListings}
+          listings={paginatedListings}
           onFavoriteToggle={handleFavoriteToggle}
           isFavorite={isFavorite}
           onCardClick={handleCardClick}
-          hasMore={hasMore}
-          onLoadMore={loadMoreListings}
+          hasMore={false}
+          onLoadMore={() => {}}
           isLoading={isLoading}
           hasFilters={hasActiveFilters}
+          pagination={
+            sortedListings.length > 0 ? (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                totalItems={sortedListings.length}
+                itemsPerPage={itemsPerPage}
+                onItemsPerPageChange={setItemsPerPage}
+              />
+            ) : undefined
+          }
         />
       </div>
 
 
 
       {/* Кнопка "Наверх" */}
-      <ScrollToTopButton />
+
 
       {/* Детальная карточка объявления */}
       {renderListingDetail()}
