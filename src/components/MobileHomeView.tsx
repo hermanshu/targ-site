@@ -148,8 +148,16 @@ const MobileHomeView: React.FC = () => {
       });
     }
 
+    // Фильтр "только с фото" - сортируем объявления, ставя те с фото в начало
     if (filterState.onlyWithPhoto) {
-      filtered = filtered.filter((listing: Listing) => listing.imageName);
+      filtered = filtered.sort((a, b) => {
+        const aHasPhoto = a.imageName && a.imageName !== '';
+        const bHasPhoto = b.imageName && b.imageName !== '';
+        
+        if (aHasPhoto && !bHasPhoto) return -1;
+        if (!aHasPhoto && bHasPhoto) return 1;
+        return 0;
+      });
     }
 
     return filtered;

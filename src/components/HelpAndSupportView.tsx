@@ -55,8 +55,8 @@ const HelpAndSupportView: React.FC = () => {
     {
       icon: EnvelopeIcon,
       title: t('help.emailSupport'),
-      subtitle: 'support@targ.com',
-      action: () => window.open('mailto:support@targ.com')
+              subtitle: 'support@targ.store',
+        action: () => window.open('mailto:support@targ.store')
     }
   ];
 

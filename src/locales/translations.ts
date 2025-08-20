@@ -609,7 +609,8 @@ export interface Translations {
   };
 }
 
-export const translations: Translations = {
+// Русские переводы
+const ruTranslations: Translations = {
     common: {
       loading: 'Загрузка...',
       error: 'Ошибка',
@@ -820,7 +821,7 @@ export const translations: Translations = {
     createListing: 'Создать объявление',
     photosRequired: 'Фотографии',
     addPhotoText: 'Добавить фото',
-    photoOptionalNote: 'Объявления с фотографиями получают больше охватов, но опубликовать объявление можно и без нее',
+    photoOptionalNote: 'Объявления с фотографиями получают больше охватов, но опубликовать объявление можно и без них',
     maxFileSizeNote: 'Максимальный размер файла: 5 МБ',
     supportedFormatsNote: 'Поддерживаемые форматы: JPG, PNG',
     enterTitle: 'Введите название объявления',
@@ -1199,4 +1200,93 @@ export const translations: Translations = {
     enterLocation: 'Введите местоположение',
     selectContactMethod: 'Выберите способ связи',
   },
-}; 
+};
+
+// Английские переводы
+const enTranslations: Translations = {
+  // Только переводы для стартового окна
+  welcome: {
+    title: 'Welcome!',
+    description: 'You have arrived at a multilingual platform for goods and services advertisements. We are glad to see you on our platform. Here you can find and post advertisements for selling and buying goods, services and real estate.',
+    selectLanguage: 'Select language to start',
+    startExploring: 'Go to listings',
+    feature1: 'Ease of use - simple interface and clear instructions',
+    feature2: 'Great choice - listings from many categories',
+    feature3: 'Reliability - data security and reliable services',
+    feature4: '24/7 Support - our team is always ready to help',
+  },
+  
+  // Остальные переводы пока оставляем на русском
+  common: ruTranslations.common,
+  navigation: ruTranslations.navigation,
+  home: ruTranslations.home,
+  profile: ruTranslations.profile,
+  messages: ruTranslations.messages,
+  favorites: ruTranslations.favorites,
+  myListings: ruTranslations.myListings,
+  addListing: ruTranslations.addListing,
+  listingDetail: ruTranslations.listingDetail,
+  help: ruTranslations.help,
+  reviews: ruTranslations.reviews,
+  sort: ruTranslations.sort,
+  pagination: ruTranslations.pagination,
+  sorting: ruTranslations.sorting,
+  filters: ruTranslations.filters,
+  validation: ruTranslations.validation,
+  listings: ruTranslations.listings,
+  editListing: ruTranslations.editListing,
+  sellerProfile: ruTranslations.sellerProfile,
+  notifications: ruTranslations.notifications,
+};
+
+// Сербские переводы
+const srTranslations: Translations = {
+  // Только переводы для стартового окна
+  welcome: {
+    title: 'Добро дошли!',
+    description: 'Дошли сте до вишејезичне платформе за огласе робе и услуга. Драго нам је што вас видимо на нашој платформи. Овде можете пронаћи и објавити огласе за продају и куповину робе, услуга и некретнина.',
+    selectLanguage: 'Изаберите језик за почетак',
+    startExploring: 'Идите на огласе',
+    feature1: 'Лакота коришћења - једноставно сучеље и јасна упутства',
+    feature2: 'Велики избор - огласи из многих категорија',
+    feature3: 'Поузданост - безбедност података и поуздане услуге',
+    feature4: 'Подршка 24/7 - наш тим је увек спреман да помогне',
+  },
+  
+  // Остальные переводы пока оставляем на русском
+  common: ruTranslations.common,
+  navigation: ruTranslations.navigation,
+  home: ruTranslations.home,
+  profile: ruTranslations.profile,
+  messages: ruTranslations.messages,
+  favorites: ruTranslations.favorites,
+  myListings: ruTranslations.myListings,
+  addListing: ruTranslations.addListing,
+  listingDetail: ruTranslations.listingDetail,
+  help: ruTranslations.help,
+  reviews: ruTranslations.reviews,
+  sort: ruTranslations.sort,
+  pagination: ruTranslations.pagination,
+  sorting: ruTranslations.sorting,
+  filters: ruTranslations.filters,
+  validation: ruTranslations.validation,
+  listings: ruTranslations.listings,
+  editListing: ruTranslations.editListing,
+  sellerProfile: ruTranslations.sellerProfile,
+  notifications: ruTranslations.notifications,
+};
+
+// Экспорт переводов в зависимости от языка
+export const getTranslations = (language: string): Translations => {
+  switch (language) {
+    case 'EN':
+      return enTranslations;
+    case 'SR':
+      return srTranslations;
+    case 'RU':
+    default:
+      return ruTranslations;
+  }
+};
+
+export const translations = ruTranslations; // Для обратной совместимости 

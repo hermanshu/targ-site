@@ -1,10 +1,11 @@
 import { useLanguage } from '../contexts/LanguageContext';
-import { translations } from '../locales/translations';
+import { getTranslations } from '../locales/translations';
 
 export const useTranslation = () => {
   const { currentLanguage } = useLanguage();
   
   const t = (key: string): string => {
+    const translations = getTranslations(currentLanguage);
     const keys = key.split('.');
     let value: any = translations;
     

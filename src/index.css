@@ -731,6 +731,15 @@ code {
   height: 28px;
 }
 
+/* Активный лайк в детальном просмотре - красный цвет */
+.listing-detail-container .action-button svg[class*="HeartIconSolid"] {
+  color: #ef4444 !important;
+}
+
+.listing-detail-container .action-button:has(.heart-animate) .action-icon {
+  color: #ef4444 !important;
+}
+
 /* Полноэкранный просмотр фото */
 .fullscreen-image-overlay {
   position: fixed;
@@ -4647,11 +4656,12 @@ body:has(.filter-overlay) .detail-header {
 }
 
 .favorite-button.favorite-active .heart-icon {
-  color: #ef4444;
+  color: #ef4444 !important;
 }
 
 .heart-animate {
   animation: heartBeat 0.35s ease-in-out;
+  color: #ef4444 !important;
 }
 
 @keyframes heartBeat {

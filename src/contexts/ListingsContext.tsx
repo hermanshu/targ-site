@@ -336,36 +336,8 @@ const initialListings: Listing[] = [
       "Тип топлива": "Бензин",
       "Коробка передач": "Автомат"
     },
-    delivery: 'pickup',
+        delivery: 'pickup',
     contactMethod: 'phone'
-  },
-  // Винил и проигрыватели
-  { 
-    id: '13', 
-    title: "Проигрыватель винила Technics", 
-    price: "25.000", 
-    currency: 'RSD', 
-    city: "Нови Сад", 
-    category: "electronics", 
-    sellerName: "Алексей Петров", 
-    isCompany: false, 
-    imageName: "vinyl", 
-    description: "Профессиональный проигрыватель винила Technics SL-1200 в отличном состоянии. Идеально подходит для DJ и аудиофилов. В комплекте игла и адаптер. Год выпуска 2015, использовался аккуратно.",
-    createdAt: new Date(), 
-    userId: '13', 
-    status: 'active', 
-    views: 123, 
-    favorites: 9, 
-    isPublished: true,
-    characteristics: {
-      "Бренд": "Technics",
-      "Модель": "SL-1200",
-      "Состояние": "Отличное",
-      "Гарантия": "Нет",
-      "Год выпуска": "2015"
-    },
-    delivery: 'pickup',
-    contactMethod: 'chat'
   },
   // Визаран
   { 
@@ -801,6 +773,7 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const getPublishedListings = useCallback((page: number = 1, limit: number = ITEMS_PER_PAGE) => {
     const publishedListings = listings.filter(listing => listing.isPublished && listing.status === 'active');
+    
     const startIndex = (page - 1) * limit;
     const endIndex = startIndex + limit;
     const pageListings = publishedListings.slice(startIndex, endIndex);

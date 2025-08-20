@@ -228,8 +228,18 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
       });
     }
 
+    // Фильтр "только с фото" - сортируем объявления, ставя те с фото в начало
+    // Вместо исключения объявлений без фото, мы будем их сортировать
     if (filterState.onlyWithPhoto) {
-      filtered = filtered.filter(listing => listing.imageName !== '');
+      // Временно применяем сортировку "с фото" при включенном фильтре
+      filtered = filtered.sort((a, b) => {
+        const aHasPhoto = a.imageName && a.imageName !== '';
+        const bHasPhoto = b.imageName && b.imageName !== '';
+        
+        if (aHasPhoto && !bHasPhoto) return -1;
+        if (!aHasPhoto && bHasPhoto) return 1;
+        return 0;
+      });
     }
 
     if (filterState.minPrice) {
@@ -296,8 +306,11 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
         });
       case 'withPhoto':
         return sorted.sort((a, b) => {
-          if (a.imageName && !b.imageName) return -1;
-          if (!a.imageName && b.imageName) return 1;
+          const aHasPhoto = a.imageName && a.imageName !== '';
+          const bHasPhoto = b.imageName && b.imageName !== '';
+          
+          if (aHasPhoto && !bHasPhoto) return -1;
+          if (!aHasPhoto && bHasPhoto) return 1;
           return 0;
         });
       default:
