@@ -464,21 +464,39 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
   };
 
   return (
-    <div className={`listing-detail-container ${isMobile ? 'mobile' : 'desktop'}`} onKeyDown={handleKeyDown} tabIndex={0}>
+            <div 
+          className={`listing-detail-container ${isMobile ? 'mobile' : 'desktop'}`} 
+          onKeyDown={handleKeyDown} 
+          tabIndex={0}
+          role="main"
+          aria-label="Детали объявления"
+        >
       {/* Верхняя панель с кнопками */}
       <div className="detail-header">
-        <button className="back-button" onClick={onBack}>
+        <button 
+          className="back-button" 
+          onClick={onBack}
+          aria-label="Назад к списку объявлений"
+        >
           <ArrowLeftIcon className="back-icon" />
         </button>
         <div className="detail-actions">
-          <button className="action-button" onClick={handleFavoriteClick}>
+          <button 
+            className="action-button" 
+            onClick={handleFavoriteClick}
+            aria-label={isFavorite ? "Убрать из избранного" : "Добавить в избранное"}
+          >
             {isFavorite ? (
               <HeartIconSolid className={`action-icon ${animateHeart ? 'heart-animate' : ''}`} />
             ) : (
               <HeartIcon className="action-icon" />
             )}
           </button>
-          <button className="action-button" onClick={handleShareClick}>
+          <button 
+            className="action-button" 
+            onClick={handleShareClick}
+            aria-label="Поделиться объявлением"
+          >
             <ShareIcon className="action-icon" />
           </button>
         </div>

@@ -6,7 +6,7 @@
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     justify-items: center;
     max-width: 1800px;
@@ -108,7 +108,7 @@
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
     justify-items: center;
     margin: 0 auto;
@@ -133,7 +133,7 @@
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 28px;
     justify-items: center;
     margin: 0 auto;
@@ -149,7 +149,7 @@
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 32px;
     justify-items: center;
     margin: 0 auto;
@@ -166,7 +166,7 @@
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(5, 1fr);
     gap: 32px;
     justify-items: center;
     max-width: 1800px;

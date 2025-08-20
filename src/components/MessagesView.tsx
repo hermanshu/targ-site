@@ -252,11 +252,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       
       // Проверяем, не обрабатывали ли мы уже этот запрос
       if (processedRequestsRef.current.has(requestKey)) {
-        console.log('Запрос уже обработан, пропускаем');
-        return;
-      }
-      
-      console.log('Обрабатываем запрос чата для объявления:', { listingId, sellerId, title, sellerName });
+            return;
+  }
       
       // Добавляем запрос в обработанные
       processedRequestsRef.current.add(requestKey);
@@ -284,7 +281,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         setSelectedChat(existingChat);
         loadChatMessages(existingChat.id);
       } else {
-        console.log('Создаем новый чат для объявления');
         
         // Создаем новое объявление на основе URL параметров
         const newListing: Listing = {
@@ -315,13 +311,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({
 
   // Функция для загрузки сообщений чата
   const loadChatMessages = useCallback((chatId: string) => {
-    console.log('Загружаем сообщения для чата:', chatId);
-    
     // Сначала пытаемся загрузить сообщения из localStorage
     const savedMessages = loadMessagesFromStorage(chatId);
     
     if (savedMessages.length > 0) {
-      console.log('Загружаем сохраненные сообщения из localStorage');
       setMessages(savedMessages);
     } else {
       // Проверяем, является ли это новым чатом (созданным из URL параметров)
@@ -329,11 +322,9 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       const isNewChat = chatId.startsWith('chat-') && chatId.length > 5;
       
       if (isNewChat) {
-        console.log('Новый чат - загружаем пустые сообщения');
         // Для новых чатов загружаем пустые сообщения
         setMessages([]);
       } else {
-        console.log('Существующий чат - загружаем мок-данные');
         // Для существующих чатов загружаем мок-данные
         setMessages(initialMessages);
       }
@@ -380,10 +371,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         const isNewChat = selectedChat.id.startsWith('chat-') && selectedChat.id.length > 5;
         
         if (isNewChat) {
-          console.log('Новый чат - показываем пустые сообщения');
           setMessages([]);
         } else {
-          console.log('Существующий чат - показываем мок-данные');
           setMessages(initialMessages);
         }
       }
@@ -676,7 +665,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
 
   // Обработчик навигации к сообщениям
   const handleNavigateToMessages = useCallback((listing: Listing) => {
-    console.log('Создаем чат с продавцом:', listing.sellerName, 'для объявления:', listing.title);
+
     
     const newChat: Chat = {
       id: `chat-${listing.userId}`,
@@ -723,7 +712,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       const existingChatByListingIndex = prevChats.findIndex((chat: Chat) => chat.listing.id === listing.id);
       
       if (existingChatBySellerIndex === -1 && existingChatByListingIndex === -1) {
-        console.log('Создаем новый чат');
         // Добавляем новый чат в начало списка
         const newChats = [newChat, ...prevChats];
         saveChatsToStorage(newChats);
@@ -734,7 +722,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         
         return newChats;
       } else {
-        console.log('Чат уже существует, перемещаем в начало');
         // Находим существующий чат (по продавцу или по объявлению)
         const existingIndex = existingChatBySellerIndex !== -1 ? existingChatBySellerIndex : existingChatByListingIndex;
         const updatedChats = [...prevChats];

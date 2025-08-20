@@ -887,23 +887,23 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 /* Гарантированное отображение панели навигации поверх модальных окон */
 .website-navigation-panel {
-  z-index: 999999 !important;
+  z-index: 100 !important;
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
   background: rgba(255, 255, 255, 0.25) !important;
-  backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 .tab-bar {
-  z-index: 999999 !important;
+  z-index: 100 !important;
   position: fixed !important;
   bottom: 0 !important;
   left: 0 !important;
   right: 0 !important;
   background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(30px) !important;
+  backdrop-filter: blur(10px) !important;
 }
 
 /* Убеждаемся, что все элементы навигации видны */
@@ -913,7 +913,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 .website-nav-logo,
 .website-nav-center,
 .website-language-selector {
-  z-index: 1000000 !important;
+  z-index: 101 !important;
   position: relative !important;
 }
 
@@ -1120,7 +1120,6 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 }
 
 .listing-detail-container.mobile .contact-button:hover {
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
   color: white !important;
 }
@@ -3355,7 +3354,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .listings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   padding: 0 16px;
   margin: 0 auto;
@@ -3414,12 +3413,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   opacity: 1;
 }
 
-/* Адаптивные стили для разных размеров экрана */
-@media (max-width: 1199px) {
-  .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-}
+
 
 @media (min-width: 768px) {
   .website-navigation-panel {
@@ -3470,7 +3464,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 32px;
     max-width: calc(100vw - 128px);
     padding: 0 64px;
@@ -3523,7 +3517,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(4, 1fr) !important;
     gap: 40px;
     max-width: calc(100vw - 160px);
     padding: 0 80px;
@@ -3572,7 +3566,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(5, 1fr) !important;
     gap: 32px;
   }
   
@@ -3686,7 +3680,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .website-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   max-width: 1200px;
   margin: 0 auto;
@@ -4161,7 +4155,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-top: 12px;
 }
@@ -4305,7 +4299,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 /* Стили для сетки в "Мои объявления" */
 .my-listings-page .website-listings-grid .listings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
   padding: 24px 48px 40px 48px;
   margin: 0 auto;
@@ -4354,7 +4348,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .my-listings-page .website-listings-grid .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
     padding: 20px 20px 32px 20px;
     max-width: calc(100vw - 40px);
@@ -4368,7 +4362,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 /* Адаптивные стили для больших экранов в "Мои объявления" */
 @media (min-width: 1200px) {
   .my-listings-page .website-listings-grid .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr) !important;
     gap: 24px;
     max-width: calc(100vw - 128px);
     padding: 32px 64px 48px 64px;
@@ -4381,7 +4375,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 @media (min-width: 1600px) {
   .my-listings-page .website-listings-grid .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(4, 1fr) !important;
     gap: 32px;
     max-width: calc(100vw - 160px);
     padding: 40px 80px 56px 80px;
@@ -5827,36 +5821,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* Стили для спиннера загрузки */
-.loading-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  padding: 40px;
-}
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 230, 204, 0.1);
-  border-left: 4px solid #00e6cc;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
-}
-
-.loading-spinner p {
-  color: #6b7280;
-  font-size: 14px;
-  margin: 0;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 
 /* Стили для Error Boundary */
 .error-boundary {
@@ -6524,7 +6489,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .website-category-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 
@@ -6871,7 +6836,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 
   .website-category-grid {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
 
@@ -6990,7 +6955,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
@@ -7052,7 +7017,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
   }
 
@@ -7129,7 +7094,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     justify-items: center;
   }
@@ -7226,7 +7191,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 32px;
   }
   
@@ -7263,7 +7228,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
 
   .listings-grid {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     justify-items: center;
   }
@@ -8225,7 +8190,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .listings-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -8284,7 +8249,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .listings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -8496,14 +8461,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   margin: 0;
 }
 
-.loading-spinner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  font-size: 1.125rem;
-  color: #6b7280;
-}
+
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
@@ -8773,7 +8731,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -8925,7 +8883,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   }
   
   .image-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
   
   .characteristics-grid {
@@ -9015,7 +8973,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
@@ -9165,7 +9123,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .announcements-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
 }
 
@@ -9179,20 +9137,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   min-height: 400px;
 }
 
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #e5e7eb;
-  border-top: 3px solid #8b5cf6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
-}
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 
 /* Адаптивность */
 @media (max-width: 768px) {
@@ -9230,7 +9175,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 @media (min-width: 768px) and (max-width: 1024px) {
   .favorites-grid,
   .announcements-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
   
   /* Захардкодим позиционирование плашки с ценой в избранном */
@@ -9257,7 +9202,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 @media (min-width: 1025px) {
   .favorites-grid,
   .announcements-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(3, 1fr) !important;
   }
   
   /* Захардкодим позиционирование плашки с ценой в избранном */
@@ -9278,6 +9223,28 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     z-index: 2 !important;
     margin: 0 !important;
     transform: none !important;
+  }
+}
+
+/* Стили для больших экранов в избранном */
+@media (min-width: 1200px) {
+  .favorites-grid,
+  .announcements-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .favorites-grid,
+  .announcements-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+@media (min-width: 2000px) {
+  .favorites-grid,
+  .announcements-grid {
+    grid-template-columns: repeat(5, 1fr) !important;
   }
 }
 
@@ -9484,7 +9451,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  z-index: 99999999 !important;
+  z-index: 1000 !important;
   padding: 20px !important;
   filter: none !important;
   animation: fadeIn 0.2s ease-out !important;
@@ -9580,7 +9547,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
     inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   position: relative !important;
-  z-index: 99999999 !important;
+  z-index: 1001 !important;
   filter: none !important;
   animation: modalSlideIn 0.3s ease-out !important;
 }
@@ -9810,12 +9777,12 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 @media (max-width: 768px) {
   .contact-modal-overlay {
     padding: 16px !important;
-    z-index: 99999999 !important;
+    z-index: 1000 !important;
   }
   
   .contact-modal-content {
     max-width: none !important;
-    z-index: 99999999 !important;
+    z-index: 1001 !important;
   }
   
   .contact-modal-header {
@@ -11002,7 +10969,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 /* Статистика продавца */
 .seller-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 32px;
 }
@@ -11098,7 +11065,7 @@ body:has(.fullscreen-image-overlay) .tab-bar {
 
 .seller-listings-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 

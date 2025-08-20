@@ -78,7 +78,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
       setAvatarUrl(url);
       
       // Здесь можно добавить логику загрузки файла на сервер
-      console.log('Выбран файл:', file.name, 'Размер:', file.size, 'Тип:', file.type);
+  
     }
   };
 

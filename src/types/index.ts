@@ -32,23 +32,9 @@ export interface Category {
   subcategories?: string[];
 }
 
-export interface ChatMessage {
-  id: string;
-  senderId: string;
-  receiverId: string;
-  message: string;
-  timestamp: Date;
-  isRead: boolean;
-}
 
-export interface ChatPreview {
-  id: string;
-  lastMessage: string;
-  timestamp: Date;
-  unreadCount: number;
-  participantId: string;
-  participantName: string;
-}
+
+
 
 export interface User {
   id: string;
