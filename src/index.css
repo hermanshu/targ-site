@@ -676,12 +676,17 @@ code {
 
   /* Убеждаемся, что верхняя панель на мобильных тоже поверх навигации */
   .detail-header {
-    z-index: 1000001;
-    top: 0; /* На мобильных устройствах панель навигации снизу, поэтому top: 0 */
-    margin-bottom: 16px; /* Меньший отступ на мобильных */
-    border-radius: 12px; /* Меньшее закругление на мобильных */
-    max-width: none;
-    width: calc(100% - 24px);
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    right: 12px !important;
+    z-index: 1000001 !important;
+    border-radius: 12px !important;
+    max-width: none !important;
+    width: calc(100% - 24px) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
   }
   
   .back-button,
@@ -690,7 +695,60 @@ code {
     z-index: 1000002;
   }
 
-  /* На мобильных устройствах убираем верхний отступ, так как панель навигации снизу */
+  /* Стили для кнопок на мобильной версии поверх фото */
+  .listing-detail-container.mobile .back-button {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    padding: 8px 12px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    min-width: auto !important;
+  }
+
+  .listing-detail-container.mobile .action-button {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    padding: 8px !important;
+    border-radius: 12px !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .listing-detail-container.mobile .action-icon {
+    color: rgba(30, 41, 59, 0.9) !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .listing-detail-container.mobile .back-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  /* Эффекты при наведении и нажатии */
+  .listing-detail-container.mobile .back-button:hover,
+  .listing-detail-container.mobile .action-button:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .listing-detail-container.mobile .back-button:active,
+  .listing-detail-container.mobile .action-button:active {
+    transform: translateY(0) !important;
+    background: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* На мобильных устройствах убираем отступ сверху */
   .listing-detail-container {
     padding-top: 0;
   }
@@ -897,6 +955,12 @@ body:has(.fullscreen-image-overlay) .detail-header {
 .filter-overlay ~ * .website-navigation-panel,
 .filter-overlay ~ .detail-header,
 .filter-overlay ~ * .detail-header,
+.mobile-filter-overlay ~ .tab-bar,
+.mobile-filter-overlay ~ * .tab-bar,
+.mobile-filter-overlay ~ .website-navigation-panel,
+.mobile-filter-overlay ~ * .website-navigation-panel,
+.mobile-filter-overlay ~ .detail-header,
+.mobile-filter-overlay ~ * .detail-header,
 .review-modal-overlay ~ .tab-bar,
 .review-modal-overlay ~ * .tab-bar,
 .review-modal-overlay ~ .website-navigation-panel,
@@ -919,6 +983,9 @@ body:has(.sort-sheet-overlay) .detail-header,
 body:has(.filter-overlay) .tab-bar,
 body:has(.filter-overlay) .website-navigation-panel,
 body:has(.filter-overlay) .detail-header,
+body:has(.mobile-filter-overlay) .tab-bar,
+body:has(.mobile-filter-overlay) .website-navigation-panel,
+body:has(.mobile-filter-overlay) .detail-header,
 body:has(.review-modal-overlay) .tab-bar,
 body:has(.review-modal-overlay) .website-navigation-panel,
 body:has(.review-modal-overlay) .detail-header {
@@ -1101,6 +1168,16 @@ body:has(.review-modal-overlay) .detail-header {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Квадратное изображение для мобильной версии */
+.listing-detail-container.mobile .detail-image-container {
+  aspect-ratio: 1 / 1;
+  height: auto;
+  width: 100%;
+  max-width: 100vw;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+
 .detail-image-container:hover {
   transform: scale(1.02);
 }
@@ -1122,6 +1199,12 @@ body:has(.review-modal-overlay) .detail-header {
   height: 100%;
   object-fit: cover;
   z-index: 1;
+}
+
+/* Квадратное изображение для мобильной версии */
+.listing-detail-container.mobile .detail-image {
+  object-fit: cover;
+  object-position: center;
 }
 
 .image-overlay {
@@ -1253,59 +1336,299 @@ body:has(.review-modal-overlay) .detail-header {
   z-index: auto;
 }
 
-.listing-detail-container.mobile .detail-info-section {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 20px 20px 0 0;
-  margin-top: 0;
-  padding: 20px;
-  padding-top: 30px;
+/* Позиционирование панели поверх изображения */
+.listing-detail-container.mobile .detail-header {
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  right: 12px !important;
+  z-index: 1000001 !important;
 }
 
-.listing-detail-container.mobile .detail-additional-info {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-}
+  .listing-detail-container.mobile .detail-info-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px 20px 0 0;
+    margin-top: 0;
+    padding: 20px;
+    padding-top: 30px;
+  }
 
-.listing-detail-container.mobile .contact-button {
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-  font-size: 12px;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
-  flex-shrink: 0;
-  white-space: nowrap;
-}
 
-.listing-detail-container.mobile .contact-button:hover {
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-  color: white !important;
-}
 
-.listing-detail-container.mobile .contact-icon {
-  width: 16px;
-  height: 16px;
-  color: white !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  fill: white !important;
-  stroke: white !important;
-}
+  /* Стили для блока продавца на мобильной версии - как на десктопе */
+  .listing-detail-container.mobile .seller-info {
+    padding: 16px !important;
+    margin: 20px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    flex-direction: row !important;
+    gap: 16px !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    min-height: 120px !important;
+  }
 
-.listing-detail-container.mobile .contact-text {
-  font-size: 12px;
-  color: white !important;
-  font-weight: 600;
-}
+  .listing-detail-container.mobile .detail-additional-info {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+  }
+
+  /* Объединенный блок мета-информации, категории и доставки */
+  .listing-detail-container.mobile .detail-meta {
+    margin: 20px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .listing-detail-container.mobile .meta-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+    font-size: 14px !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+  }
+
+  .listing-detail-container.mobile .meta-item:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .listing-detail-container.mobile .meta-icon {
+    width: 16px !important;
+    height: 16px !important;
+    color: rgba(107, 114, 128, 0.8) !important;
+  }
+
+  .listing-detail-container.mobile .category-label,
+  .listing-detail-container.mobile .delivery-label {
+    font-weight: 600 !important;
+    color: rgba(107, 114, 128, 0.8) !important;
+  }
+
+  .listing-detail-container.mobile .category-value,
+  .listing-detail-container.mobile .delivery-value {
+    font-weight: 500 !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+  }
+
+  /* Дополнительная подложка для категории и доставки */
+  .listing-detail-container.mobile .meta-category-delivery-section {
+    margin-top: 12px !important;
+    padding: 12px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .listing-detail-container.mobile .meta-category-delivery-section .meta-item {
+    margin-bottom: 6px !important;
+  }
+
+  .listing-detail-container.mobile .meta-category-delivery-section .meta-item:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Десктопные стили для категории и доставки - одна строка */
+  .listing-detail-container.desktop .meta-category-delivery-section {
+    display: flex !important;
+    gap: 20px !important;
+    flex-wrap: wrap !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    backdrop-filter: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .listing-detail-container.desktop .meta-category-delivery-section .meta-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    flex-shrink: 0 !important;
+    min-width: 0 !important;
+  }
+
+
+
+  /* Стили для заголовка и цены на мобильной версии */
+  .listing-detail-container.mobile .detail-title-section {
+    margin: 20px !important;
+    margin-bottom: 20px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 16px !important;
+    padding: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .listing-detail-container.mobile .detail-title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: rgba(30, 41, 59, 0.95) !important;
+    margin-bottom: 12px !important;
+    line-height: 1.3 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+  }
+
+  .listing-detail-container.mobile .detail-price {
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    color: rgba(30, 41, 59, 0.95) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin-bottom: 12px !important;
+  }
+
+
+
+  .listing-detail-container.mobile .seller-avatar {
+    width: 48px !important;
+    height: 48px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 16px !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    flex-shrink: 0 !important;
+  }
+
+  .listing-detail-container.mobile .seller-icon {
+    width: 24px !important;
+    height: 24px !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)) !important;
+  }
+
+  .listing-detail-container.mobile .seller-details {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+    margin-right: 8px !important;
+  }
+
+  .listing-detail-container.mobile .seller-name {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    margin: 0 !important;
+  }
+
+  .listing-detail-container.mobile .seller-type {
+    font-size: 14px !important;
+    color: rgba(107, 114, 128, 0.8) !important;
+    margin: 0 !important;
+  }
+
+  .listing-detail-container.mobile .seller-rating-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 4px !important;
+    padding: 4px 8px !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+
+  .listing-detail-container.mobile .rating-text {
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+  }
+
+  /* Стили для звездочек рейтинга на мобильной */
+  .listing-detail-container.mobile .seller-rating-info .flex {
+    gap: 2px !important;
+  }
+
+  .listing-detail-container.mobile .seller-rating-info button {
+    font-size: 14px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: none !important;
+    color: #fbbf24 !important; /* Желтый цвет для активных звезд */
+  }
+
+  .listing-detail-container.mobile .seller-rating-info button.text-gray-300 {
+    color: #d1d5db !important; /* Серый цвет для неактивных звезд */
+  }
+
+
+
+  .listing-detail-container.mobile .seller-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+    min-width: auto !important;
+    max-width: none !important;
+    width: auto !important;
+    align-items: stretch !important;
+  }
+
+  /* Кнопки продавца как на десктопе */
+  .listing-detail-container.mobile .contact-button,
+  .listing-detail-container.mobile .review-button {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 10px 16px !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    white-space: nowrap !important;
+    justify-content: center !important;
+    min-height: 40px !important;
+  }
+
+  .listing-detail-container.mobile .contact-icon,
+  .listing-detail-container.mobile .review-icon {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .listing-detail-container.mobile .contact-text,
+  .listing-detail-container.mobile .review-text {
+    font-size: 12px !important;
+  }
 
 .detail-title-section {
   margin-bottom: 20px;
@@ -1408,32 +1731,9 @@ body:has(.review-modal-overlay) .detail-header {
 
 }
 
-/* Адаптивность для мобильных устройств */
+/* Адаптивность для мобильных устройств - отключено для использования специфичных стилей */
 @media (max-width: 768px) {
-  .seller-info {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
-  
-  .seller-actions {
-    gap: 6px;
-    min-width: auto;
-    width: 100%;
-  }
-  
-  .seller-actions .contact-button,
-  .seller-actions .review-button {
-    padding: 10px 16px;
-    font-size: 0.8rem;
-    font-weight: 600;
-  }
-  
-  .seller-actions .contact-icon,
-  .seller-actions .review-icon {
-    width: 16px;
-    height: 16px;
-  }
+  /* Стили перенесены в .listing-detail-container.mobile */
 }
 
 /* Стили для кнопок в секции продавца */
@@ -5169,6 +5469,15 @@ body:has(.review-modal-overlay) .detail-header {
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* iOS стиль для мобильной версии */
+@media (max-width: 767px) {
+  .sort-sheet,
+  .filter-sheet {
+    animation: slideUpFromBottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(100%);
+  }
+}
+
 .sort-sheet.visible,
 .filter-sheet.visible {
   transform: translateY(0);
@@ -5181,6 +5490,11 @@ body:has(.review-modal-overlay) .detail-header {
 
 @keyframes slideDownFromTop {
   from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes slideUpFromBottom {
+  from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
 

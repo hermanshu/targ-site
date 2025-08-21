@@ -259,80 +259,7 @@
     color: rgba(255, 255, 255, 0.6) !important;
   }
 
-  /* Компактная кнопка "Связаться" рядом с продавцом */
-  .seller-info {
-    position: relative !important;
-    padding-right: 120px !important;
-  }
 
-  .contact-button-mobile {
-    position: absolute !important;
-    right: 16px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    background: #a78bfa !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 8px !important;
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-    white-space: nowrap !important;
-  }
-
-  .contact-button-mobile:hover {
-    background: #8b5cf6 !important;
-  }
-
-  .contact-icon-mobile {
-    width: 14px !important;
-    height: 14px !important;
-  }
-
-  .contact-text-mobile {
-    font-size: 11px !important;
-  }
-
-  /* Кнопка отзыва для мобильных */
-  .review-button-mobile {
-    position: absolute !important;
-    right: 16px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    background: #f3f4f6 !important;
-    color: #374151 !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 8px !important;
-    padding: 6px 10px !important;
-    font-size: 11px !important;
-    font-weight: 500 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-    white-space: nowrap !important;
-    margin-top: 40px !important;
-  }
-
-  .review-button-mobile:hover {
-    background: #e5e7eb !important;
-    border-color: #9ca3af !important;
-  }
-
-  .review-icon-mobile {
-    width: 12px !important;
-    height: 12px !important;
-  }
-
-  .review-text-mobile {
-    font-size: 10px !important;
-  }
 
   /* Скрываем нижнюю панель с кнопкой на мобильных */
   .detail-bottom-actions {
@@ -1085,7 +1012,7 @@
   /* Список объявлений */
   .mobile-listings {
     padding: 4px 16px 16px 16px !important; /* Уменьшаем верхний отступ с 8px до 4px */
-    margin-top: 0 !important; /* Убираем верхний отступ */
+    margin-top: 8px !important; /* Добавляем небольшой отступ от категорий */
   }
 
   .mobile-listings-header {
@@ -1102,28 +1029,324 @@
   }
 
   .mobile-sort-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
-    color: #374151;
-    cursor: pointer;
-    transition: all 0.2s;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 16px !important;
+    padding: 10px 16px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    white-space: nowrap !important;
   }
 
   .mobile-sort-button:hover {
-    background: #f9fafb;
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .mobile-sort-button.active {
+    background: rgba(167, 139, 250, 0.1) !important;
+    border-color: rgba(167, 139, 250, 0.3) !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-1px) !important;
   }
 
   .sort-icon {
-    width: 16px;
-    height: 16px;
-    color: #6b7280;
+    width: 16px !important;
+    height: 16px !important;
+    color: rgba(100, 116, 139, 0.9) !important;
+    transition: transform 0.2s ease !important;
   }
+
+  .mobile-sort-button:hover .sort-icon {
+    color: rgba(167, 139, 250, 0.8) !important;
+  }
+
+  .mobile-sort-button.active .sort-icon {
+    color: rgba(167, 139, 250, 0.8) !important;
+  }
+
+  /* iOS стиль для SortSheet на мобильной */
+  @media (max-width: 767px) {
+    .sort-sheet-overlay {
+      padding-bottom: 0 !important;
+      align-items: flex-end !important;
+    }
+
+    .sort-sheet {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(30px) !important;
+      border: none !important;
+      border-radius: 20px 20px 0 0 !important;
+      width: 100% !important;
+      max-width: none !important;
+      max-height: 80vh !important;
+      margin-bottom: 0 !important;
+      transform: translateY(100%) !important;
+      box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2) !important;
+      position: relative !important;
+    }
+
+    .sort-sheet.visible {
+      transform: translateY(0) !important;
+    }
+
+    .sort-sheet-header {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+      padding: 20px 24px 16px !important;
+      position: relative !important;
+    }
+
+    .sort-sheet-title {
+      color: rgba(0, 0, 0, 0.9) !important;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+    }
+
+    .close-button {
+      background: rgba(0, 0, 0, 0.1) !important;
+      border: none !important;
+    }
+
+    .close-icon {
+      color: rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .sort-options {
+      padding: 8px 0 32px 0 !important;
+    }
+
+    .sort-option {
+      padding: 16px 24px !important;
+      margin: 0 16px 8px 16px !important;
+      border-radius: 12px !important;
+      background: rgba(0, 0, 0, 0.02) !important;
+      border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .sort-option:hover {
+      background: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .sort-option.active {
+      background: rgba(167, 139, 250, 0.1) !important;
+      border-color: rgba(167, 139, 250, 0.3) !important;
+    }
+
+    .sort-option-title {
+      color: rgba(0, 0, 0, 0.9) !important;
+      font-weight: 500 !important;
+    }
+
+    .sort-option-description {
+      color: rgba(0, 0, 0, 0.6) !important;
+      font-size: 13px !important;
+    }
+
+    .sort-option-icon {
+      color: rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .sort-option.active .sort-option-icon {
+      color: rgba(167, 139, 250, 0.8) !important;
+    }
+
+      .check-circle {
+    background: rgba(167, 139, 250, 0.8) !important;
+    border: 2px solid rgba(167, 139, 250, 0.3) !important;
+  }
+
+  /* iOS стиль для мобильных фильтров */
+  .mobile-filter-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    z-index: 10000 !important;
+    padding-bottom: 0 !important;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .mobile-filter-overlay.visible {
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(20px) !important;
+  }
+
+  .mobile-filter-sheet {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(30px) !important;
+    border: none !important;
+    border-radius: 20px 20px 0 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: 85vh !important;
+    margin-bottom: 0 !important;
+    transform: translateY(100%) !important;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2) !important;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    overflow: hidden !important;
+  }
+
+  .mobile-filter-sheet.visible {
+    transform: translateY(0) !important;
+  }
+
+  .mobile-filter-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 20px 24px 16px !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .mobile-filter-title {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: rgba(0, 0, 0, 0.9) !important;
+    margin: 0 !important;
+  }
+
+  .mobile-filter-close-button {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .mobile-filter-close-button:hover {
+    background: rgba(0, 0, 0, 0.2) !important;
+    transform: scale(1.1) !important;
+  }
+
+  .mobile-filter-close-icon {
+    width: 20px !important;
+    height: 20px !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+  }
+
+  /* Стили для содержимого фильтров */
+  .mobile-filter-sheet > div:nth-child(2) {
+    padding: 20px 24px !important;
+    max-height: 60vh !important;
+    overflow-y: auto !important;
+  }
+
+  /* Стили для полей ввода */
+  .mobile-filter-sheet input,
+  .mobile-filter-sheet select {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    font-size: 16px !important;
+    color: rgba(0, 0, 0, 0.9) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .mobile-filter-sheet input:focus,
+  .mobile-filter-sheet select:focus {
+    outline: none !important;
+    border-color: rgba(167, 139, 250, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1) !important;
+  }
+
+  /* Стили для кнопок в фильтрах */
+  .mobile-filter-sheet button {
+    border-radius: 12px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .mobile-filter-sheet button:hover {
+    transform: translateY(-1px) !important;
+  }
+
+  /* Стили для кнопок действий фильтров */
+  .mobile-filter-actions {
+    display: flex !important;
+    gap: 12px !important;
+    padding: 24px !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 10 !important;
+  }
+
+  .mobile-filter-reset-button {
+    flex: 1 !important;
+    padding: 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    position: relative !important;
+    z-index: 11 !important;
+    pointer-events: auto !important;
+  }
+
+  .mobile-filter-reset-button:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .mobile-filter-reset-button:active {
+    transform: translateY(0) !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .mobile-filter-apply-button {
+    flex: 2 !important;
+    padding: 16px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    background: rgba(167, 139, 250, 0.9) !important;
+    color: white !important;
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3) !important;
+    position: relative !important;
+    z-index: 11 !important;
+    pointer-events: auto !important;
+  }
+
+  .mobile-filter-apply-button:hover {
+    background: rgba(167, 139, 250, 1) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(167, 139, 250, 0.4) !important;
+  }
+
+  .mobile-filter-apply-button:active {
+    transform: translateY(0) !important;
+    background: rgba(167, 139, 250, 0.8) !important;
+  }
+}
 
   /* Сетка объявлений */
   .mobile-listings-grid {

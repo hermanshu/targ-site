@@ -683,7 +683,7 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
             </div>
           </div>
 
-          {/* Локация и дата */}
+          {/* Объединенный блок: мета-информация, категория и доставка */}
           <div className="detail-meta">
             <div className="meta-item">
               <MapPinIcon className="meta-icon" />
@@ -699,25 +699,25 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
                 <span>{formatViews(listing.views)} {t('listingDetail.views')}</span>
               </div>
             )}
-          </div>
-
-          {/* Категория и доставка */}
-          <div className="detail-category-delivery">
-            {/* Категория */}
-            <div className="detail-category">
-              <span className="category-label">{t('listings.category')}:</span>
-              <span className="category-value">{getTranslatedCategory(listing.category)}</span>
-            </div>
-
-            {/* Способ доставки - не показываем для категорий "Работа", "Вакансии" и "Недвижимость" */}
-            {listing.delivery && listing.category !== 'work' && listing.category !== 'vacancies' && listing.category !== 'realEstate' && (
-              <div className="detail-delivery">
-                <span className="delivery-label">{t('listingDetail.delivery')}:</span>
-                <span className="delivery-value">
-                  {listing.delivery === 'pickup' ? t('listingDetail.pickup') : t('listingDetail.sellerDelivery')}
-                </span>
+            
+            {/* Категория и доставка в отдельном блоке */}
+            <div className="meta-category-delivery-section">
+              {/* Категория */}
+              <div className="meta-item">
+                <span className="category-label">{t('listings.category')}:</span>
+                <span className="category-value">{getTranslatedCategory(listing.category)}</span>
               </div>
-            )}
+
+              {/* Способ доставки - не показываем для категорий "Работа", "Вакансии" и "Недвижимость" */}
+              {listing.delivery && listing.category !== 'work' && listing.category !== 'vacancies' && listing.category !== 'realEstate' && (
+                <div className="meta-item">
+                  <span className="delivery-label">{t('listingDetail.delivery')}:</span>
+                  <span className="delivery-value">
+                    {listing.delivery === 'pickup' ? t('listingDetail.pickup') : t('listingDetail.sellerDelivery')}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

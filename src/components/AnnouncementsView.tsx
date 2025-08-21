@@ -156,15 +156,13 @@ const AnnouncementsView: React.FC = () => {
       });
     }
 
-    // Фильтр "только с фото" - сортируем объявления, ставя те с фото в начало
+    // Фильтр "только с фото" - показываем только объявления с фото
     if (filterState.onlyWithPhoto) {
-      filtered = filtered.sort((a, b) => {
-        const aHasPhoto = a.imageName && a.imageName !== '';
-        const bHasPhoto = b.imageName && b.imageName !== '';
-        
-        if (aHasPhoto && !bHasPhoto) return -1;
-        if (!aHasPhoto && bHasPhoto) return 1;
-        return 0;
+      filtered = filtered.filter((listing: Listing) => {
+        return listing.imageName && 
+               listing.imageName !== '' && 
+               listing.imageName !== null && 
+               listing.imageName !== undefined;
       });
     }
 

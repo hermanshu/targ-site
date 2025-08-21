@@ -42,9 +42,19 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
   const [localFilters, setLocalFilters] = useState<FilterState>(filterState);
 
   const categories = ["", t('home.electronics'), t('home.furniture'), t('home.fashion'), t('home.books'), t('home.sport'), t('home.transport'), t('home.kids'), t('home.realEstate'), t('home.services'), t('home.animals'), t('home.construction'), t('home.free'), t('home.other'), t('home.plants')];
-  const conditions = { "any": "Не важно", "new": "Новое", "used": "Б/у" };
-  const deliveries = { "any": "Не важно", "delivery": "Доставка", "pickup": "Самовывоз" };
-  const sellers = { "any": "Не важно", "company": "Компания", "private": "Частное" };
+  
+  // Скрытые поля для совместимости с основным интерфейсом
+  React.useEffect(() => {
+    if (localFilters.selectedCondition === undefined) {
+      handleFilterChange('selectedCondition', 'any');
+    }
+    if (localFilters.selectedDelivery === undefined) {
+      handleFilterChange('selectedDelivery', 'any');
+    }
+    if (localFilters.selectedSeller === undefined) {
+      handleFilterChange('selectedSeller', 'any');
+    }
+  }, []);
 
   const handleFilterChange = (key: keyof FilterState, value: any) => {
     const newFilters = { ...localFilters, [key]: value };
@@ -53,7 +63,7 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
 
   const handleApply = () => {
     onFilterChange(localFilters);
-    onClose();
+    handleClose();
   };
 
   const handleReset = () => {
@@ -75,68 +85,46 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
     city.toLowerCase().includes(localFilters.cityInput.toLowerCase())
   );
 
-  if (!isOpen) {
+  const [isVisible, setIsVisible] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+      setIsClosing(false);
+    }
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsVisible(false);
+      setIsClosing(false);
+    }, 400);
+  };
+
+  if (!isOpen && !isVisible) {
     return null;
   }
 
   return (
     <div 
-      className="mobile-filter-overlay" 
-      onClick={onClose}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        zIndex: 9999,
-      }}
+      className={`mobile-filter-overlay ${isVisible && !isClosing ? 'visible' : ''}`}
+      onClick={handleClose}
     >
       <div 
-        className="mobile-filter-sheet" 
+        className={`mobile-filter-sheet ${isVisible && !isClosing ? 'visible' : ''}`}
         onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'white',
-          borderRadius: '20px 20px 0 0',
-          width: '100%',
-          maxWidth: '500px',
-          maxHeight: '80vh',
-          overflowY: 'auto',
-          padding: '20px',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-        }}
       >
         {/* Заголовок */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '20px 24px 16px',
-          borderBottom: '1px solid #e5e7eb',
-          background: 'white'
-        }}>
-          <h2 style={{
-            fontSize: '20px',
-            fontWeight: '700',
-            color: '#1f2937',
-            margin: 0
-          }}>Фильтры</h2>
+        <div className="mobile-filter-header">
+          <h2 className="mobile-filter-title">Фильтры</h2>
           <button 
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '8px',
-              borderRadius: '8px',
-              transition: 'background-color 0.2s'
-            }}
+            className="mobile-filter-close-button"
+            onClick={handleClose}
           >
-            <XMarkIcon style={{ width: '20px', height: '20px', color: '#6b7280' }} />
+            <XMarkIcon className="mobile-filter-close-icon" />
           </button>
         </div>
 
@@ -351,154 +339,20 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
             </div>
           </div>
 
-          {/* Состояние товара */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: '#1f2937',
-              marginBottom: '8px'
-            }}>{t('filters.condition')}</label>
-            <div style={{
-              display: 'flex',
-              gap: '8px'
-            }}>
-              {Object.entries(conditions).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => handleFilterChange('selectedCondition', key)}
-                  style={{
-                    flex: 1,
-                    padding: '12px 16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    background: localFilters.selectedCondition === key ? '#8b5cf6' : '#f9fafb',
-                    color: localFilters.selectedCondition === key ? 'white' : '#374151'
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
 
-          {/* Доставка */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: '#1f2937',
-              marginBottom: '8px'
-            }}>{t('filters.delivery')}</label>
-            <div style={{
-              display: 'flex',
-              gap: '8px'
-            }}>
-              {Object.entries(deliveries).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => handleFilterChange('selectedDelivery', key)}
-                  style={{
-                    flex: 1,
-                    padding: '12px 16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    background: localFilters.selectedDelivery === key ? '#8b5cf6' : '#f9fafb',
-                    color: localFilters.selectedDelivery === key ? 'white' : '#374151'
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Продавец */}
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{
-              display: 'block',
-              fontSize: '16px',
-              fontWeight: '600',
-              color: '#1f2937',
-              marginBottom: '8px'
-            }}>{t('filters.seller')}</label>
-            <div style={{
-              display: 'flex',
-              gap: '8px'
-            }}>
-              {Object.entries(sellers).map(([key, label]) => (
-                <button
-                  key={key}
-                  onClick={() => handleFilterChange('selectedSeller', key)}
-                  style={{
-                    flex: 1,
-                    padding: '12px 16px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '8px',
-                    fontSize: '14px',
-                    fontWeight: '500',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
-                    background: localFilters.selectedSeller === key ? '#8b5cf6' : '#f9fafb',
-                    color: localFilters.selectedSeller === key ? 'white' : '#374151'
-                  }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Кнопки действий */}
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          padding: '24px',
-          borderTop: '1px solid #e5e7eb',
-          background: 'white'
-        }}>
+        <div className="mobile-filter-actions">
           <button 
+            className="mobile-filter-reset-button"
             onClick={handleReset}
-            style={{
-              flex: 1,
-              padding: '16px',
-              border: '1px solid #d1d5db',
-              borderRadius: '12px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              background: 'white',
-              color: '#6b7280'
-            }}
           >
             {t('filters.reset')}
           </button>
           <button 
+            className="mobile-filter-apply-button"
             onClick={handleApply}
-            style={{
-              flex: 2,
-              padding: '16px',
-              border: 'none',
-              borderRadius: '12px',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-              background: '#8b5cf6',
-              color: 'white'
-            }}
           >
             {t('filters.apply')}
           </button>

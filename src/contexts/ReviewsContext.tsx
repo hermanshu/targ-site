@@ -28,7 +28,7 @@ const initialReviews: Review[] = [
   {
     id: '1',
     reviewerId: 'user1',
-    sellerId: 'seller1',
+    sellerId: '1', // Алексей Петров
     listingId: 'listing1',
     rating: 5,
     comment: 'Отличный продавец! Товар точно как на фото, доставка быстрая.',
@@ -39,7 +39,7 @@ const initialReviews: Review[] = [
   {
     id: '2',
     reviewerId: 'user2',
-    sellerId: 'seller1',
+    sellerId: '1', // Алексей Петров
     listingId: 'listing2',
     rating: 4,
     comment: 'Хороший продавец, рекомендую. Товар качественный.',
@@ -50,13 +50,35 @@ const initialReviews: Review[] = [
   {
     id: '3',
     reviewerId: 'user3',
-    sellerId: 'seller2',
+    sellerId: '2', // Мария Иванова
     listingId: 'listing3',
     rating: 3,
     comment: 'Нормально, но можно было бы лучше.',
     createdAt: new Date('2024-01-08'),
     isVerified: true,
     reviewerName: 'Елена С.'
+  },
+  {
+    id: '4',
+    reviewerId: 'user4',
+    sellerId: '3', // Игорь Сидоров
+    listingId: 'listing4',
+    rating: 5,
+    comment: 'Отличная компания! Быстрая доставка, качественный товар.',
+    createdAt: new Date('2024-01-12'),
+    isVerified: true,
+    reviewerName: 'Дмитрий В.'
+  },
+  {
+    id: '5',
+    reviewerId: 'user5',
+    sellerId: '3', // Игорь Сидоров
+    listingId: 'listing5',
+    rating: 4,
+    comment: 'Хорошая компания, рекомендую.',
+    createdAt: new Date('2024-01-09'),
+    isVerified: true,
+    reviewerName: 'Ольга М.'
   }
 ];
 
