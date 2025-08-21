@@ -1,35 +1,35 @@
 /* Мобильные стили в стиле приложения */
 @media (max-width: 767px) {
+  /* Убираем отступы у body и html */
+  body, html, #root, .App, .main-container, .content-area {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+  }
+  
   /* Основной контейнер */
   .mobile-home-view {
     background: #f8f9fa;
     min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    padding-bottom: 100px; /* Отступ для закрепленной панели навигации */
+    padding: 0 0 calc(90px + env(safe-area-inset-bottom)) 0 !important; /* Только отступ снизу */
+    margin: 0 !important; /* Убираем все отступы */
   }
 
-  /* Закрепленная панель навигации */
-  .tab-bar {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 1000 !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    backdrop-filter: blur(20px) !important;
-    border-top: 1px solid rgba(229, 231, 235, 0.5) !important;
-  }
+
 
   /* Заголовок */
   .mobile-header {
-    background: white;
-    padding: 16px;
-    border-bottom: 1px solid #e5e7eb;
+    position: static !important; /* Возвращаем в обычный поток документа */
+    background: white !important;
+    padding: 16px 16px 16px 16px !important; /* Убираем отступ сверху */
+    border-bottom: 1px solid #e5e7eb !important; /* Возвращаем нижнюю границу */
+    margin-bottom: 0 !important; /* Убираем нижний отступ */
   }
 
   /* Поисковая строка */
   .mobile-search-container {
-    margin-bottom: 16px;
+    margin-bottom: 0 !important; /* Убираем отступ снизу */
     position: relative;
   }
 
@@ -827,18 +827,109 @@
 
   /* Категории */
   .mobile-categories {
-    background: white;
-    padding: 16px 0;
-    border-bottom: 1px solid #e5e7eb;
+    position: static !important; /* Возвращаем в обычный поток документа */
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(15px) !important;
+    padding: 16px 20px 8px 20px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+    margin: 10px 20px 0 20px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* Кнопка выбора категории */
+  .mobile-category-select-button {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 12px 16px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 20px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    white-space: nowrap !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    height: 52px !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  .mobile-category-select-button:hover {
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .mobile-category-chevron {
+    width: 14px !important;
+    height: 14px !important;
+    color: rgba(100, 116, 139, 0.9) !important;
+    transition: transform 0.3s ease !important;
+    margin-left: auto !important;
+  }
+
+  .mobile-category-chevron.expanded {
+    transform: rotate(180deg) !important;
+  }
+
+  /* Выпадающий список категорий */
+  .mobile-categories-dropdown {
+    margin-top: 12px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+    overflow: hidden !important;
+    animation: slideDown 0.3s ease-out !important;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .mobile-categories-scroll {
     display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    padding: 0 16px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 4px 0 !important;
+  }
+
+  /* Стили для скролла в выпадающем списке */
+  .mobile-categories-dropdown .mobile-categories-scroll {
+    padding: 12px !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .mobile-categories-dropdown .mobile-categories-scroll::-webkit-scrollbar {
+    width: 4px !important;
+  }
+
+  .mobile-categories-dropdown .mobile-categories-scroll::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05) !important;
+    border-radius: 2px !important;
+  }
+
+  .mobile-categories-dropdown .mobile-categories-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 2px !important;
   }
 
   .mobile-categories-scroll::-webkit-scrollbar {
@@ -846,50 +937,155 @@
   }
 
   .mobile-category-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    min-width: 80px;
-    flex-shrink: 0;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 8px 12px !important;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 16px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+    height: 44px !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
   }
 
   .mobile-category-item:hover {
-    background: #f3f4f6;
+    background: rgba(255, 255, 255, 0.35) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
   }
 
   .mobile-category-item.active {
-    background: #8b5cf6;
-    border-color: #8b5cf6;
-    color: white;
+    background: rgba(167, 139, 250, 0.1) !important;
+    border-color: rgba(167, 139, 250, 0.3) !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Стили для категорий с подкатегориями */
+  .mobile-category-item-wrapper:has(.mobile-subcategory-list) .mobile-category-item {
+    position: relative !important;
+  }
+
+  .mobile-category-item-wrapper:has(.mobile-subcategory-list) .mobile-category-item:hover {
+    background: rgba(167, 139, 250, 0.05) !important;
+    border-color: rgba(167, 139, 250, 0.2) !important;
   }
 
   .mobile-category-icon {
-    width: 24px;
-    height: 24px;
-    color: #6b7280;
+    width: 16px !important;
+    height: 16px !important;
+    color: rgba(100, 116, 139, 0.9) !important;
+    transition: transform 0.2s ease !important;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)) !important;
   }
 
   .mobile-category-item.active .mobile-category-icon {
-    color: white;
+    color: rgba(167, 139, 250, 0.8) !important;
   }
 
   .mobile-category-name {
-    font-size: 12px;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.2;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Обертка для элемента категории */
+  .mobile-category-item-wrapper {
+    width: 100% !important;
+    position: relative !important;
+  }
+
+  /* Подкатегории */
+  .mobile-subcategory-list {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-top: 8px !important;
+    padding: 12px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(167, 139, 250, 0.2) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+    z-index: 10 !important;
+  }
+
+  .mobile-subcategory-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(167, 139, 250, 0.2) !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    width: 100% !important;
+    box-shadow: 0 2px 8px rgba(167, 139, 250, 0.1) !important;
+  }
+
+  .mobile-subcategory-item:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: rgba(167, 139, 250, 0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.2) !important;
+  }
+
+  .mobile-subcategory-item.active {
+    background: rgba(167, 139, 250, 0.15) !important;
+    border-color: rgba(167, 139, 250, 0.5) !important;
+    color: rgba(30, 41, 59, 1) !important;
+    box-shadow: 0 4px 16px rgba(167, 139, 250, 0.3) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  .mobile-subcategory-icon {
+    width: 16px !important;
+    height: 16px !important;
+    color: rgba(167, 139, 250, 0.8) !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  .mobile-subcategory-item:hover .mobile-subcategory-icon {
+    color: rgba(167, 139, 250, 1) !important;
+    transform: scale(1.1) !important;
+  }
+
+  .mobile-subcategory-item.active .mobile-subcategory-icon {
+    color: rgba(167, 139, 250, 1) !important;
+    transform: scale(1.1) !important;
+  }
+
+  .mobile-subcategory-name {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
   }
 
   /* Список объявлений */
   .mobile-listings {
-    padding: 16px;
+    padding: 4px 16px 16px 16px !important; /* Уменьшаем верхний отступ с 8px до 4px */
+    margin-top: 0 !important; /* Убираем верхний отступ */
   }
 
   .mobile-listings-header {
@@ -933,27 +1129,32 @@
   .mobile-listings-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
   }
 
   .mobile-listing-card {
-    background: white;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 16px !important;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
   .mobile-listing-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.9) !important;
   }
 
   .mobile-listing-image {
     position: relative;
-    height: 120px;
-    background: #f3f4f6;
+    height: 140px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
   }
 
   .mobile-listing-img {
@@ -977,25 +1178,47 @@
     color: #9ca3af;
   }
 
+  /* Значок категории на изображении */
+  .mobile-category-badge {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .mobile-category-badge-icon {
+    width: 20px !important;
+    height: 20px !important;
+    color: #6b7280 !important;
+  }
+
+  /* Кнопка лайка в футере карточки */
   .mobile-favorite-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
+    background: none !important;
+    border: none !important;
+    padding: 8px !important;
+    border-radius: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
 
   .mobile-favorite-button:hover {
-    background: white;
-    transform: scale(1.1);
+    background: rgba(239, 68, 68, 0.1) !important;
+    transform: scale(1.1) !important;
   }
 
   .favorite-icon {
@@ -1010,33 +1233,58 @@
   }
 
   .mobile-listing-content {
-    padding: 12px;
+    padding: 16px !important;
+    padding-top: 8px !important; /* Уменьшаем верхний отступ, так как плашка цены уже создает визуальное разделение */
   }
 
   .mobile-listing-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0 0 8px 0;
-    line-height: 1.3;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 0 10px 0 !important;
+    line-height: 1.4 !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .mobile-listing-price {
-    font-size: 16px;
-    font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 4px;
+
+
+  .mobile-listing-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-top: 8px !important;
   }
 
   .mobile-listing-location {
-    font-size: 12px;
-    color: #6b7280;
+    font-size: 13px !important;
+    color: #6b7280 !important;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1 !important;
+  }
+
+  /* Плашка цены для мобильной версии */
+  .mobile-listing-card .price-bar {
+    position: relative !important;
+    background: rgba(94, 234, 212, 0.9) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 8px 12px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-radius: 0 0 16px 16px !important;
+    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    z-index: 2 !important;
+    margin-top: -16px !important; /* Поднимаем плашку, чтобы она перекрывала нижнюю часть изображения */
+  }
+
+  .mobile-listing-card .price-text {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: rgba(15, 23, 42, 0.95) !important;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
   }
 
   /* Скрываем десктопные элементы на мобильных */

@@ -24,7 +24,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
-import { useIsMobile } from '../hooks/useIsMobile';
+import { useDeviceType } from '../hooks/useDeviceType';
 import { Listing } from '../types';
 
 // Временные компоненты для демонстрации
@@ -463,7 +463,7 @@ const TabBar = () => {
               }}
             >
               <div style={{ position: 'relative' }}>
-                <Icon style={{ width: '24px', height: '24px' }} />
+                <Icon style={{ width: '20px', height: '20px' }} />
               </div>
               <span style={{ marginTop: '4px' }}>{tab.name}</span>
             </button>
@@ -478,7 +478,7 @@ const TabBar = () => {
             className={`tab-item ${isActive ? 'active' : ''}`}
           >
             <div style={{ position: 'relative' }}>
-              <Icon style={{ width: '24px', height: '24px' }} />
+              <Icon style={{ width: '20px', height: '20px' }} />
               {tab.href === '/messages' && currentUser && unreadMessagesCount > 0 && (
                 <div className="unread-badge">
                   {unreadMessagesCount > 99 ? '99+' : unreadMessagesCount}
@@ -522,7 +522,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const { t } = useTranslation();
   const { currentUser } = useAuth();
   const { currentLanguage, setLanguage, languages } = useLanguage();
-  const isMobile = useIsMobile();
+  const { isMobile } = useDeviceType();
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showWelcomeModal, setShowWelcomeModal] = useState(true);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -692,6 +692,8 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
               <UserIcon className="website-nav-icon" />
               <span className="website-nav-text">{t('navigation.profile')}</span>
             </button>
+            
+
           </div>
           
           {/* Кнопка переключения языка */}
@@ -725,7 +727,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
       <div className={`content-area ${shouldShowProfileBackground ? 'profile-background' : ''}`}>
         <Routes>
           <Route path="/" element={
-            window.innerWidth <= 767 ? <MobileHomeView /> : <WebsiteAnnouncementsView 
+            isMobile ? <MobileHomeView /> : <WebsiteAnnouncementsView 
               showSortSheet={showSortSheet}
               setShowSortSheet={setShowSortSheet}
               selectedSort={selectedSort}
@@ -735,7 +737,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
           <Route path="/add" element={<AddListingViewWrapper />} />
           <Route path="/favorites" element={<FavoritesViewWrapper />} />
           <Route path="/messages" element={
-            window.innerWidth <= 767 ? 
+            isMobile ? 
             <MobileMessagesViewWrapper /> : 
             <MessagesViewWrapper />
           } />

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MagnifyingGlassIcon, FunnelIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { 
@@ -18,7 +18,8 @@ import {
   GiftIcon,
   EllipsisHorizontalIcon,
   SunIcon,
-  AcademicCapIcon
+  AcademicCapIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -63,6 +64,17 @@ const MobileHomeView: React.FC = () => {
     return cats;
   }, [t]);
 
+  const subcategories = useMemo(() => ({
+    [t('home.work')]: [
+      { name: t('home.vacancies'), key: 'vacancies', icon: BriefcaseIcon },
+      { name: t('home.resume'), key: 'resume', icon: UserIcon }
+    ],
+    [t('home.realEstate')]: [
+      { name: t('home.rent'), key: 'rent', icon: HomeIcon },
+      { name: t('home.sale'), key: 'sale', icon: BuildingOfficeIcon }
+    ]
+  }), [t]);
+
 
 
   const [searchText, setSearchText] = useState('');
@@ -70,6 +82,8 @@ const MobileHomeView: React.FC = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSortSheet, setShowSortSheet] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [filterState, setFilterState] = useState({
     cityInput: '',
@@ -86,6 +100,7 @@ const MobileHomeView: React.FC = () => {
 
   // Фильтрация объявлений
   const filteredListings = useMemo(() => {
+    console.log('Initial listings:', initialListings.listings);
     let filtered = initialListings.listings;
 
     // Поиск по тексту
@@ -236,6 +251,25 @@ const MobileHomeView: React.FC = () => {
 
   const currentLanguageOption = languages.find(lang => lang.code === currentLanguage);
 
+  // Закрытие выпадающего списка категорий при клике вне его
+  const categoriesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
+        setShowCategories(false);
+      }
+    };
+
+    if (showCategories) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCategories]);
+
   if (selectedListing) {
     return (
       <ListingDetailView
@@ -301,22 +335,120 @@ const MobileHomeView: React.FC = () => {
       </div>
 
       {/* Категории */}
-      <div className="mobile-categories">
-        <div className="mobile-categories-scroll">
-          {categories.map((category) => {
-            const IconComponent = category.icon as React.ComponentType<{ className?: string }>;
+      <div className="mobile-categories" ref={categoriesRef}>
+        {/* Кнопка выбора категории - показывает выбранную категорию */}
+        <button
+          className="mobile-category-select-button"
+          onClick={() => setShowCategories(!showCategories)}
+        >
+          {(() => {
+            // Сначала ищем основную категорию
+            let selectedCategoryData = categories.find(cat => cat.key === selectedCategory);
+            let displayName = selectedCategoryData?.name || categories[0].name;
+            let IconComponent = selectedCategoryData?.icon || categories[0].icon;
+            
+            // Если не нашли основную категорию, ищем подкатегорию
+            if (!selectedCategoryData) {
+              for (const [mainCategoryName, subcats] of Object.entries(subcategories)) {
+                const subcategory = subcats.find(sub => sub.key === selectedCategory);
+                if (subcategory) {
+                  // Находим основную категорию для этой подкатегории
+                  const mainCategory = categories.find(cat => cat.name === mainCategoryName);
+                  if (mainCategory) {
+                    selectedCategoryData = mainCategory;
+                    displayName = subcategory.name; // Показываем название подкатегории
+                    IconComponent = subcategory.icon;
+                  }
+                  break;
+                }
+              }
+            }
+            
+            const IconComponentFinal = IconComponent as React.ComponentType<{ className?: string }>;
+            
             return (
-              <button
-                key={category.key}
-                className={`mobile-category-item ${selectedCategory === category.key ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(category.key)}
-              >
-                <IconComponent className="mobile-category-icon" />
-                <span className="mobile-category-name">{category.name}</span>
-              </button>
+              <>
+                <IconComponentFinal className="mobile-category-icon" />
+                <span className="mobile-category-name">{displayName}</span>
+                <svg 
+                  className={`mobile-category-chevron ${showCategories ? 'expanded' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </>
             );
-          })}
-        </div>
+          })()}
+        </button>
+        
+        {/* Выпадающий список категорий */}
+        {showCategories && (
+          <div className="mobile-categories-dropdown">
+            <div className="mobile-categories-scroll">
+              {categories.map((category) => {
+                const IconComponent = category.icon as React.ComponentType<{ className?: string }>;
+                const isExpanded = expandedCategory === category.name;
+                const hasSubcategories = category.hasSubcategories;
+                
+                return (
+                  <div key={category.key} className="mobile-category-item-wrapper">
+                    <button
+                      className={`mobile-category-item ${selectedCategory === category.key ? 'active' : ''}`}
+                      onClick={() => {
+                        if (hasSubcategories) {
+                          // Если у категории есть подкатегории, переключаем их отображение
+                          setExpandedCategory(expandedCategory === category.name ? null : category.name);
+                        } else {
+                          // Если это обычная категория, выбираем её
+                          setSelectedCategory(category.key);
+                          setShowCategories(false);
+                        }
+                      }}
+                    >
+                      <IconComponent className="mobile-category-icon" />
+                      <span className="mobile-category-name">{category.name}</span>
+                      {hasSubcategories && (
+                        <svg 
+                          className={`mobile-category-chevron ${isExpanded ? 'expanded' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      )}
+                    </button>
+                    
+                    {/* Подкатегории */}
+                    {hasSubcategories && isExpanded && (
+                      <div className="mobile-subcategory-list">
+                        {subcategories[category.name]?.map((subcategory) => {
+                          const SubIconComponent = subcategory.icon as React.ComponentType<{ className?: string }>;
+                          return (
+                            <button
+                              key={subcategory.key}
+                              className={`mobile-subcategory-item ${selectedCategory === subcategory.key ? 'active' : ''}`}
+                              onClick={() => {
+                                setSelectedCategory(subcategory.key);
+                                setExpandedCategory(null);
+                                setShowCategories(false);
+                              }}
+                            >
+                              <SubIconComponent className="mobile-subcategory-icon" />
+                              <span className="mobile-subcategory-name">{subcategory.name}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Список объявлений */}
@@ -344,29 +476,47 @@ const MobileHomeView: React.FC = () => {
               <div className="mobile-listing-image">
                 {listing.imageName ? (
                   <img 
-                    src={`/images/${listing.imageName}`} 
+                    src={`/images/${listing.imageName}.jpg`} 
                     alt={listing.title}
                     className="mobile-listing-img"
+                    onError={(e) => {
+                      console.error('Ошибка загрузки изображения:', listing.imageName);
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                 ) : (
                   <div className="mobile-listing-placeholder">
                     <HomeIcon className="placeholder-icon" />
                   </div>
                 )}
-                <button 
-                  className="mobile-favorite-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleFavoriteToggle(listing);
-                  }}
-                >
-                  <HeartIcon className={`favorite-icon ${isFavorite(listing.id) ? 'active' : ''}`} />
-                </button>
+                <div className="mobile-category-badge">
+                  {(() => {
+                    const category = categories.find(cat => cat.key === listing.category);
+                    if (category) {
+                      const IconComponent = category.icon as React.ComponentType<{ className?: string }>;
+                      return <IconComponent className="mobile-category-badge-icon" />;
+                    }
+                    return <HomeIcon className="mobile-category-badge-icon" />;
+                  })()}
+                </div>
+              </div>
+              <div className="price-bar">
+                <div className="price-text">{listing.price} {listing.currency}</div>
               </div>
               <div className="mobile-listing-content">
                 <h3 className="mobile-listing-title">{listing.title}</h3>
-                <div className="mobile-listing-price">{listing.price}</div>
-                <div className="mobile-listing-location">{listing.city}</div>
+                <div className="mobile-listing-footer">
+                  <div className="mobile-listing-location">{listing.city}</div>
+                  <button 
+                    className="mobile-favorite-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFavoriteToggle(listing);
+                    }}
+                  >
+                    <HeartIcon className={`favorite-icon ${isFavorite(listing.id) ? 'active' : ''}`} />
+                  </button>
+                </div>
               </div>
             </div>
           ))}

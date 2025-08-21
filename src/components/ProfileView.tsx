@@ -279,7 +279,12 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
 
     setIsLoading(true);
     try {
+      // TODO: Firebase - сохраняем email для последующей верификации
+      // window.localStorage.setItem('emailForSignIn', registerEmail.trim());
+      
       await signUp(registerEmail.trim(), registerPassword, registerName.trim(), false);
+      
+      // Показываем модальное окно с инструкциями по подтверждению email
       setShowEmailVerificationModal(true);
     } catch (error: any) {
       setAuthError(translateAuthError(error.message));
@@ -642,6 +647,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
                   </div>
                 </div>
                 
+                {/* TODO: Firebase - убрать кнопку "Ввести код вручную" для email ссылок */}
                 <div className="verification-actions">
                   <button
                     type="button"
@@ -651,6 +657,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
                   >
                     {isResendingEmail ? t('profile.sending') : t('profile.resendEmail')}
                   </button>
+                  {/* Временно оставляем для демо версии */}
                   <button
                     type="button"
                     onClick={() => {

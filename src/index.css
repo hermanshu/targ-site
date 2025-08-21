@@ -2,6 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Классы для определения устройства */
+.device-mobile {
+  /* Специфичные стили для мобильных устройств */
+}
+
+.device-tablet {
+  /* Специфичные стили для планшетов */
+}
+
+.device-desktop {
+  /* Специфичные стили для десктопа */
+}
+
+/* Адаптивные стили по размеру экрана (не влияют на определение устройства) */
+@media (max-width: 768px) {
+  /* Стили для маленьких экранов на любом устройстве */
+  .responsive-small {
+    /* Адаптивные стили */
+  }
+  
+  /* Адаптация десктопной версии для узких окон */
+  .device-desktop .website-announcements-container {
+    padding: 0 10px;
+    overflow-x: auto;
+    min-width: 100%;
+  }
+  
+  .device-desktop .website-listings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    min-width: max-content;
+  }
+  
+  .device-desktop .listing-card {
+    min-width: 280px;
+    max-width: 320px;
+  }
+  
+  /* Обеспечиваем горизонтальную прокрутку для десктопа */
+  .device-desktop .content-area {
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+  
+  /* Адаптация навигационной панели для узких окон */
+  .device-desktop .website-navigation-panel {
+    min-width: 100%;
+    overflow-x: auto;
+  }
+  
+  .device-desktop .website-nav-items {
+    min-width: max-content;
+    gap: 8px;
+  }
+  
+  .device-desktop .website-nav-item {
+    min-width: 120px;
+    padding: 8px 12px;
+  }
+  
+  .device-desktop .website-nav-text {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Стили для средних экранов */
+  .responsive-medium {
+    /* Адаптивные стили */
+  }
+  
+  /* Адаптация десктопной версии для средних окон */
+  .device-desktop .website-listings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Стили для больших экранов */
+  .responsive-large {
+    /* Адаптивные стили */
+  }
+  
+  /* Десктопная версия для больших экранов */
+  .device-desktop .website-listings-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+  }
+}
+
 /* Обеспечиваем полную высоту для всех контейнеров */
 html, body, #root, .App {
   height: 100%;
@@ -53,13 +144,13 @@ code {
 /* Анимированная линза */
 .tab-lens {
   position: absolute;
-  top: 8px;
-  height: 60px;
+  top: 6px; /* Уменьшено с 8px до 6px */
+  height: 50px; /* Уменьшено с 60px до 50px */
   background: linear-gradient(135deg, 
     rgba(139, 92, 246, 0.15) 0%, 
     rgba(139, 92, 246, 0.1) 50%, 
     rgba(139, 92, 246, 0.15) 100%);
-  border-radius: 20px;
+  border-radius: 18px; /* Уменьшено с 20px до 18px */
   backdrop-filter: blur(20px);
   border: 1px solid rgba(139, 92, 246, 0.3);
   box-shadow: 
@@ -3091,10 +3182,10 @@ body:has(.review-modal-overlay) .detail-header {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px 8px;
+  padding: 8px 6px; /* Уменьшен padding с 12px 8px до 8px 6px */
   color: rgba(100, 116, 139, 0.7);
   text-decoration: none;
-  font-size: 12px;
+  font-size: 11px; /* Уменьшен размер шрифта с 12px до 11px */
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 16px;
@@ -3138,6 +3229,8 @@ body:has(.review-modal-overlay) .detail-header {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   color: inherit;
+  width: 20px !important; /* Уменьшено с 24px до 20px */
+  height: 20px !important; /* Уменьшено с 24px до 20px */
 }
 
 .tab-item.active svg {

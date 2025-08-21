@@ -12,6 +12,9 @@ interface AuthContextType {
   resendVerificationEmail: () => Promise<void>;
   verifyEmailCode: (code: string) => Promise<void>;
   updateUserProfile: (updates: Partial<User>) => Promise<void>;
+  // Firebase-specific methods
+  verifyEmailLink: (emailLink: string) => Promise<void>;
+  sendEmailVerification: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,13 +31,27 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Функция для загрузки пользователей из localStorage
+// TODO: Firebase imports (раскомментировать после настройки Firebase)
+// import { 
+//   getAuth, 
+//   createUserWithEmailAndPassword, 
+//   signInWithEmailAndPassword,
+//   sendEmailVerification,
+//   sendPasswordResetEmail,
+//   signOut as firebaseSignOut,
+//   onAuthStateChanged,
+//   User as FirebaseUser,
+//   isSignInWithEmailLink,
+//   signInWithEmailLink
+// } from 'firebase/auth';
+// import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+
+// Функция для загрузки пользователей из localStorage (временно, для демо)
 const loadMockUsers = (): User[] => {
   const savedUsers = localStorage.getItem('mockUsers');
   if (savedUsers) {
     try {
       const users = JSON.parse(savedUsers);
-      // Преобразуем строки дат обратно в объекты Date
       return users.map((user: any) => ({
         ...user,
         createdAt: new Date(user.createdAt)
@@ -44,7 +61,6 @@ const loadMockUsers = (): User[] => {
     }
   }
   
-  // Возвращаем дефолтных пользователей, если нет сохраненных
   return [
     {
       id: '1',
@@ -57,12 +73,10 @@ const loadMockUsers = (): User[] => {
   ];
 };
 
-// Функция для сохранения пользователей в localStorage
 const saveMockUsers = (users: User[]) => {
   localStorage.setItem('mockUsers', JSON.stringify(users));
 };
 
-// Мок-данные для демонстрации
 let mockUsers: User[] = loadMockUsers();
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -71,13 +85,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [pendingVerification, setPendingVerification] = useState<{email: string, code: string} | null>(null);
 
-  // Загружаем пользователя из localStorage при инициализации
+  // TODO: Firebase auth initialization
+  // const auth = getAuth();
+  // const db = getFirestore();
+
+  // TODO: Firebase auth state listener
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+  //     if (firebaseUser) {
+  //       // Пользователь вошел в систему
+  //       const userData = await getUserData(firebaseUser.uid);
+  //       setCurrentUser(userData);
+  //       setUserProfile(userData);
+  //     } else {
+  //       // Пользователь вышел из системы
+  //       setCurrentUser(null);
+  //       setUserProfile(null);
+  //     }
+  //     setLoading(false);
+  //   });
+  //   return unsubscribe;
+  // }, []);
+
+  // Временная логика для демо
   useEffect(() => {
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
       try {
         const user = JSON.parse(savedUser);
-        // Преобразуем строки дат обратно в объекты Date
         if (user.createdAt) {
           user.createdAt = new Date(user.createdAt);
         }
@@ -89,62 +124,73 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
     
-    // Имитируем загрузку
     setTimeout(() => {
       setLoading(false);
     }, 500);
   }, []);
 
+  // TODO: Firebase sign in
   const signIn = async (email: string, password: string) => {
     try {
-      // Имитируем задержку сети
+      // TODO: Firebase implementation
+      // const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      // const firebaseUser = userCredential.user;
+      
+      // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Простая проверка для демо
       if (email === 'admin@admin.ru' && password === 'admin') {
         const user = mockUsers[0];
         setCurrentUser(user);
         setUserProfile(user);
-        // Сохраняем в localStorage
         localStorage.setItem('currentUser', JSON.stringify(user));
         return;
       }
       
-      // Проверяем существующих пользователей
       const existingUser = mockUsers.find(u => u.email === email);
       if (existingUser && existingUser.emailVerified) {
         setCurrentUser(existingUser);
         setUserProfile(existingUser);
-        // Сохраняем в localStorage
         localStorage.setItem('currentUser', JSON.stringify(existingUser));
         return;
       }
       
-      // Возвращаем ошибку, которую компонент переведет
       throw new Error('INVALID_EMAIL_OR_PASSWORD');
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
     }
   };
 
+  // TODO: Firebase sign up
   const signUp = async (email: string, password: string, name: string, isCompany: boolean) => {
     try {
-      // Имитируем задержку сети
+      // TODO: Firebase implementation
+      // const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // const firebaseUser = userCredential.user;
+      
+      // // Отправляем email для подтверждения
+      // await sendEmailVerification(firebaseUser);
+      
+      // // Сохраняем дополнительные данные пользователя в Firestore
+      // await setDoc(doc(db, 'users', firebaseUser.uid), {
+      //   name,
+      //   email,
+      //   isCompany,
+      //   createdAt: new Date(),
+      //   emailVerified: false
+      // });
+      
+      // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Проверяем, не существует ли уже пользователь
       const existingUser = mockUsers.find(u => u.email === email);
       if (existingUser) {
         throw new Error('USER_ALREADY_EXISTS');
       }
       
-      // Генерируем код подтверждения
       const verificationCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-      
-      // Сохраняем данные для подтверждения
       setPendingVerification({ email, code: verificationCode });
       
-      // Создаем временного пользователя
       const newUser: User = {
         id: Date.now().toString(),
         name,
@@ -154,32 +200,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         emailVerified: false
       };
       
-      // Добавляем в мок-данные
       mockUsers.push(newUser);
       saveMockUsers(mockUsers);
-      
-      // Код подтверждения отправлен на email
       
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
     }
   };
 
+  // TODO: Firebase email verification
   const verifyEmailCode = async (code: string) => {
     try {
+      // TODO: Firebase implementation - проверка email link
+      // if (isSignInWithEmailLink(auth, window.location.href)) {
+      //   let email = window.localStorage.getItem('emailForSignIn');
+      //   if (!email) {
+      //     email = window.prompt('Пожалуйста, введите ваш email для подтверждения');
+      //   }
+      //   await signInWithEmailLink(auth, email, window.location.href);
+      //   window.localStorage.removeItem('emailForSignIn');
+      // }
+      
+      // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       if (!pendingVerification || pendingVerification.code !== code) {
         throw new Error('INVALID_VERIFICATION_CODE');
       }
       
-      // Находим пользователя и подтверждаем email
       const userIndex = mockUsers.findIndex(u => u.email === pendingVerification.email);
       if (userIndex !== -1) {
         mockUsers[userIndex].emailVerified = true;
         setCurrentUser(mockUsers[userIndex]);
         setUserProfile(mockUsers[userIndex]);
-        // Сохраняем в localStorage
         localStorage.setItem('currentUser', JSON.stringify(mockUsers[userIndex]));
         saveMockUsers(mockUsers);
         setPendingVerification(null);
@@ -190,26 +243,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const signOut = async () => {
+  // TODO: Firebase email link verification
+  const verifyEmailLink = async (emailLink: string) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setCurrentUser(null);
-      setUserProfile(null);
-      // Удаляем из localStorage
-      localStorage.removeItem('currentUser');
+      // TODO: Firebase implementation
+      // if (isSignInWithEmailLink(auth, emailLink)) {
+      //   let email = window.localStorage.getItem('emailForSignIn');
+      //   if (!email) {
+      //     email = window.prompt('Пожалуйста, введите ваш email для подтверждения');
+      //   }
+      //   const result = await signInWithEmailLink(auth, email, emailLink);
+      //   window.localStorage.removeItem('emailForSignIn');
+      //   
+      //   // Обновляем статус emailVerified в Firestore
+      //   await setDoc(doc(db, 'users', result.user.uid), {
+      //     emailVerified: true
+      //   }, { merge: true });
+      // }
+      
+      // Временная логика для демо
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Email link verification:', emailLink);
+      
     } catch (error: any) {
-      throw new Error('NETWORK_ERROR');
+      throw new Error(error.message || 'NETWORK_ERROR');
     }
   };
 
-  const sendPasswordReset = async (email: string) => {
+  // TODO: Firebase send email verification
+  const sendEmailVerification = async () => {
     try {
+      // TODO: Firebase implementation
+      // if (auth.currentUser) {
+      //   await sendEmailVerification(auth.currentUser);
+      // }
+      
+      // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
-      const user = mockUsers.find(u => u.email === email);
-      if (!user) {
-        throw new Error('EMAIL_NOT_FOUND');
-      }
-      // Ссылка для сброса пароля отправлена на email
+      console.log('Email verification sent');
+      
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
     }
@@ -217,11 +289,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const resendVerificationEmail = async () => {
     try {
+      // TODO: Firebase implementation
+      // if (auth.currentUser) {
+      //   await sendEmailVerification(auth.currentUser);
+      // }
+      
+      // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
-      if (!pendingVerification) {
-        throw new Error('NO_PENDING_VERIFICATION');
-      }
-      // Email с подтверждением отправлен повторно
+      console.log('Verification email resent');
+      
+    } catch (error: any) {
+      throw new Error(error.message || 'NETWORK_ERROR');
+    }
+  };
+
+  const sendPasswordReset = async (email: string) => {
+    try {
+      // TODO: Firebase implementation
+      // await sendPasswordResetEmail(auth, email);
+      
+      // Временная логика для демо
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Password reset email sent to:', email);
+      
+    } catch (error: any) {
+      throw new Error(error.message || 'NETWORK_ERROR');
+    }
+  };
+
+  const signOut = async () => {
+    try {
+      // TODO: Firebase implementation
+      // await firebaseSignOut(auth);
+      
+      // Временная логика для демо
+      await new Promise(resolve => setTimeout(resolve, 500));
+      setCurrentUser(null);
+      setUserProfile(null);
+      localStorage.removeItem('currentUser');
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
     }
@@ -229,31 +334,39 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const updateUserProfile = async (updates: Partial<User>) => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // TODO: Firebase implementation
+      // if (auth.currentUser) {
+      //   await setDoc(doc(db, 'users', auth.currentUser.uid), updates, { merge: true });
+      // }
       
-      if (!currentUser) {
-        throw new Error('NO_CURRENT_USER');
+      // Временная логика для демо
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      if (currentUser) {
+        const updatedUser = { ...currentUser, ...updates };
+        setCurrentUser(updatedUser);
+        setUserProfile(updatedUser);
+        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+        
+        const userIndex = mockUsers.findIndex(u => u.id === currentUser.id);
+        if (userIndex !== -1) {
+          mockUsers[userIndex] = updatedUser;
+          saveMockUsers(mockUsers);
+        }
       }
-
-      // Обновляем пользователя в мок-данных
-      const userIndex = mockUsers.findIndex(u => u.id === currentUser.id);
-      if (userIndex !== -1) {
-        mockUsers[userIndex] = { ...mockUsers[userIndex], ...updates };
-        saveMockUsers(mockUsers);
-      }
-
-      // Обновляем текущего пользователя
-      const updatedUser = { ...currentUser, ...updates };
-      setCurrentUser(updatedUser);
-      setUserProfile(updatedUser);
-      
-      // Сохраняем в localStorage
-      localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-      
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
     }
   };
+
+  // TODO: Helper function for getting user data from Firestore
+  // const getUserData = async (uid: string): Promise<User> => {
+  //   const userDoc = await getDoc(doc(db, 'users', uid));
+  //   if (userDoc.exists()) {
+  //     return { id: uid, ...userDoc.data() } as User;
+  //   }
+  //   throw new Error('User not found');
+  // };
 
   const value = {
     currentUser,
@@ -265,7 +378,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     sendPasswordReset,
     resendVerificationEmail,
     verifyEmailCode,
-    updateUserProfile
+    updateUserProfile,
+    verifyEmailLink,
+    sendEmailVerification,
   };
 
   return (
