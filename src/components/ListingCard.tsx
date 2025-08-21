@@ -22,6 +22,7 @@ import {
 import { Listing } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
 
+
 interface ListingCardProps {
   listing: Listing;
   onFavoriteToggle: (listing: Listing) => void;
@@ -139,6 +140,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="listing-location">
           <span className="location-text">{listing.city}</span>
         </div>
+        
+
       </div>
     </div>
   );

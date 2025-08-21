@@ -12,7 +12,8 @@ import {
   XMarkIcon,
   EyeIcon,
   ChevronLeftIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  StarIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { Listing } from '../types';
@@ -20,6 +21,9 @@ import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useListingImages } from '../hooks/useListingImages';
+import { useReviews } from '../contexts/ReviewsContext';
+import StarRating from './StarRating';
+import ReviewModal from './ReviewModal';
 
 interface ListingDetailViewProps {
   listing: Listing;
@@ -56,6 +60,11 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
   const [showFullscreenImage, setShowFullscreenImage] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  // Хуки для рейтинга
+  const { getSellerRating, addReview, hasUserReviewedSeller } = useReviews();
+  const sellerRating = getSellerRating(listing.userId);
 
   // Используем хук для работы с изображениями
   const {
@@ -345,6 +354,32 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
     setShowShareModal(false);
   };
 
+  const handleReviewClick = () => {
+    if (!currentUser) {
+      setShowAuthModal(true);
+      return;
+    }
+    setShowReviewModal(true);
+  };
+
+  const handleSubmitReview = async (rating: number, comment: string) => {
+    if (!currentUser) return;
+
+    addReview({
+      reviewerId: currentUser.id,
+      sellerId: listing.userId,
+      listingId: listing.id,
+      rating: rating as 1 | 2 | 3 | 4 | 5,
+      comment,
+      isVerified: true,
+      reviewerName: currentUser.name
+    });
+  };
+
+  const canLeaveReview = currentUser && 
+    currentUser.id !== listing.userId && 
+    !hasUserReviewedSeller(currentUser.id, listing.userId);
+
   const handleCopyLink = async () => {
     try {
       // Создаем ссылку на объявление
@@ -609,16 +644,43 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
               <div className="seller-type">
                 {listing.isCompany ? t('listingDetail.company') : t('listingDetail.individual')}
               </div>
+              
+              {/* Рейтинг продавца */}
+              {sellerRating.totalReviews > 0 && (
+                <div className="seller-rating-info">
+                  <StarRating 
+                    rating={sellerRating.averageRating} 
+                    readonly={true} 
+                    size="small"
+                  />
+                  <span className="rating-text">
+                    {sellerRating.averageRating} ({sellerRating.totalReviews} отзывов)
+                  </span>
+                </div>
+              )}
             </div>
-            <button 
-              className="contact-button"
-              onClick={handleContactClick}
-            >
-              <ChatBubbleLeftRightIcon className="contact-icon" />
-              <span className="contact-text">
-                {listing.contactMethod === 'chat' ? t('listingDetail.write') : t('listingDetail.contactSeller')}
-              </span>
-            </button>
+            <div className="seller-actions">
+              <button 
+                className="contact-button"
+                onClick={handleContactClick}
+              >
+                <ChatBubbleLeftRightIcon className="contact-icon" />
+                <span className="contact-text">
+                  {listing.contactMethod === 'chat' ? t('listingDetail.write') : t('listingDetail.contactSeller')}
+                </span>
+              </button>
+              
+              {/* Кнопка оставить отзыв */}
+              {canLeaveReview && (
+                <button 
+                  className="review-button"
+                  onClick={handleReviewClick}
+                >
+                  <StarIcon className="review-icon" />
+                                      <span className="review-text">Отзыв</span>
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Локация и дата */}
@@ -958,6 +1020,15 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Модальное окно для отзыва */}
+      <ReviewModal
+        isOpen={showReviewModal}
+        onClose={() => setShowReviewModal(false)}
+        onSubmit={handleSubmitReview}
+        sellerName={listing.sellerName}
+        listingTitle={listing.title}
+      />
     </div>
   );
 };

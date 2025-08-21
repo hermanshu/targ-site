@@ -17,6 +17,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { Listing } from '../types';
 import ListingDetailView from './ListingDetailView';
 import EditListingView from './EditListingView';
+import SaleConfirmationModal from './SaleConfirmationModal';
 
 const MyListingsView: React.FC = () => {
   const { currentUser } = useAuth();
@@ -26,6 +27,17 @@ const MyListingsView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'active' | 'archived' | 'draft'>('active');
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [editingListing, setEditingListing] = useState<Listing | null>(null);
+  const [saleConfirmationModal, setSaleConfirmationModal] = useState<{
+    isOpen: boolean;
+    listingId: string;
+    listingTitle: string;
+    action: 'archive' | 'delete';
+  }>({
+    isOpen: false,
+    listingId: '',
+    listingTitle: '',
+    action: 'archive'
+  });
 
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
@@ -66,7 +78,15 @@ const MyListingsView: React.FC = () => {
   };
 
   const handleArchive = (listingId: string) => {
-    updateListing(listingId, { status: 'archived' });
+    const listing = userListings.find(l => l.id === listingId);
+    if (listing) {
+      setSaleConfirmationModal({
+        isOpen: true,
+        listingId,
+        listingTitle: listing.title,
+        action: 'archive'
+      });
+    }
   };
 
   const handleActivate = (listingId: string) => {
@@ -74,13 +94,49 @@ const MyListingsView: React.FC = () => {
   };
 
   const handleDelete = (listingId: string) => {
-    if (window.confirm(t('myListings.deleteConfirmation'))) {
-      deleteListing(listingId);
+    const listing = userListings.find(l => l.id === listingId);
+    if (listing) {
+      setSaleConfirmationModal({
+        isOpen: true,
+        listingId,
+        listingTitle: listing.title,
+        action: 'delete'
+      });
     }
   };
 
   const handlePublish = (listingId: string) => {
     updateListing(listingId, { isPublished: true, status: 'active' });
+  };
+
+  const handleConfirmSale = (buyerId: string, review?: { rating: number; comment: string }) => {
+    // Здесь можно добавить логику для сохранения отзыва о покупателе
+    if (review && buyerId) {
+      // TODO: Добавить отзыв о покупателе
+      console.log('Отзыв о покупателе:', { buyerId, review });
+    }
+    
+    // Архивируем или удаляем объявление
+    if (saleConfirmationModal.listingId) {
+      if (saleConfirmationModal.action === 'archive') {
+        updateListing(saleConfirmationModal.listingId, { status: 'archived' });
+      } else {
+        deleteListing(saleConfirmationModal.listingId);
+      }
+    }
+    
+    setSaleConfirmationModal({ isOpen: false, listingId: '', listingTitle: '', action: 'archive' });
+  };
+
+  const handleConfirmAction = () => {
+    // Простое действие без продажи
+    if (saleConfirmationModal.listingId) {
+      if (saleConfirmationModal.action === 'archive') {
+        updateListing(saleConfirmationModal.listingId, { status: 'archived' });
+      } else {
+        deleteListing(saleConfirmationModal.listingId);
+      }
+    }
   };
 
   const handleCardClick = (listing: Listing) => {
@@ -397,6 +453,23 @@ const MyListingsView: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Модальное окно подтверждения продажи */}
+      <SaleConfirmationModal
+        isOpen={saleConfirmationModal.isOpen}
+        onClose={() => setSaleConfirmationModal({ isOpen: false, listingId: '', listingTitle: '', action: 'archive' })}
+        listingId={saleConfirmationModal.listingId}
+        listingTitle={saleConfirmationModal.listingTitle}
+        action={saleConfirmationModal.action}
+        onConfirmSale={handleConfirmSale}
+        onConfirmAction={handleConfirmAction}
+        buyers={[
+          // TODO: Здесь нужно подтягивать реальных покупателей из чатов
+          { id: 'buyer1', name: 'Анна К.' },
+          { id: 'buyer2', name: 'Михаил П.' },
+          { id: 'buyer3', name: 'Елена С.' }
+        ]}
+      />
     </div>
   );
 };

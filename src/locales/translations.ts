@@ -164,6 +164,16 @@ export interface Translations {
     helpAndSupportDescription: string;
     reviews: string;
     reviewsDescription: string;
+    wallet: string;
+    walletDescription: string;
+    walletFeature1Title: string;
+    walletFeature1Description: string;
+    walletFeature2Title: string;
+    walletFeature2Description: string;
+    walletFeature3Title: string;
+    walletFeature3Description: string;
+    walletComingSoonTitle: string;
+    walletComingSoonDescription: string;
     languageChange: string;
     languageChangeDescription: string;
     logoutFromAccount: string;
@@ -433,6 +443,21 @@ export interface Translations {
       active: string;
       drafts: string;
       archive: string;
+    };
+    saleConfirmation: {
+      title: string;
+      question: string;
+      yes: string;
+      no: string;
+      selectBuyer: string;
+      selectBuyerText: string;
+      leaveReview: string;
+      reviewText: string;
+      rating: string;
+      comment: string;
+      commentPlaceholder: string;
+      submitReview: string;
+      skipReview: string;
     };
   };
 
@@ -760,6 +785,16 @@ const ruTranslations: Translations = {
     helpAndSupportDescription: 'Получить помощь и поддержку',
       reviews: 'Отзывы',
     reviewsDescription: 'Просмотр отзывов',
+      wallet: 'Кошелек',
+      walletDescription: 'Пополнение и продвижение объявлений',
+      walletFeature1Title: 'Пополнение кошелька',
+      walletFeature1Description: 'Безопасное пополнение через карту или электронные платежи',
+      walletFeature2Title: 'Продвижение объявлений',
+      walletFeature2Description: 'Используйте средства для продвижения ваших объявлений',
+      walletFeature3Title: 'Ускорение сделок',
+      walletFeature3Description: 'Продвинутые объявления быстрее находят покупателей',
+      walletComingSoonTitle: 'Скоро будет доступно',
+      walletComingSoonDescription: 'Мы работаем над интеграцией платежной системы. Следите за обновлениями!',
       languageChange: 'Смена языка',
     languageChangeDescription: 'Изменить язык интерфейса',
       logoutFromAccount: 'Выйти из аккаунта',
@@ -880,7 +915,7 @@ const ruTranslations: Translations = {
   },
 
   listingDetail: {
-    contactSeller: 'Связаться с продавцом',
+    contactSeller: 'Написать',
     write: 'Написать',
     writeMessage: 'Написать сообщение',
     openChat: 'Открыть чат',
@@ -1025,6 +1060,21 @@ const ruTranslations: Translations = {
         drafts: 'Черновики',
         archive: 'Архив',
       },
+      saleConfirmation: {
+        title: 'Подтверждение продажи',
+        question: 'Вы уже продали этот товар?',
+        yes: 'Да, продал',
+        no: 'Нет, еще продаю',
+        selectBuyer: 'Выберите покупателя',
+        selectBuyerText: 'Выберите покупателя, с которым совершили сделку:',
+        leaveReview: 'Оставить отзыв',
+        reviewText: 'Оставьте отзыв о покупателе:',
+        rating: 'Оценка',
+        comment: 'Комментарий',
+        commentPlaceholder: 'Расскажите о вашем опыте работы с этим покупателем...',
+        submitReview: 'Отправить отзыв',
+        skipReview: 'Пропустить отзыв',
+      },
     },
 
       editListing: {
@@ -1121,13 +1171,13 @@ const ruTranslations: Translations = {
     reviews: {
     title: 'Отзывы',
     averageRating: 'Средний рейтинг',
-    averageGivenRating: 'Средний рейтинг данных',
+    averageGivenRating: 'Средний рейтинг оставленных',
     totalReviews: 'Всего отзывов',
-    totalGivenReviews: 'Всего данных отзывов',
+    totalGivenReviews: 'Всего оставленных отзывов',
     receivedReviews: 'Полученные отзывы',
-    givenReviews: 'Данные отзывы',
+    givenReviews: 'Оставленные отзывы',
     noReceivedReviews: 'Пока нет полученных отзывов',
-    noGivenReviews: 'Пока нет данных отзывов',
+    noGivenReviews: 'Пока нет оставленных отзывов',
     noReceivedReviewsDescription: 'Когда другие пользователи оставят вам отзыв, он появится здесь',
     noGivenReviewsDescription: 'Когда вы оставите отзыв другому пользователю, он появится здесь',
   },

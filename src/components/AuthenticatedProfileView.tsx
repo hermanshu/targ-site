@@ -8,7 +8,8 @@ import {
   QuestionMarkCircleIcon,
   StarIcon,
   LanguageIcon,
-  PencilIcon
+  PencilIcon,
+  WalletIcon
 } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -36,6 +37,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   const settingsMenuItems = [
     {
@@ -329,6 +331,20 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
 
           <button 
             className="menu-item"
+            onClick={() => setShowWalletModal(true)}
+          >
+            <div className="menu-item-content">
+              <WalletIcon className="menu-item-icon" />
+              <div className="menu-item-text">
+                <span className="menu-item-title">{t('profile.wallet')}</span>
+                <span className="menu-item-subtitle">{t('profile.walletDescription')}</span>
+              </div>
+            </div>
+            <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+          </button>
+
+          <button 
+            className="menu-item"
             onClick={() => navigate('/reviews')}
           >
             <div className="menu-item-content">
@@ -376,6 +392,58 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
           <span>{t('profile.logoutFromAccount')}</span>
         </button>
       </div>
+
+      {/* Модальное окно кошелька */}
+      {showWalletModal && (
+        <div className="modal-overlay wallet-modal-overlay" onClick={() => setShowWalletModal(false)}>
+          <div className="modal-content wallet-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="wallet-modal-header">
+              <h3 className="wallet-modal-title">
+                <WalletIcon className="wallet-modal-icon" />
+                {t('profile.wallet')}
+              </h3>
+              <button 
+                className="modal-close-button"
+                onClick={() => setShowWalletModal(false)}
+              >
+                <ArrowRightOnRectangleIcon className="modal-close-icon" />
+              </button>
+            </div>
+            
+            <div className="wallet-modal-body">
+              <div className="wallet-feature">
+                <div className="wallet-feature-icon">💳</div>
+                <div className="wallet-feature-content">
+                  <h4 className="wallet-feature-title">{t('profile.walletFeature1Title')}</h4>
+                  <p className="wallet-feature-description">{t('profile.walletFeature1Description')}</p>
+                </div>
+              </div>
+              
+              <div className="wallet-feature">
+                <div className="wallet-feature-icon">🚀</div>
+                <div className="wallet-feature-content">
+                  <h4 className="wallet-feature-title">{t('profile.walletFeature2Title')}</h4>
+                  <p className="wallet-feature-description">{t('profile.walletFeature2Description')}</p>
+                </div>
+              </div>
+              
+              <div className="wallet-feature">
+                <div className="wallet-feature-icon">⚡</div>
+                <div className="wallet-feature-content">
+                  <h4 className="wallet-feature-title">{t('profile.walletFeature3Title')}</h4>
+                  <p className="wallet-feature-description">{t('profile.walletFeature3Description')}</p>
+                </div>
+              </div>
+              
+              <div className="wallet-coming-soon">
+                <div className="coming-soon-icon">🔜</div>
+                <h4 className="coming-soon-title">{t('profile.walletComingSoonTitle')}</h4>
+                <p className="coming-soon-description">{t('profile.walletComingSoonDescription')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -298,6 +298,42 @@
     font-size: 11px !important;
   }
 
+  /* Кнопка отзыва для мобильных */
+  .review-button-mobile {
+    position: absolute !important;
+    right: 16px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    white-space: nowrap !important;
+    margin-top: 40px !important;
+  }
+
+  .review-button-mobile:hover {
+    background: #e5e7eb !important;
+    border-color: #9ca3af !important;
+  }
+
+  .review-icon-mobile {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .review-text-mobile {
+    font-size: 10px !important;
+  }
+
   /* Скрываем нижнюю панель с кнопкой на мобильных */
   .detail-bottom-actions {
     display: none !important;

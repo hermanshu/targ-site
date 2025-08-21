@@ -53,4 +53,23 @@ export interface LanguageOption {
   code: string;
 }
 
-export type AppLanguage = 'RU' | 'EN' | 'SR'; 
+export type AppLanguage = 'RU' | 'EN' | 'SR';
+
+// Система рейтинга и отзывов
+export interface Review {
+  id: string;
+  reviewerId: string;
+  sellerId: string;
+  listingId: string;
+  rating: 1 | 2 | 3 | 4 | 5;
+  comment: string;
+  createdAt: Date;
+  isVerified: boolean;
+  reviewerName: string;
+}
+
+export interface SellerRating {
+  averageRating: number;
+  totalReviews: number;
+  reviews: Review[];
+} 
