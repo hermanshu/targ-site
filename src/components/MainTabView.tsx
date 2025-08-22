@@ -226,8 +226,6 @@ const TabBar = () => {
   const location = useLocation();
   const { currentUser } = useAuth();
   const { t } = useTranslation();
-  const tabRefs = useRef<(HTMLAnchorElement | HTMLButtonElement | null)[]>([]);
-  const [lensStyle, setLensStyle] = useState({ left: '0px', width: '0px' });
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
   const tabs = useMemo(() => {
@@ -245,37 +243,6 @@ const TabBar = () => {
 
     return baseTabs;
   }, [currentUser, t]);
-
-  // Находим активную вкладку и позиционируем линзу
-  useEffect(() => {
-    const updateLensPosition = () => {
-      const activeTabIndex = tabs.findIndex(tab => tab.href === location.pathname);
-      
-      if (activeTabIndex >= 0 && tabRefs.current[activeTabIndex]) {
-        const activeTab = tabRefs.current[activeTabIndex];
-        const tabBar = activeTab?.parentElement;
-        
-        if (activeTab && tabBar && activeTab.offsetWidth > 0) {
-          const tabRect = activeTab.getBoundingClientRect();
-          const barRect = tabBar.getBoundingClientRect();
-          
-          if (tabRect.width > 0 && barRect.width > 0) {
-            const left = tabRect.left - barRect.left;
-            const width = tabRect.width * 0.85; // Уменьшаем ширину на 15%
-            
-            setLensStyle({
-              left: `${left + (tabRect.width - width) / 2}px`, // Центрируем линзу
-              width: `${width}px`
-            });
-          }
-        }
-      }
-    };
-
-    // Увеличиваем задержку для более стабильного рендера
-    const timeoutId = setTimeout(updateLensPosition, 100);
-    return () => clearTimeout(timeoutId);
-  }, [location.pathname, tabs]);
 
   // Функция для подсчета непрочитанных сообщений
   const calculateUnreadMessages = useCallback(() => {
@@ -412,15 +379,6 @@ const TabBar = () => {
 
   return (
     <div className="tab-bar">
-      {/* Анимированная линза */}
-      <div 
-        className="tab-lens"
-        style={{
-          left: lensStyle.left,
-          width: lensStyle.width
-        }}
-      />
-      
       {tabs.map((tab, index) => {
         const isActive = location.pathname === tab.href;
         const Icon = isActive ? tab.activeIcon : tab.icon;
@@ -430,7 +388,6 @@ const TabBar = () => {
           return (
             <button
               key={tab.name}
-              ref={(el) => { tabRefs.current[index] = el; }}
               className={`tab-item ${isActive ? 'active' : ''}`}
               onClick={() => {
             
@@ -473,20 +430,28 @@ const TabBar = () => {
         return (
           <Link
             key={tab.name}
-            ref={(el) => { tabRefs.current[index] = el; }}
             to={tab.href}
             className={`tab-item ${isActive ? 'active' : ''}`}
           >
             <div style={{ position: 'relative' }}>
-              <Icon style={{ width: '20px', height: '20px' }} />
+              {/* Специальная обработка для вкладки "Добавить объявление" */}
+              {tab.href === '/add' ? (
+                <div className="add-listing-icon">
+                  <PlusIcon style={{ width: '16px', height: '16px' }} />
+                </div>
+              ) : (
+                <Icon style={{ width: '20px', height: '20px' }} />
+              )}
               {tab.href === '/messages' && currentUser && unreadMessagesCount > 0 && (
                 <div className="unread-badge">
                   {unreadMessagesCount > 99 ? '99+' : unreadMessagesCount}
                 </div>
               )}
-
             </div>
-            <span style={{ marginTop: '4px' }}>{tab.name}</span>
+            {/* Скрываем текст для вкладки "Добавить объявление" */}
+            {tab.href !== '/add' && (
+              <span style={{ marginTop: '4px' }}>{tab.name}</span>
+            )}
           </Link>
         );
       })}

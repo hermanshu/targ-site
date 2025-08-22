@@ -8,7 +8,7 @@
   z-index: 5 !important;
   overflow: hidden !important;
   min-height: 100vh !important;
-  padding-top: 0 !important; /* Убираем отступ сверху, чтобы фон начинался с самого верха */
+  padding-top: 0 !important;
 }
 
 .content-area:has(.profile-container)::before,
@@ -24,7 +24,7 @@
     radial-gradient(circle at 80% 20%, rgba(254, 214, 227, 0.3) 0%, transparent 50%),
     radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
   z-index: -1;
-  height: 100vh !important; /* Обеспечиваем полную высоту */
+  height: 100vh !important;
 }
 
 /* Убираем старый фон с profile-container */
@@ -100,110 +100,84 @@
   left: 12px !important;
   width: 16px !important;
   height: 16px !important;
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.auth-required-content .password-toggle {
+  right: 12px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: rgba(0, 0, 0, 0.5) !important;
 }
 
 .auth-required-content .auth-button {
   padding: 14px 20px !important;
   font-size: 14px !important;
-  border-radius: 10px !important;
-  background: rgba(255, 255, 255, 0.3) !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  color: rgba(0, 0, 0, 0.8) !important;
-  margin-top: 6px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
 }
 
-.auth-required-content .auth-button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.4) !important;
-  transform: translateY(-1px) !important;
+.auth-required-content .auth-mode-toggle {
+  font-size: 12px !important;
+  padding: 6px 12px !important;
 }
 
-.auth-required-content .terms-checkbox-container {
-  margin-top: 12px !important;
+.auth-required-content .terms-checkbox {
+  gap: 6px !important;
 }
 
-.auth-required-content .terms-checkbox-label {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 10px !important;
+.auth-required-content .terms-checkbox input[type="checkbox"] {
+  width: 14px !important;
+  height: 14px !important;
 }
 
-.auth-required-content .terms-text {
+.auth-required-content .terms-checkbox label {
   font-size: 11px !important;
-  color: rgba(0, 0, 0, 0.7) !important;
   line-height: 1.3 !important;
-  flex: 1 !important;
 }
 
 .auth-required-content .terms-link {
-  color: rgba(0, 0, 0, 0.8) !important;
-  text-decoration: underline !important;
-  font-weight: 500 !important;
+  font-size: 11px !important;
 }
 
 .auth-required-content .error-message {
   font-size: 10px !important;
-  color: rgba(239, 68, 68, 0.9) !important;
-  margin-top: 2px !important;
+  padding: 6px 8px !important;
+  border-radius: 6px !important;
+}
+
+.auth-required-content .success-message {
+  font-size: 10px !important;
+  padding: 6px 8px !important;
+  border-radius: 6px !important;
 }
 
 .auth-required-content .auth-error-message {
-  background: rgba(239, 68, 68, 0.1) !important;
-  border: 1px solid rgba(239, 68, 68, 0.3) !important;
-  border-radius: 8px !important;
-  padding: 8px 10px !important;
-  color: rgba(239, 68, 68, 0.9) !important;
-  font-size: 12px !important;
-  text-align: center !important;
-  backdrop-filter: blur(10px) !important;
+  padding: 6px 8px !important;
+  font-size: 11px !important;
 }
 
-/* Стили для кнопки переключения режимов */
-.auth-mode-toggle-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
+.auth-required-content .terms-text {
+  font-size: 10px !important;
 }
 
-.auth-mode-toggle {
-  background: none;
-  border: none;
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 14px;
-  cursor: pointer;
-  text-decoration: underline;
-  transition: all 0.2s ease;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
-  padding: 8px 12px;
-  border-radius: 8px;
-}
-
-.auth-mode-toggle:hover {
-  color: rgba(0, 0, 0, 0.9);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-}
-
+/* Основные стили для форм */
 .auth-form-container {
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(20px);
   border-radius: 24px;
-  padding: 32px 24px;
+  padding: 48px 32px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 4px 16px rgba(0, 0, 0, 0.05),
     0 2px 8px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.2);
   max-width: 420px;
   width: 100%;
   margin: 0 auto;
-  max-height: 70vh;
-  overflow-y: auto;
   position: relative;
-  z-index: 10;
+  overflow: hidden;
 }
 
 .auth-form-container::before {
@@ -218,173 +192,103 @@
   z-index: -1;
 }
 
-/* Стили для скроллбара */
-.auth-form-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.auth-form-container::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 3px;
-}
-
-.auth-form-container::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
-  transition: background 0.2s;
-}
-
-.auth-form-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-/* Десктопная версия - центрируем форму */
-@media (min-width: 768px) {
-  .auth-form-container {
-    margin: 0 auto;
-    max-width: 420px;
-    max-height: 65vh;
-    padding: 40px 32px;
-  }
-}
-
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  min-height: 0;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 0;
 }
 
 .form-label {
+  font-size: 14px;
   font-weight: 500;
   color: rgba(0, 0, 0, 0.8);
-  font-size: 14px;
-  flex-shrink: 0;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
-.input-group {
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.input-icon {
-  position: absolute;
-  left: 16px;
-  width: 20px;
-  height: 20px;
-  color: rgba(0, 0, 0, 0.6);
-  z-index: 1;
-  flex-shrink: 0;
-}
-
 .form-input {
-  width: 100%;
+  position: relative;
   padding: 16px 16px 16px 48px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 16px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
-  flex-shrink: 0;
-  box-sizing: border-box;
+  font-size: 16px;
   color: rgba(0, 0, 0, 0.8);
+  transition: all 0.3s ease;
   box-shadow: 
     0 2px 8px rgba(0, 0, 0, 0.05),
-    0 1px 4px rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 .form-input::placeholder {
   color: rgba(0, 0, 0, 0.5);
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-.form-input.error {
-  border-color: rgba(239, 68, 68, 0.5);
-  background: rgba(239, 68, 68, 0.05);
+.input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .password-toggle {
   position: absolute;
   right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 0.5);
   cursor: pointer;
-  transition: all 0.2s ease;
   z-index: 1;
+  transition: color 0.2s;
 }
 
 .password-toggle:hover {
-  color: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
-}
-
-.form-error {
-  color: rgba(239, 68, 68, 0.9);
-  font-size: 12px;
-  margin-top: 4px;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .auth-button {
-  width: 100%;
-  padding: 16px 24px;
-  border: none;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  padding: 18px 32px;
   background: rgba(255, 255, 255, 0.3);
   backdrop-filter: blur(10px);
-  color: rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+  cursor: pointer;
+  transition: all 0.3s ease;
   box-shadow: 
     0 4px 16px rgba(0, 0, 0, 0.1),
     0 2px 8px rgba(0, 0, 0, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
 }
 
-.auth-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  border-radius: 16px;
-  z-index: -1;
-}
-
-.auth-button:hover:not(:disabled) {
+.auth-button:hover {
+  transform: translateY(-2px);
   background: rgba(255, 255, 255, 0.4);
   border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
   box-shadow: 
     0 8px 24px rgba(0, 0, 0, 0.15),
     0 4px 12px rgba(0, 0, 0, 0.08),
@@ -392,44 +296,25 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
-.auth-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.auth-button:active:not(:disabled) {
+.auth-button:active {
   transform: translateY(0);
 }
 
 .auth-mode-toggle {
   background: none;
   border: none;
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(0, 0, 0, 0.6);
   font-size: 14px;
   cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s;
   text-decoration: underline;
-  transition: all 0.2s ease;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .auth-mode-toggle:hover {
-  color: rgba(0, 0, 0, 0.9);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
-}
-
-.auth-error {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 12px;
-  padding: 12px 16px;
-  color: rgba(239, 68, 68, 0.9);
-  font-size: 14px;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  box-shadow: 
-    0 2px 8px rgba(239, 68, 68, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: rgba(0, 0, 0, 0.8);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .terms-checkbox {
@@ -443,43 +328,58 @@
   width: 18px;
   height: 18px;
   margin-top: 2px;
-  accent-color: rgba(0, 0, 0, 0.7);
+  accent-color: rgba(0, 0, 0, 0.6);
 }
 
 .terms-checkbox label {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.7);
   line-height: 1.4;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  cursor: pointer;
 }
 
 .terms-link {
   color: rgba(0, 0, 0, 0.8);
   text-decoration: underline;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  font-weight: 500;
 }
 
 .terms-link:hover {
   color: rgba(0, 0, 0, 1);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
 }
 
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 20px 0;
-  color: rgba(0, 0, 0, 0.6);
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: rgba(185, 28, 28, 0.9);
+  padding: 12px 16px;
+  border-radius: 12px;
   font-size: 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
 }
 
-.auth-divider::before,
-.auth-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: rgba(0, 0, 0, 0.2);
+.success-message {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: rgba(21, 128, 61, 0.9);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.auth-error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: rgba(185, 28, 28, 0.9);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  margin-bottom: 16px;
 }
 
 /* Модальные окна */
@@ -489,42 +389,26 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(20px);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
   padding: 20px;
-  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-content {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 32px;
-  max-width: 400px;
+  max-width: 500px;
   width: 100%;
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    0 4px 16px rgba(0, 0, 0, 0.05),
-    0 2px 8px rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-}
-
-.modal-content::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  border-radius: 24px;
-  z-index: -1;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .modal-header {
@@ -532,81 +416,155 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .modal-title {
   font-size: 20px;
   font-weight: 600;
   color: rgba(0, 0, 0, 0.8);
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  margin: 0;
 }
 
 .modal-close {
   background: none;
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-close:hover {
-  background: rgba(255, 255, 255, 0.9);
-  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .modal-close-icon {
   width: 20px;
   height: 20px;
-  color: rgba(0, 0, 0, 0.7);
 }
 
-/* Мобильные стили */
+/* Мобильные стили для форм авторизации */
 @media (max-width: 768px) {
+  .content-area:has(.profile-container),
+  .content-area.profile-background {
+    padding: 16px !important;
+    padding-top: 10px !important; /* Уменьшаем с 40px до 10px - поднимаем в 4 раза */
+    min-height: calc(100vh - 80px) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .profile-container {
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+    margin-top: 0 !important; /* Убираем margin-top чтобы поднять еще выше */
+    padding: 0 !important;
+  }
+
   .auth-form-container {
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(20px) !important;
+    border-radius: 20px !important;
     padding: 24px 20px !important;
-    max-width: 340px !important;
-    margin: 20px auto !important;
-    max-height: 80vh !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1) !important,
+      0 4px 16px rgba(0, 0, 0, 0.05) !important,
+      0 2px 8px rgba(0, 0, 0, 0.03) !important,
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    max-height: calc(100vh - 120px) !important;
+    overflow-y: auto !important;
   }
 
   .auth-form {
     gap: 16px !important;
   }
 
+  .form-group {
+    gap: 6px !important;
+  }
+
+  .form-label {
+    font-size: 13px !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    font-weight: 500 !important;
+  }
+
   .form-input {
     padding: 14px 14px 14px 44px !important;
-    font-size: 16px !important;
+    font-size: 15px !important;
+    border-radius: 12px !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: rgba(0, 0, 0, 0.8) !important;
   }
 
   .input-icon {
     left: 14px !important;
     width: 18px !important;
     height: 18px !important;
+    color: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .password-toggle {
+    right: 14px !important;
+    width: 18px !important;
+    height: 18px !important;
+    color: rgba(0, 0, 0, 0.5) !important;
   }
 
   .auth-button {
-    padding: 14px 20px !important;
-    font-size: 16px !important;
+    padding: 16px 24px !important;
+    font-size: 15px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
   }
 
-  .modal-content {
-    padding: 24px !important;
-    margin: 20px !important;
+  .auth-mode-toggle {
+    font-size: 13px !important;
+    padding: 8px 16px !important;
   }
-} 
 
-/* Мобильные стили для формы */
-@media (max-width: 768px) {
+  .terms-checkbox {
+    gap: 8px !important;
+  }
+
+  .terms-checkbox input[type="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .terms-checkbox label {
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+  }
+
+  .terms-link {
+    font-size: 13px !important;
+  }
+
+  .error-message {
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+  }
+
+  .success-message {
+    font-size: 12px !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+  }
+
+  /* Стили для форм внутри auth-required-content */
   .auth-required-content .auth-form-container {
-    max-height: 50vh !important;
+    max-height: calc(50vh - 40px) !important;
   }
   
   .auth-required-content .auth-form {
@@ -648,5 +606,16 @@
   .auth-required-content .auth-error-message {
     padding: 6px 8px !important;
     font-size: 11px !important;
+  }
+
+  /* Модальные окна на мобильных */
+  .modal-overlay {
+    padding: 16px !important;
+    padding-top: 56px !important; /* Уменьшаем с 96px до 56px */
+  }
+
+  .modal-content {
+    padding: 24px !important;
+    margin: 20px !important;
   }
 } 

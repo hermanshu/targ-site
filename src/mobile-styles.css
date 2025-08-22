@@ -990,4 +990,274 @@
   .mobile-filter-apply-button:hover {
     background: #00d4b8;
   }
+
+  /* Пустые состояния для избранного и сообщений на мобильных */
+  .favorites-empty,
+  .messages-empty {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: calc(100vh - 160px) !important;
+    padding: 20px !important;
+    padding-top: 20px !important; /* Уменьшаем с 60px до 20px - поднимаем в 3 раза */
+    text-align: center !important;
+    background: #f9fafb !important;
+  }
+
+  .favorites-empty .empty-icon,
+  .messages-empty .empty-icon {
+    width: 80px !important;
+    height: 80px !important;
+    background: #e5e7eb !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 20px !important;
+    font-size: 40px !important;
+  }
+
+  .favorites-empty .empty-title,
+  .messages-empty .empty-title {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .favorites-empty .empty-description,
+  .messages-empty .empty-description {
+    font-size: 16px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+    max-width: 280px !important;
+  }
+
+  /* Мобильный контейнер сообщений */
+  .mobile-messages-container {
+    min-height: calc(100vh - 80px) !important;
+    background: #f9fafb !important;
+  }
+
+  /* Мобильное пустое состояние для сообщений */
+  .mobile-empty-state {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: calc(100vh - 200px) !important;
+    padding: 20px !important;
+    padding-top: 20px !important; /* Уменьшаем с 60px до 20px - поднимаем в 3 раза */
+    text-align: center !important;
+    background: #f9fafb !important;
+  }
+
+  .mobile-empty-state .empty-icon {
+    width: 80px !important;
+    height: 80px !important;
+    background: #e5e7eb !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-bottom: 20px !important;
+  }
+
+  .mobile-empty-state .empty-icon-svg {
+    width: 40px !important;
+    height: 40px !important;
+    color: #9ca3af !important;
+  }
+
+  .mobile-empty-state .empty-title {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .mobile-empty-state .empty-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+    max-width: 280px !important;
+  }
+
+  /* Дополнительные стили для принудительного поднятия мобильных заглушек */
+  .mobile-messages-container .mobile-empty-state,
+  .favorites-container .favorites-empty {
+    margin-top: -80px !important; /* Увеличиваем с -40px до -80px - поднимаем в 2 раза */
+    padding-top: 40px !important; /* Увеличиваем с 100px до 40px - поднимаем в 2.5 раза */
+  }
+
+  /* Специальные стили для заглушек в мобильной версии */
+  .mobile-auth-required,
+  .mobile-favorites-empty,
+  .mobile-messages-empty {
+    position: relative !important;
+    top: -90px !important; /* Увеличиваем с -30px до -90px - поднимаем в 3 раза */
+    margin-top: 0 !important;
+    padding-top: 20px !important; /* Уменьшаем с 60px до 20px - поднимаем в 3 раза */
+  }
+
+  /* Стили для иконки добавления объявления в мобильной версии */
+  .add-listing-icon {
+    width: 40px !important;
+    height: 40px !important;
+    background: linear-gradient(135deg, #00e6cc 0%, #00d4b8 100%) !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 12px rgba(0, 230, 204, 0.3) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .add-listing-icon:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 16px rgba(0, 230, 204, 0.4) !important;
+  }
+
+  .add-listing-icon svg {
+    color: white !important;
+    stroke-width: 2.5 !important;
+  }
+
+  /* Активное состояние для иконки добавления */
+  .tab-item.active .add-listing-icon {
+    background: linear-gradient(135deg, #00d4b8 0%, #00c4a8 100%) !important;
+    box-shadow: 0 4px 12px rgba(0, 212, 184, 0.4) !important;
+  }
+
+  /* Красивые стили для выделения выбранной вкладки в мобильной версии */
+  .tab-bar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .tab-item {
+    position: relative !important;
+    transition: all 0.3s ease !important;
+    border-radius: 12px !important;
+    margin: 4px !important;
+  }
+
+  .tab-item.active {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
+    transform: translateY(-2px) !important;
+  }
+
+  .tab-item.active::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -2px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 20px !important;
+    height: 3px !important;
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important;
+    border-radius: 2px !important;
+  }
+
+  .tab-item:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.03) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Стили для иконок в активном состоянии */
+  .tab-item.active svg {
+    color: #475569 !important;
+    transform: scale(1.1) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Стили для текста в активном состоянии */
+  .tab-item.active span {
+    color: #475569 !important;
+    font-weight: 600 !important;
+    transform: scale(1.05) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  /* Анимация для перехода между вкладками */
+  .tab-item {
+    animation: fadeInUp 0.3s ease-out !important;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Стили для поиска в мобильных сообщениях */
+  .mobile-search-container {
+    position: relative !important;
+    margin-bottom: 16px !important;
+  }
+
+  .mobile-search-container .mobile-search-icon {
+    width: 18px !important;
+    height: 18px !important;
+    color: #6b7280 !important;
+    position: absolute !important;
+    left: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 1 !important;
+  }
+
+  .mobile-search-container .mobile-search-input {
+    width: 100% !important;
+    border: none !important;
+    background: #f3f4f6 !important;
+    font-size: 16px !important;
+    outline: none !important;
+    color: #1f2937 !important;
+    padding: 12px 12px 12px 40px !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .mobile-search-container .mobile-search-input::placeholder {
+    color: #9ca3af !important;
+    font-size: 15px !important;
+  }
+
+  .mobile-search-container .mobile-search-input:focus {
+    background: #ffffff !important;
+    box-shadow: 0 0 0 2px rgba(0, 230, 204, 0.2) !important;
+  }
+
+  /* Стили для заголовка сообщений */
+  .mobile-chats-header {
+    padding: 16px !important;
+    background: white !important;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .mobile-chats-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin: 0 0 16px 0 !important;
+  }
+
+  /* Общие стили для мобильных сообщений */
+  .mobile-messages-container {
+    background: #f9fafb !important;
+  }
+
+  .mobile-chats-list {
+    background: white !important;
+  }
 } 
