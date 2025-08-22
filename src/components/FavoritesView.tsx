@@ -2,6 +2,7 @@ import React from 'react';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
 import ListingCard from './ListingCard';
+
 import { Listing } from '../types';
 
 interface FavoritesViewProps {
@@ -31,6 +32,7 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
 
   return (
     <div className="favorites-container">
+      
       <div className="favorites-header">
         <h1 className="favorites-title">{t('favorites.title')}</h1>
         <span className="favorites-count">{favorites.length} {t('favorites.listingsCount')}</span>

@@ -18,6 +18,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
 import AuthRequiredView from './AuthRequiredView';
 
+
 interface Chat {
   id: string;
   name: string;
@@ -787,6 +788,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
 
   return (
     <div className="telegram-layout">
+      
       {/* Боковая панель с чатами */}
       <div className={`sidebar ${!showSidebar ? 'hidden' : ''}`}>
         <div className="sidebar-header">

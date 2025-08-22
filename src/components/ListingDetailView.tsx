@@ -25,6 +25,7 @@ import { useReviews } from '../contexts/ReviewsContext';
 import StarRating from './StarRating';
 import ReviewModal from './ReviewModal';
 
+
 interface ListingDetailViewProps {
   listing: Listing;
   onBack: () => void;
@@ -499,13 +500,15 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
   };
 
   return (
-            <div 
-          className={`listing-detail-container ${isMobile ? 'mobile' : 'desktop'}`} 
-          onKeyDown={handleKeyDown} 
-          tabIndex={0}
-          role="main"
-          aria-label="Детали объявления"
-        >
+    <div 
+      className={`listing-detail-container ${isMobile ? 'mobile' : 'desktop'}`} 
+      onKeyDown={handleKeyDown} 
+      tabIndex={0}
+      role="main"
+      aria-label="Детали объявления"
+    >
+      
+      
       {/* Верхняя панель с кнопками */}
       <div className="detail-header">
         <button 

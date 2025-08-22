@@ -36,8 +36,8 @@ import ListingDetailView from './ListingDetailView';
 import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import WebsiteCategoryView from './WebsiteCategoryView';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
-
 import Pagination from './Pagination';
+
 
 import { Listing } from '../types';
 
@@ -483,6 +483,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
   return (
     <div className="website-announcements-view">
+      
       {/* Поисковая строка с фильтрами и категориями */}
       <div className="website-header-section">
         {/* Поисковая строка с фильтрами и категориями */}

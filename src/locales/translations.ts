@@ -444,6 +444,7 @@ export interface Translations {
       drafts: string;
       archive: string;
     };
+    noListingsInCategory: string;
     saleConfirmation: {
       title: string;
       question: string;
@@ -1060,6 +1061,7 @@ const ruTranslations: Translations = {
         drafts: 'Черновики',
         archive: 'Архив',
       },
+      noListingsInCategory: 'В этой категории пока нет объявлений',
       saleConfirmation: {
         title: 'Подтверждение продажи',
         question: 'Вы уже продали этот товар?',

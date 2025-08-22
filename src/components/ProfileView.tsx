@@ -14,6 +14,7 @@ import { useTranslation } from '../hooks/useTranslation';
 import '../auth-form-styles.css';
 import '../auth-required-styles.css';
 
+
 interface ProfileViewProps {
   onLogin?: (email: string, password: string) => void;
   onRegister?: (email: string, password: string, name: string) => void;
@@ -312,6 +313,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
 
   return (
     <div className="auth-required-container">
+      
       <div className="auth-required-content">
         <div className="auth-required-icon">
           <LockClosedIcon className="lock-icon" />

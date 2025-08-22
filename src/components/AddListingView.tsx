@@ -16,6 +16,7 @@ import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
 
+
 // Кастомный компонент выпадающего списка
 interface CustomSelectProps {
   value: string;
@@ -115,6 +116,13 @@ const AddListingView: React.FC = () => {
   const { addListing } = useListings();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  
+  // Константы
+  const MAX_IMAGES = 5;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MIN_DESCRIPTION_LENGTH = 20;
+  const MAX_DESCRIPTION_LENGTH = 2000;
+  
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -137,8 +145,8 @@ const AddListingView: React.FC = () => {
     { value: 'home', label: t('home.homeAndGarden'), emoji: '🏠' },
     { value: 'fashion', label: t('home.fashion'), emoji: '👕' },
     { value: 'services', label: t('home.services'), emoji: '🔧' },
-    { value: 'work', label: t('home.work'), emoji: '💼', hasSubcategories: true },
-    { value: 'real-estate', label: t('home.realEstate'), emoji: '🏢', hasSubcategories: true },
+    { value: 'work', label: t('home.work'), emoji: '💼' },
+    { value: 'real-estate', label: t('home.realEstate'), emoji: '🏢' },
     { value: 'plants', label: t('home.plants'), emoji: '☀️' },
     { value: 'transport', label: t('home.transport'), emoji: '🚗' },
     { value: 'sport', label: t('home.sport'), emoji: '⚽' },
@@ -287,7 +295,7 @@ const AddListingView: React.FC = () => {
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     // Проверяем, если пользователь пытается выбрать телефон, но у него нет номера
-    if (field === 'contactMethod' && value === 'phone' && !currentUser?.phone) {
+    if (field === 'contactMethod' && value === 'phone' && currentUser && !currentUser.phone) {
       // Автоматически переключаем на чат
       setFormData(prev => ({ ...prev, [field]: 'chat' }));
       alert(t('listings.fillPhoneInProfile'));
@@ -323,15 +331,7 @@ const AddListingView: React.FC = () => {
     }
   };
 
-  const handleCategoryChange = (category: string) => {
-    setFormData(prev => ({ 
-      ...prev, 
-      category,
-      subcategory: '',
-      characteristics: {}, // Сбрасываем характеристики при смене категории
-      ...((category === 'work' || category === 'real-estate') && { delivery: undefined }) // Убираем доставку для категорий "Работа" и "Недвижимость"
-    }));
-    // Очищаем ошибки характеристик
+  const clearCharacteristicErrors = () => {
     setErrors(prev => {
       const newErrors = { ...prev };
       Object.keys(newErrors).forEach(key => {
@@ -343,6 +343,18 @@ const AddListingView: React.FC = () => {
     });
   };
 
+  const handleCategoryChange = (category: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      category,
+      subcategory: '',
+      characteristics: {}, // Сбрасываем характеристики при смене категории
+      ...((category === 'work' || category === 'real-estate') && { delivery: undefined }) // Убираем доставку для категорий "Работа" и "Недвижимость"
+    }));
+    // Очищаем ошибки характеристик
+    clearCharacteristicErrors();
+  };
+
   const handleSubcategoryChange = (subcategory: string) => {
     setFormData(prev => ({ 
       ...prev, 
@@ -350,15 +362,7 @@ const AddListingView: React.FC = () => {
       characteristics: {} // Сбрасываем характеристики при смене подкатегории
     }));
     // Очищаем ошибки характеристик
-    setErrors(prev => {
-      const newErrors = { ...prev };
-      Object.keys(newErrors).forEach(key => {
-        if (key.startsWith('characteristic_')) {
-          delete newErrors[key];
-        }
-      });
-      return newErrors;
-    });
+    clearCharacteristicErrors();
   };
 
   const handleImagesChange = (images: File[]) => {
@@ -377,7 +381,7 @@ const AddListingView: React.FC = () => {
     const files = Array.from(event.target.files || []);
     const validFiles = files.filter(file => {
       const isValidType = file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png';
-      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB
+      const isValidSize = file.size <= MAX_FILE_SIZE; // 5MB
       
       if (!isValidType) {
         alert(t('profile.fileTypeError'));
@@ -392,7 +396,7 @@ const AddListingView: React.FC = () => {
       return true;
     });
 
-    if (formData.images.length + validFiles.length > 5) {
+    if (formData.images.length + validFiles.length > MAX_IMAGES) {
       alert(t('listings.maxPhotoCount'));
       return;
     }
@@ -405,6 +409,10 @@ const AddListingView: React.FC = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreviewUrls(prev => [...prev, e.target?.result as string]);
+      };
+      reader.onerror = () => {
+        console.error('Ошибка при чтении файла:', file.name);
+        alert(t('profile.fileReadError') || 'Ошибка при чтении файла');
       };
       reader.readAsDataURL(file);
     });
@@ -427,8 +435,8 @@ const AddListingView: React.FC = () => {
 
     if (!formData.description.trim()) {
       newErrors.description = t('listings.enterDescription');
-    } else if (formData.description.length < 20) {
-      newErrors.description = t('validation.minLength') + ' 20';
+    } else if (formData.description.length < MIN_DESCRIPTION_LENGTH) {
+      newErrors.description = t('validation.minLength') + ' ' + MIN_DESCRIPTION_LENGTH;
     }
 
     if (!formData.price.trim()) {
@@ -450,8 +458,13 @@ const AddListingView: React.FC = () => {
 
     if (!formData.contactMethod) {
       newErrors.contactMethod = t('validation.selectContactMethod');
-    } else if (formData.contactMethod === 'phone' && !currentUser?.phone) {
+    } else if (formData.contactMethod === 'phone' && currentUser && !currentUser.phone) {
       newErrors.contactMethod = t('listings.fillPhoneInProfile');
+    }
+
+    // Проверяем поле доставки для категорий, где оно обязательно
+    if (formData.category !== 'work' && formData.category !== 'real-estate' && !formData.delivery) {
+      newErrors.delivery = t('validation.selectDeliveryMethod') || 'Выберите способ доставки';
     }
 
     setErrors(newErrors);
@@ -508,15 +521,10 @@ const AddListingView: React.FC = () => {
     }
   };
 
-  const formatPrice = (value: string) => {
-    // Возвращаем значение как есть, без ограничений
-    return value;
-  };
-
-
 
   return (
     <div className="add-listing-container">
+      
       {/* Заголовок */}
       <div className="add-listing-header">
         <button 
@@ -552,14 +560,14 @@ const AddListingView: React.FC = () => {
                 </div>
               ))}
               
-              {formData.images.length < 5 && (
+              {formData.images.length < MAX_IMAGES && (
                 <div 
                   className="image-upload-placeholder"
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <CameraIcon className="upload-icon" />
                   <span>{t('listings.addPhotoText')}</span>
-                  <small>{String(formData.images.length)}/5</small>
+                  <small>{String(formData.images.length)}/{MAX_IMAGES}</small>
                 </div>
               )}
             </div>
@@ -613,13 +621,13 @@ const AddListingView: React.FC = () => {
             placeholder={t('listings.description')}
             className={`form-textarea ${errors.description ? 'input-error' : ''}`}
             rows={6}
-            maxLength={2000}
+            maxLength={MAX_DESCRIPTION_LENGTH}
           />
           {errors.description && (
             <div className="error-message">{errors.description}</div>
           )}
           <div className="char-counter">
-            {formData.description.length}/2000
+            {formData.description.length}/{MAX_DESCRIPTION_LENGTH}
           </div>
         </div>
 
@@ -635,7 +643,7 @@ const AddListingView: React.FC = () => {
             <input
               type="text"
               value={formData.price}
-              onChange={(e) => handleInputChange('price', formatPrice(e.target.value))}
+              onChange={(e) => handleInputChange('price', e.target.value)}
               placeholder="0"
               className={`form-input ${errors.price ? 'input-error' : ''}`}
             />
@@ -764,13 +772,13 @@ const AddListingView: React.FC = () => {
           <div className="contact-method-buttons">
             <button
               type="button"
-              className={`contact-method-button ${formData.contactMethod === 'phone' ? 'active' : ''} ${!currentUser?.phone ? 'disabled' : ''}`}
-              onClick={() => currentUser?.phone ? handleInputChange('contactMethod', 'phone') : null}
-              disabled={!currentUser?.phone}
+              className={`contact-method-button ${formData.contactMethod === 'phone' ? 'active' : ''} ${currentUser && !currentUser.phone ? 'disabled' : ''}`}
+              onClick={() => currentUser && currentUser.phone ? handleInputChange('contactMethod', 'phone') : null}
+              disabled={!currentUser || !currentUser.phone}
             >
               <span className="method-text">{t('listings.phone')}</span>
               <span className="method-hint">
-                {currentUser?.phone ? `${t('listings.fromProfile')} ${currentUser?.phone}` : t('listings.fillPhoneInProfile')}
+                {currentUser && currentUser.phone ? `${t('listings.fromProfile')} ${currentUser.phone}` : t('listings.fillPhoneInProfile')}
               </span>
             </button>
             <button
@@ -809,6 +817,9 @@ const AddListingView: React.FC = () => {
                 <span className="delivery-hint">{t('listings.sellerWillDeliver')}</span>
               </button>
             </div>
+            {errors.delivery && (
+              <div className="error-message">{errors.delivery}</div>
+            )}
           </div>
         )}
 

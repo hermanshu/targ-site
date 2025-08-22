@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
 
+
 interface AuthenticatedProfileViewProps {
   onLogout: () => void;
 }
@@ -181,6 +182,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
 
   return (
     <div className="profile-container">
+      
       {/* Заголовок профиля */}
       <div className="profile-header">
         <h1 className="profile-title">{t('profile.title')}</h1>

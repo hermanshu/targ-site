@@ -195,12 +195,12 @@ code {
     "info info";
   grid-template-columns: 450px 1fr;
   gap: 24px;
-  padding: 30px 40px;
+  padding: 50px 40px 30px 40px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
   margin-bottom: 24px;
-  margin-top: 20px;
+  margin-top: 0;
   
 
 }
@@ -208,11 +208,11 @@ code {
 .listing-detail-container.desktop .detail-image-section {
   grid-area: photo;
   position: sticky;
-  top: 20px;
+  top: 0;
   height: fit-content;
   z-index: 10;
   align-self: flex-start;
-  margin-top: 20px;
+  margin-top: 0;
   
 
 }
@@ -230,11 +230,12 @@ code {
   flex-direction: column;
   gap: 20px;
   z-index: 1;
-  margin-top: 20px;
+  margin-top: 0;
+  margin-left: 40px;
   max-width: 100%;
   overflow: hidden;
-  
-
+  height: 450px;
+  box-sizing: border-box;
 }
 
 
@@ -545,7 +546,7 @@ code {
 @media (max-width: 1200px) {
   .listing-detail-container.desktop .detail-main-content {
     gap: 30px;
-    padding: 25px 30px;
+    padding: 45px 30px 25px 30px;
     grid-template-columns: 400px 1fr;
     grid-template-rows: 400px 1fr;
   }
@@ -553,6 +554,11 @@ code {
   .listing-detail-container.desktop .detail-image-container {
     width: 400px;
     height: 400px;
+  }
+  
+  .listing-detail-container.desktop .detail-main-info {
+    height: 400px;
+    margin-left: 40px;
   }
   
   .listing-detail-container.desktop .detail-info-section {
@@ -577,13 +583,18 @@ code {
 @media (max-width: 1024px) {
   .listing-detail-container.desktop .detail-main-content {
     gap: 20px;
-    padding: 20px;
+    padding: 40px 20px 20px 20px;
     grid-template-columns: 350px 1fr;
   }
   
   .listing-detail-container.desktop .detail-image-container {
     width: 350px;
     height: 350px;
+  }
+  
+  .listing-detail-container.desktop .detail-main-info {
+    height: 350px;
+    margin-left: 40px;
   }
   
   .listing-detail-container.desktop .detail-info-section {
@@ -756,6 +767,229 @@ code {
   /* На мобильных устройствах убираем отступ сверху, так как панель навигации снизу */
   .listing-detail-container.mobile .detail-main-content {
     margin-top: 0;
+  }
+}
+
+/* Исправление для экранов с высотой 930px и меньше */
+@media (max-height: 930px) {
+  .listing-detail-container.desktop .detail-main-content {
+    align-items: flex-start !important;
+  }
+  
+  .listing-detail-container.desktop .detail-image-section {
+    position: static !important;
+    top: auto !important;
+    margin-top: 0 !important;
+    z-index: 1000 !important;
+    height: auto !important;
+    align-self: flex-start !important;
+  }
+  
+  .listing-detail-container.desktop .detail-image-container {
+    z-index: 1001 !important;
+    position: relative !important;
+  }
+  
+  .listing-detail-container.desktop .detail-main-info {
+    z-index: 1 !important;
+    position: relative !important;
+    align-self: flex-start !important;
+    margin-top: 0 !important;
+  }
+  
+  .listing-detail-container.desktop .detail-info-section {
+    z-index: 1 !important;
+    position: relative !important;
+  }
+}
+
+/* Исправление для экранов с высотой 850px и меньше */
+@media (max-height: 850px) {
+  /* Исправление для профиля на очень узких экранах */
+  .profile-container:not(:has(.auth-form-container)) {
+    overflow-y: visible !important;
+    height: auto !important;
+    min-height: calc(100vh - 112px) !important;
+    padding-bottom: 20px !important;
+    padding-top: 92px !important; /* Отступ для панели навигации */
+    position: relative !important;
+  }
+  
+  /* Уменьшаем размеры элементов профиля для узких экранов */
+  .profile-container:not(:has(.auth-form-container)) .profile-header {
+    margin-bottom: 5px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-title {
+    font-size: 16px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-user-section {
+    gap: 8px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-avatar-container {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-avatar {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-info-fields {
+    gap: 4px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-info-row {
+    gap: 6px !important;
+    margin-bottom: 3px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-info-label {
+    font-size: 11px !important;
+    min-width: 45px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-info-value {
+    font-size: 11px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .profile-menu-section,
+  .profile-container:not(:has(.auth-form-container)) .settings-menu-section {
+    margin-bottom: 8px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .section-title {
+    font-size: 12px !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .menu-item {
+    padding: 6px 10px !important;
+    margin-bottom: 4px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .menu-item-title {
+    font-size: 11px !important;
+  }
+  
+  .profile-container:not(:has(.auth-form-container)) .menu-item-subtitle {
+    font-size: 10px !important;
+  }
+  
+  /* Настраиваем прокрутку для основного раздела профиля */
+  .profile-container:not(:has(.auth-form-container)) .profile-main-section {
+    padding-bottom: 20px !important;
+    overflow-y: visible !important;
+    padding: 10px !important;
+    max-height: none !important;
+  }
+  
+  /* Исправление для страницы "Мои объявления" на очень узких экранах */
+  .my-listings-page {
+    padding: 5px !important;
+    padding-top: 20px !important;
+    position: relative !important;
+    overflow-y: visible !important;
+  }
+  
+  .my-listings-page .my-listings-header {
+    margin-bottom: 15px !important;
+  }
+  
+  .my-listings-page .website-stats-section {
+    margin-bottom: 15px !important;
+    padding: 0 20px !important;
+  }
+  
+
+  
+
+  
+  .my-listings-page .website-categories-section {
+    margin-bottom: 15px !important;
+    margin-top: 15px !important;
+    position: relative !important;
+    z-index: 1 !important;
+  }
+  
+
+  
+  .my-listings-page .website-listings-grid {
+    margin-top: 0 !important;
+    position: relative !important;
+    z-index: 2 !important;
+  }
+  
+  /* Убираем фиксированное позиционирование для всех плашек на узких экранах */
+  .my-listings-page * {
+    position: relative !important;
+  }
+  
+  /* Принудительно убираем sticky/fixed позиционирование */
+  .my-listings-page .website-categories-section,
+  .my-listings-page .website-stats-section,
+  .my-listings-page .website-listings-grid {
+    position: relative !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+  }
+  
+  /* Уменьшаем размеры элементов для очень узких экранов */
+  .my-listings-page .my-listings-title {
+    font-size: 18px !important;
+  }
+  
+  .my-listings-page .website-stats-grid {
+    gap: 10px !important;
+  }
+  
+  .my-listings-page .website-stat-card {
+    padding: 12px !important;
+  }
+  
+  .my-listings-page .website-stat-number {
+    font-size: 18px !important;
+  }
+  
+  .my-listings-page .website-stat-label {
+    font-size: 11px !important;
+  }
+  
+  .my-listings-page .website-categories-scroll {
+    gap: 8px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+  
+  .my-listings-page .website-category-button {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    flex: 1 !important;
+    max-width: 120px !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* Стили для больших экранов */
+@media (min-width: 1400px) {
+  .listing-detail-container.desktop .detail-image-container {
+    width: 500px;
+    height: 500px;
+  }
+  
+  .listing-detail-container.desktop .detail-main-info {
+    height: 500px;
+    margin-left: 40px;
   }
 }
 
@@ -2271,13 +2505,9 @@ body:has(.review-modal-overlay) .detail-header {
   padding: 20px;
   box-sizing: border-box;
   width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
   z-index: 5;
-  overflow: hidden;
+  overflow: visible;
   padding-top: 112px; /* Отступ для панели навигации */
 }
 
@@ -2311,24 +2541,7 @@ body:has(.review-modal-overlay) .detail-header {
   z-index: -1;
 }
 
-/* Стили для авторизованного профиля */
-.profile-container:not(:has(.auth-form-container)) {
-  justify-content: flex-start;
-  padding-top: 92px; /* Отступ для панели навигации */
-  overflow-y: auto;
-  background: none;
-}
 
-.profile-container:not(:has(.auth-form-container))::before {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .profile-container:not(:has(.auth-form-container)) {
-    padding: 20px;
-    padding-top: 112px; /* Отступ для панели навигации */
-  }
-}
 
 /* ЗАКРЕПЛЕННЫЕ СТИЛИ ДЛЯ НЕАВТОРИЗОВАННЫХ ПОЛЬЗОВАТЕЛЕЙ - НЕ ИЗМЕНЯТЬ */
 .auth-required-container {
@@ -3583,10 +3796,10 @@ body:has(.review-modal-overlay) .detail-header {
 .main-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .main-container::before {
@@ -3608,11 +3821,10 @@ body:has(.review-modal-overlay) .detail-header {
   flex: 1;
   padding-bottom: 100px;
   padding-top: 72px; /* Отступ для фиксированной панели навигации */
-  overflow-y: auto;
+  overflow-y: visible;
   position: relative;
   z-index: 2;
   min-height: 100vh; /* Обеспечиваем полную высоту */
-  height: 100%; /* Добавляем height для полного заполнения */
 }
 
 /* ЗАКРЕПЛЕННЫЕ СТИЛИ ДЛЯ CONTENT-AREA - НЕ ИЗМЕНЯТЬ */
@@ -3622,9 +3834,9 @@ body:has(.review-modal-overlay) .detail-header {
   height: 100vh !important; /* Полная высота экрана */
 }
 
-/* Отключаем прокрутку для страницы профиля */
+/* Включаем прокрутку для страницы профиля */
 .content-area:has(.profile-container) {
-  overflow: hidden;
+  overflow: visible;
 }
 
 .start-screen {
@@ -4374,7 +4586,10 @@ body:has(.review-modal-overlay) .detail-header {
 
 
 
-/* Стили для страницы "Мои объявления" */
+
+
+
+
 .my-listings-page {
   padding: 24px 48px;
   max-width: 1400px;
@@ -4458,6 +4673,11 @@ body:has(.review-modal-overlay) .detail-header {
 .website-stats-section {
   padding: 0 48px;
   margin-bottom: 24px;
+}
+
+/* Переопределяем для страницы "Мои объявления" */
+.my-listings-page .website-stats-section {
+  margin-bottom: 15px !important;
 }
 
 .website-stats-grid {
