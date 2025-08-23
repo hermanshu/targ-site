@@ -121,14 +121,14 @@ const ListingCard: React.FC<ListingCardProps> = ({
             <HeartIcon className="heart-icon" />
           )}
         </button>
+      </div>
 
-        {/* Плашка с ценой */}
-        <div className="price-bar">
-          <span className="price-text">
-            {listing.price} {listing.currency}
-            {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && ' / месяц'}
-          </span>
-        </div>
+      {/* Плашка с ценой - теперь отдельно под изображением */}
+      <div className="price-bar">
+        <span className="price-text">
+          {listing.price} {listing.currency}
+          {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && ' / месяц'}
+        </span>
       </div>
 
       {/* Текстовая часть */}

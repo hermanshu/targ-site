@@ -60,6 +60,8 @@
     transition: all 0.2s ease;
     overflow: hidden;
     background: white;
+    display: flex;
+    flex-direction: column;
   }
 
   .listing-card:hover {
@@ -70,13 +72,16 @@
   .listing-image-container {
     height: 100px;
     margin-bottom: 0;
-    padding-bottom: 25px;
+    padding-bottom: 0;
     position: relative;
+    border-bottom: none;
+    overflow: hidden;
+    border-radius: 8px 8px 0 0;
   }
 
   .listing-content {
     padding: 6px;
-    padding-top: 12px;
+    padding-top: 0;
     min-height: 60px;
     display: flex;
     flex-direction: column;
@@ -160,20 +165,17 @@
     color: white;
   }
 
-  /* Стили для плашки с ценой в мобильной сетке */
+  /* Стили для плашки с ценой в мобильной сетке - теперь под изображением */
   .price-bar {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    right: 4px;
     background: rgba(94, 234, 212, 0.9);
-    border-radius: 4px;
-    padding: 3px 4px;
-    z-index: 5;
+    padding: 4px 6px;
+    margin: 0;
+    border-bottom: 1px solid #e5e7eb;
+    border-radius: 0;
   }
 
   .price-bar .price-text {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     color: rgba(15, 23, 42, 0.95);
   }
@@ -1260,4 +1262,376 @@
   .mobile-chats-list {
     background: white !important;
   }
+
+  /* Мобильные стили для стартового модального окна */
+  .welcome-modal-overlay {
+    padding: 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  .welcome-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    padding: 16px 16px !important;
+    margin: 0 !important;
+    border-radius: 16px !important;
+    overflow-y: auto !important;
+  }
+
+  .welcome-modal-content {
+    padding: 0 !important;
+  }
+
+  .welcome-logo {
+    margin-bottom: 12px !important;
+  }
+
+  .welcome-logo-image {
+    height: 160px !important;
+    width: auto !important;
+  }
+
+  .welcome-title {
+    font-size: 20px !important;
+    margin-bottom: 8px !important;
+    line-height: 1.2 !important;
+  }
+
+  .welcome-description {
+    font-size: 14px !important;
+    margin-bottom: 16px !important;
+    max-width: 100% !important;
+    padding: 0 8px !important;
+  }
+
+  /* Скрываем блоки с функциями на мобильных */
+  .welcome-features {
+    display: none !important;
+  }
+
+  .welcome-language-section {
+    margin-bottom: 16px !important;
+  }
+
+  .welcome-language-title {
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .welcome-language-options {
+    gap: 6px !important;
+  }
+
+  .welcome-language-option {
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+  }
+
+  .welcome-flag {
+    font-size: 18px !important;
+  }
+
+  .welcome-start-button {
+    padding: 14px 20px !important;
+    font-size: 16px !important;
+    border-radius: 12px !important;
+  }
+
+  .welcome-modal-close {
+    top: 8px !important;
+    right: 8px !important;
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 16px !important;
+  }
+
+  /* Мобильные стили для формы регистрации - новый дизайн без подложки */
+  .auth-required-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 80px !important; /* Оставляем место для панели навигации */
+    background: #f9fafb !important; /* Простой серый фон вместо фиолетового */
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 1000 !important;
+  }
+
+  .auth-required-content {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    padding: 16px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important; /* Изменяем с center на flex-start */
+    align-items: center !important;
+    overflow: hidden !important; /* Убираем скроллинг */
+  }
+
+  /* Стили для иконки */
+  .auth-required-icon {
+    margin-top: 20px !important; /* Добавляем небольшой отступ сверху */
+    margin-bottom: 12px !important; /* Уменьшаем отступ */
+    background: #e5e7eb !important; /* Простой серый фон */
+    border-radius: 50% !important;
+    width: 60px !important; /* Уменьшаем размер */
+    height: 60px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .auth-required-icon .lock-icon {
+    width: 30px !important; /* Уменьшаем размер */
+    height: 30px !important;
+    color: #6b7280 !important; /* Серый цвет */
+  }
+
+  /* Стили для заголовка */
+  .auth-required-title {
+    font-size: 22px !important; /* Уменьшаем размер */
+    font-weight: 700 !important;
+    color: #1f2937 !important; /* Темный цвет */
+    text-align: center !important;
+    margin-bottom: 4px !important; /* Уменьшаем отступ с 6px до 4px */
+  }
+
+  /* Стили для описания */
+  .auth-required-description {
+    font-size: 14px !important; /* Уменьшаем размер */
+    color: #6b7280 !important; /* Серый цвет */
+    text-align: center !important;
+    margin-bottom: 12px !important; /* Уменьшаем отступ с 16px до 12px */
+    line-height: 1.4 !important;
+    max-width: 280px !important;
+  }
+
+  /* Контейнер формы */
+  .auth-form-container {
+    width: 100% !important;
+    max-width: 320px !important; /* Уменьшаем максимальную ширину */
+    background: white !important; /* Белый фон */
+    border-radius: 12px !important;
+    padding: 16px !important; /* Уменьшаем padding с 20px до 16px */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; /* Простая тень */
+    max-height: calc(100vh - 200px) !important; /* Ограничиваем максимальную высоту */
+    overflow-y: auto !important; /* Добавляем скроллинг если нужно */
+  }
+
+  /* Стили для формы */
+  .auth-form {
+    width: 100% !important;
+    max-height: 100% !important; /* Ограничиваем высоту формы */
+    overflow: hidden !important; /* Скрываем переполнение */
+  }
+
+  /* Стили для групп полей */
+  .form-group {
+    margin-bottom: 4px !important; /* Уменьшаем отступ с 8px до 4px */
+  }
+
+  /* Стили для полей ввода */
+  .form-input {
+    width: 100% !important;
+    padding: 8px 12px !important; /* Уменьшаем padding с 10px 14px до 8px 12px */
+    border: 1px solid #d1d5db !important; /* Простая рамка */
+    border-radius: 8px !important;
+    font-size: 16px !important; /* Увеличиваем размер шрифта до 16px для предотвращения зума */
+    background: white !important;
+    color: #1f2937 !important;
+    transition: all 0.3s ease !important;
+    box-sizing: border-box !important;
+    -webkit-appearance: none !important; /* Убираем стандартные стили iOS */
+    -moz-appearance: none !important; /* Убираем стандартные стили Firefox */
+    appearance: none !important;
+    transform: translateZ(0) !important; /* Включаем аппаратное ускорение */
+  }
+
+  .form-input:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important; /* Синий цвет при фокусе */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+    transform: translateZ(0) !important; /* Сохраняем аппаратное ускорение при фокусе */
+  }
+
+  /* Предотвращение зума на мобильных устройствах */
+  @media screen and (max-width: 767px) {
+    .form-input {
+      font-size: 16px !important; /* Минимальный размер для предотвращения зума */
+      line-height: 1.2 !important; /* Компактная высота строки */
+    }
+    
+    /* Отключаем масштабирование для полей ввода */
+    .form-input,
+    .form-input:focus {
+      -webkit-text-size-adjust: 100% !important;
+      -moz-text-size-adjust: 100% !important;
+      -ms-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
+    }
+  }
+
+  /* Стили для кнопки */
+  .auth-button {
+    width: 100% !important;
+    padding: 8px 16px !important; /* Уменьшаем padding с 10px 18px до 8px 16px */
+    background: #3b82f6 !important; /* Синий цвет */
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 14px !important; /* Уменьшаем размер шрифта */
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin-top: 4px !important; /* Уменьшаем отступ с 6px до 4px */
+  }
+
+  .auth-button:hover {
+    background: #2563eb !important; /* Темно-синий при наведении */
+  }
+
+  /* Стили для переключателя режимов */
+  .auth-mode-toggle {
+    width: 100% !important;
+    padding: 4px !important; /* Уменьшаем padding с 6px до 4px */
+    background: transparent !important;
+    border: none !important;
+    color: #3b82f6 !important; /* Синий цвет */
+    font-size: 12px !important; /* Уменьшаем размер шрифта */
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    margin-top: 4px !important; /* Уменьшаем отступ с 6px до 4px */
+    text-decoration: underline !important;
+    transition: color 0.3s ease !important;
+  }
+
+  /* Скрываем старые стили подложки */
+  .content-area.profile-background {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  /* Убираем все старые отступы и позиционирование */
+  .auth-required-container > .auth-required-content {
+    margin: 0 !important;
+    padding: 16px !important;
+    transform: none !important;
+  }
+
+  .auth-required-container * {
+    margin-top: 0 !important;
+  }
+
+  .auth-required-content * {
+    margin-top: 0 !important;
+  }
+
+  /* Компактные стили для сообщений об ошибках валидации */
+  .error-message,
+  .auth-error-message,
+  .success-message {
+    font-size: 10px !important; /* Очень маленький шрифт */
+    padding: 4px 6px !important; /* Минимальный padding */
+    margin: 2px 0 !important; /* Минимальные отступы */
+    border-radius: 4px !important;
+    line-height: 1.2 !important; /* Компактная высота строки */
+    max-height: 20px !important; /* Ограничиваем высоту */
+    overflow: hidden !important; /* Скрываем лишний текст */
+    text-overflow: ellipsis !important; /* Добавляем многоточие */
+    white-space: nowrap !important; /* Запрещаем перенос строк */
+  }
+
+  /* Стили для текста условий */
+  .terms-text {
+    font-size: 9px !important; /* Очень маленький шрифт */
+    line-height: 1.2 !important; /* Компактная высота строки */
+    margin: 2px 0 !important; /* Минимальные отступы */
+    max-height: 16px !important; /* Ограничиваем высоту */
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  /* Уменьшаем отступы для групп с ошибками */
+  .form-group:has(.error-message),
+  .form-group:has(.auth-error-message) {
+    margin-bottom: 2px !important; /* Уменьшаем отступ с 4px до 2px */
+  }
+
+  /* Стили для чекбокса условий */
+  .terms-checkbox {
+    margin: 2px 0 !important; /* Минимальные отступы */
+    gap: 4px !important; /* Минимальный отступ между чекбоксом и текстом */
+  }
+
+  .terms-checkbox input[type="checkbox"] {
+    width: 12px !important; /* Маленький чекбокс */
+    height: 12px !important;
+    margin: 0 !important;
+  }
+
+  .terms-checkbox label {
+    font-size: 9px !important; /* Очень маленький шрифт */
+    line-height: 1.2 !important;
+    margin: 0 !important;
+  }
+
+  /* Сбалансированные отступы для кнопок на заглушках */
+  .auth-required-button {
+    width: 100% !important;
+    padding: 12px 20px !important;
+    background: #3b82f6 !important; /* Синий цвет */
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    margin: 8px 0 !important; /* Сбалансированные отступы сверху и снизу */
+  }
+
+  .auth-required-button:hover {
+    background: #2563eb !important; /* Темно-синий при наведении */
+  }
+
+  .auth-required-button.primary {
+    background: #3b82f6 !important; /* Основная кнопка */
+    margin-bottom: 8px !important; /* Отступ снизу */
+  }
+
+  .auth-required-button.secondary {
+    background: #6b7280 !important; /* Вторичная кнопка */
+    margin-top: 8px !important; /* Отступ сверху */
+  }
+
+  /* Стили для разделителя "или" */
+  .auth-required-or {
+    font-size: 12px !important;
+    color: #6b7280 !important;
+    margin: 8px 0 !important; /* Сбалансированные отступы */
+    font-weight: 400 !important;
+    text-align: center !important;
+  }
+
+  /* Контейнер для кнопок */
+  .auth-required-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important; /* Равномерные отступы между элементами */
+    align-items: center !important;
+    width: 100% !important;
+  }
+
 } 

@@ -166,7 +166,7 @@
   background: rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(20px);
   border-radius: 24px;
-  padding: 48px 32px;
+  padding: 32px 24px; /* Уменьшаем padding с 48px 32px до 32px 24px */
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.1),
     0 4px 16px rgba(0, 0, 0, 0.05),
@@ -195,13 +195,13 @@
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px; /* Уменьшаем отступ с 20px до 12px */
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px; /* Уменьшаем отступ с 8px до 6px */
 }
 
 .form-label {
@@ -447,175 +447,136 @@
   height: 20px;
 }
 
-/* Мобильные стили для форм авторизации */
+/* Стили для мобильных устройств */
 @media (max-width: 768px) {
-  .content-area:has(.profile-container),
   .content-area.profile-background {
-    padding: 16px !important;
-    padding-top: 10px !important; /* Уменьшаем с 40px до 10px - поднимаем в 4 раза */
-    min-height: calc(100vh - 80px) !important;
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
+    /* Убираем все старые стили */
   }
 
-  .profile-container {
-    width: 100% !important;
-    max-width: 360px !important;
-    margin: 0 auto !important;
-    margin-top: 0 !important; /* Убираем margin-top чтобы поднять еще выше */
-    padding: 0 !important;
+  .auth-required-container {
+    /* Убираем все старые стили */
   }
 
-  .auth-form-container {
-    background: rgba(255, 255, 255, 0.25) !important;
-    backdrop-filter: blur(20px) !important;
-    border-radius: 20px !important;
-    padding: 24px 20px !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.1) !important,
-      0 4px 16px rgba(0, 0, 0, 0.05) !important,
-      0 2px 8px rgba(0, 0, 0, 0.03) !important,
-      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-    max-height: calc(100vh - 120px) !important;
-    overflow-y: auto !important;
-  }
-
-  .auth-form {
-    gap: 16px !important;
-  }
-
-  .form-group {
-    gap: 6px !important;
-  }
-
-  .form-label {
-    font-size: 13px !important;
-    color: rgba(0, 0, 0, 0.7) !important;
-    font-weight: 500 !important;
-  }
-
-  .form-input {
-    padding: 14px 14px 14px 44px !important;
-    font-size: 15px !important;
-    border-radius: 12px !important;
-    background: rgba(255, 255, 255, 0.3) !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    color: rgba(0, 0, 0, 0.8) !important;
-  }
-
-  .input-icon {
-    left: 14px !important;
-    width: 18px !important;
-    height: 18px !important;
-    color: rgba(0, 0, 0, 0.5) !important;
-  }
-
-  .password-toggle {
-    right: 14px !important;
-    width: 18px !important;
-    height: 18px !important;
-    color: rgba(0, 0, 0, 0.5) !important;
-  }
-
-  .auth-button {
-    padding: 16px 24px !important;
-    font-size: 15px !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-  }
-
-  .auth-mode-toggle {
-    font-size: 13px !important;
-    padding: 8px 16px !important;
-  }
-
-  .terms-checkbox {
-    gap: 8px !important;
-  }
-
-  .terms-checkbox input[type="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-  }
-
-  .terms-checkbox label {
-    font-size: 13px !important;
-    line-height: 1.4 !important;
-  }
-
-  .terms-link {
-    font-size: 13px !important;
-  }
-
-  .error-message {
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-    border-radius: 8px !important;
-  }
-
-  .success-message {
-    font-size: 12px !important;
-    padding: 8px 12px !important;
-    border-radius: 8px !important;
+  .auth-required-content {
+    /* Убираем все старые стили */
   }
 
   /* Стили для форм внутри auth-required-content */
   .auth-required-content .auth-form-container {
-    max-height: calc(50vh - 40px) !important;
+    /* Убираем все старые стили */
   }
-  
+
   .auth-required-content .auth-form {
-    gap: 10px !important;
+    /* Убираем все старые стили */
   }
-  
+
   .auth-required-content .form-group {
-    gap: 3px !important;
+    /* Убираем все старые стили */
   }
-  
+
   .auth-required-content .form-label {
-    font-size: 11px !important;
+    /* Убираем все старые стили */
   }
-  
+
   .auth-required-content .form-input {
-    padding: 10px 10px 10px 36px !important;
-    font-size: 13px !important;
+    /* Убираем все старые стили */
   }
-  
+
   .auth-required-content .input-icon {
-    left: 10px !important;
-    width: 14px !important;
-    height: 14px !important;
+    /* Убираем все старые стили */
   }
-  
+
+  .auth-required-content .password-toggle {
+    /* Убираем все старые стили */
+  }
+
   .auth-required-content .auth-button {
-    padding: 12px 18px !important;
-    font-size: 13px !important;
+    /* Убираем все старые стили */
   }
-  
-  .auth-required-content .terms-text {
-    font-size: 10px !important;
+
+  .auth-required-content .auth-mode-toggle {
+    /* Убираем все старые стили */
   }
-  
+
+  .auth-required-content .terms-checkbox {
+    /* Убираем все старые стили */
+  }
+
+  .auth-required-content .terms-checkbox input[type="checkbox"] {
+    /* Убираем все старые стили */
+  }
+
+  .auth-required-content .terms-checkbox label {
+    /* Убираем все старые стили */
+  }
+
+  .auth-required-content .terms-link {
+    /* Убираем все старые стили */
+  }
+
   .auth-required-content .error-message {
-    font-size: 9px !important;
+    /* Убираем все старые стили */
   }
-  
+
+  .auth-required-content .success-message {
+    /* Убираем все старые стили */
+  }
+
   .auth-required-content .auth-error-message {
-    padding: 6px 8px !important;
-    font-size: 11px !important;
+    /* Убираем все старые стили */
   }
 
-  /* Модальные окна на мобильных */
-  .modal-overlay {
-    padding: 16px !important;
-    padding-top: 56px !important; /* Уменьшаем с 96px до 56px */
+  .auth-required-content .terms-text {
+    /* Убираем все старые стили */
   }
+} 
 
-  .modal-content {
-    padding: 24px !important;
-    margin: 20px !important;
-  }
+/* Стили для сообщений об ошибках на десктопе */
+.error-message,
+.auth-error-message,
+.success-message {
+  font-size: 12px !important; /* Уменьшаем размер шрифта */
+  padding: 6px 8px !important; /* Уменьшаем padding */
+  margin: 4px 0 !important; /* Уменьшаем отступы */
+  border-radius: 6px !important;
+  line-height: 1.3 !important; /* Компактная высота строки */
+  max-height: 24px !important; /* Ограничиваем высоту */
+  overflow: hidden !important; /* Скрываем переполнение */
+  text-overflow: ellipsis !important; /* Добавляем многоточие */
+  white-space: nowrap !important; /* Запрещаем перенос строк */
+}
+
+/* Стили для текста условий на десктопе */
+.terms-text {
+  font-size: 11px !important; /* Уменьшаем размер шрифта */
+  line-height: 1.3 !important; /* Компактная высота строки */
+  margin: 4px 0 !important; /* Уменьшаем отступы */
+  max-height: 20px !important; /* Ограничиваем высоту */
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Уменьшаем отступы для групп с ошибками на десктопе */
+.form-group:has(.error-message),
+.form-group:has(.auth-error-message) {
+  margin-bottom: 8px !important; /* Уменьшаем отступ */
+}
+
+/* Стили для чекбокса условий на десктопе */
+.terms-checkbox {
+  margin: 4px 0 !important; /* Уменьшаем отступы */
+  gap: 6px !important; /* Уменьшаем отступ между чекбоксом и текстом */
+}
+
+.terms-checkbox input[type="checkbox"] {
+  width: 14px !important; /* Уменьшаем размер чекбокса */
+  height: 14px !important;
+  margin: 0 !important;
+}
+
+.terms-checkbox label {
+  font-size: 11px !important; /* Уменьшаем размер шрифта */
+  line-height: 1.3 !important;
+  margin: 0 !important;
 } 

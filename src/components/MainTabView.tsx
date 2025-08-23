@@ -578,12 +578,13 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
 
   // Показываем приветственное окно при каждом обновлении страницы для тестирования
   useEffect(() => {
+    // Показываем модальное окно на всех устройствах
     setShowWelcomeModal(true);
   }, []);
 
   return (
     <div className="main-container">
-      {/* Приветственное модальное окно */}
+      {/* Приветственное модальное окно для всех устройств */}
       <WelcomeModal 
         isVisible={showWelcomeModal} 
         onClose={handleCloseWelcomeModal} 
@@ -722,7 +723,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
           <Route path="/seller" element={<SellerProfileViewWrapper />} />
         </Routes>
       </div>
-      {isMobile && <TabBar />}
+      {isMobile && (location.pathname !== '/' || !showWelcomeModal) && <TabBar />}
       
       {/* Модальное окно сортировки - на том же уровне, что и панель навигации */}
       <SortSheet
