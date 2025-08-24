@@ -294,6 +294,20 @@ code {
   max-width: 100%;
 }
 
+/* Элементы категории и доставки */
+.listing-detail-container.desktop .category-delivery-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
 /* Категория */
 .listing-detail-container.desktop .detail-category {
   display: flex;
@@ -360,6 +374,30 @@ code {
   -moz-user-select: none;
   -ms-user-select: none;
   touch-action: pan-y;
+}
+
+/* Стили для мобильной версии категории и доставки */
+.listing-detail-container.mobile .detail-category-delivery {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.listing-detail-container.mobile .category-delivery-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.listing-detail-container.mobile .category-delivery-item:last-child {
+  border-bottom: none;
 }
 
 
@@ -467,6 +505,49 @@ code {
   transform: translateY(-1px) scale(0.98);
 }
 
+/* Стили для кнопки отзыва на десктопе */
+.listing-detail-container.desktop .review-button {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 14px 28px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.listing-detail-container.desktop .review-button:hover {
+  transform: translateY(-2px);
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.listing-detail-container.desktop .review-button:active {
+  transform: translateY(0);
+}
+
+.listing-detail-container.desktop .review-icon {
+  width: 20px;
+  height: 20px;
+  color: #6b7280;
+}
+
 .listing-detail-container.desktop .contact-icon {
   width: 20px;
   height: 20px;
@@ -504,6 +585,12 @@ code {
 .listing-detail-container.desktop .contact-text {
   font-size: 14px;
   color: white !important;
+  font-weight: 600;
+}
+
+.listing-detail-container.desktop .review-text {
+  font-size: 14px;
+  color: #374151;
   font-weight: 600;
 }
 
@@ -619,6 +706,11 @@ code {
     overflow: hidden;
   }
   
+  .listing-detail-container.desktop .category-delivery-item {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
   .listing-detail-container.desktop .detail-characteristics {
     width: 100%;
   }
@@ -657,6 +749,18 @@ code {
     font-size: 28px;
   }
   
+  .listing-detail-container.desktop .price-amount {
+    font-size: 32px;
+  }
+  
+  .listing-detail-container.desktop .price-currency {
+    font-size: 20px;
+  }
+  
+  .listing-detail-container.desktop .price-period {
+    font-size: 18px;
+  }
+  
 
   
   .listing-detail-container.desktop .detail-category-delivery {
@@ -665,6 +769,11 @@ code {
     align-items: flex-start;
     max-width: 100%;
     overflow: hidden;
+  }
+  
+  .listing-detail-container.desktop .category-delivery-item {
+    width: 100%;
+    justify-content: flex-start;
   }
   
   .listing-detail-container.desktop .detail-characteristics {
@@ -1644,7 +1753,7 @@ body:has(.review-modal-overlay) .detail-header {
     border: 1px solid rgba(255, 255, 255, 0.3) !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
     display: flex !important;
-    align-items: flex-start !important;
+    align-items: center !important;
     flex-direction: row !important;
     gap: 16px !important;
     max-width: 100% !important;
@@ -1782,6 +1891,39 @@ body:has(.review-modal-overlay) .detail-header {
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
     margin-bottom: 12px !important;
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .listing-detail-container.mobile .price-amount {
+    font-size: 30px !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+  }
+  
+  .listing-detail-container.mobile .price-currency {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    opacity: 0.8 !important;
+  }
+  
+  .listing-detail-container.mobile .price-period {
+    font-size: 18px !important;
+    font-weight: 500 !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    opacity: 0.7 !important;
   }
 
 
@@ -1925,18 +2067,46 @@ body:has(.review-modal-overlay) .detail-header {
 }
 
 .detail-price {
-  font-size: 28px;
-  font-weight: 700;
-  color: rgba(30, 41, 59, 0.95);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: rgba(30, 41, 59, 0.95) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 4px !important;
+  flex-wrap: wrap !important;
+}
+
+/* Стили для суммы цены */
+.price-amount {
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  color: rgba(30, 41, 59, 0.95) !important;
+  line-height: 1 !important;
+}
+
+/* Стили для валюты */
+.price-currency {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: rgba(30, 41, 59, 0.7) !important;
+  line-height: 1 !important;
+}
+
+/* Стили для периода (например, "/ месяц") */
+.price-period {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: rgba(30, 41, 59, 0.6) !important;
+  line-height: 1 !important;
 }
 
 .seller-info {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.25);
@@ -13230,4 +13400,207 @@ body .form-section select.characteristic-select:focus {
 /* Убираем лишние отступы */
 .form-row + .form-section {
   margin-top: 0;
+}
+
+/* Стили для компонентов загрузки */
+.listing-loading,
+.tabs-loading,
+.similar-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.loading-spinner {
+  font-size: 48px;
+  margin-bottom: 16px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Стили для ошибок */
+.listing-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.listing-error h2 {
+  margin-bottom: 16px;
+  color: #ef4444;
+}
+
+.listing-error p {
+  margin-bottom: 24px;
+  color: #6b7280;
+}
+
+/* Стили для вкладок */
+.listing-tabs {
+  margin-top: 32px;
+}
+
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 24px;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  color: #6b7280;
+}
+
+.tab-button:hover {
+  color: #374151;
+}
+
+.tab-button.active {
+  color: #1f2937;
+  border-bottom-color: #3b82f6;
+}
+
+.tab-content {
+  min-height: 200px;
+}
+
+.tab-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Стили для похожих объявлений */
+.similar-listings {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.similar-listings-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #1f2937;
+}
+
+.similar-listings-placeholder {
+  text-align: center;
+  color: #6b7280;
+  padding: 40px 20px;
+}
+
+/* Стили для заметки о безопасности */
+.safety-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 12px;
+  margin: 32px 0;
+}
+
+.safety-note-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.safety-note-content {
+  flex: 1;
+}
+
+.safety-note-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #92400e;
+}
+
+.safety-note-text {
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+/* Стили для хлебных крошек */
+.breadcrumbs {
+  margin-bottom: 24px;
+}
+
+.breadcrumbs-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-item:not(:last-child)::after {
+  content: '>';
+  margin-left: 8px;
+  color: #9ca3af;
+}
+
+.breadcrumb-link {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  color: #1d4ed8;
+}
+
+.breadcrumb-current {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+  .tabs-header {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  
+  .tab-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  
+  .safety-note {
+    padding: 16px;
+    margin: 24px 0;
+  }
+  
+  .safety-note-icon {
+    font-size: 20px;
+  }
 }

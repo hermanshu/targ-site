@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { ListingsProvider } from './contexts/ListingsContext';
@@ -44,19 +45,21 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <LanguageProvider>
-        <AuthProvider>
-          <ListingsProvider>
-            <FavoritesProvider>
-              <ReviewsProvider>
-                <div className={`App device-${type}`}>
-                  <MainTabView />
-                </div>
-              </ReviewsProvider>
-            </FavoritesProvider>
-          </ListingsProvider>
-        </AuthProvider>
-      </LanguageProvider>
+      <HelmetProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ListingsProvider>
+              <FavoritesProvider>
+                <ReviewsProvider>
+                  <div className={`App device-${type}`}>
+                    <MainTabView />
+                  </div>
+                </ReviewsProvider>
+              </FavoritesProvider>
+            </ListingsProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </HelmetProvider>
     </ErrorBoundary>
   );
 }

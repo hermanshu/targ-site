@@ -15,7 +15,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { Listing } from '../types';
-import ListingDetailView from './ListingDetailView';
+import { ListingPage } from './listing/ListingPage';
 import EditListingView from './EditListingView';
 import SaleConfirmationModal from './SaleConfirmationModal';
 
@@ -240,8 +240,8 @@ const MyListingsView: React.FC = () => {
   // Если выбрано объявление, показываем детальный просмотр
   if (selectedListing) {
     return (
-      <ListingDetailView
-        listing={selectedListing}
+      <ListingPage
+        listingId={selectedListing.id}
         onBack={handleBackToList}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={false} // В "Мои объявления" всегда false

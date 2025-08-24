@@ -32,7 +32,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
-import ListingDetailView from './ListingDetailView';
+import { ListingPage } from './listing/ListingPage';
 import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import WebsiteCategoryView from './WebsiteCategoryView';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
@@ -418,8 +418,8 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     const isListingFavorite = isFavorite(selectedListing.id);
     
     return (
-      <ListingDetailView
-        listing={selectedListing}
+      <ListingPage
+        listingId={selectedListing.id}
         onBack={handleBackToList}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={isListingFavorite}
@@ -469,8 +469,8 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
   if (selectedListing) {
     return (
-      <ListingDetailView
-        listing={selectedListing}
+      <ListingPage
+        listingId={selectedListing.id}
         onBack={handleBackToList}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={isFavorite(selectedListing.id)}

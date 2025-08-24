@@ -26,7 +26,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useListings } from '../contexts/ListingsContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
-import ListingDetailView from './ListingDetailView';
+import { ListingPage } from './listing/ListingPage';
 import MobileFilterSheet from './MobileFilterSheet';
 import SortSheet from './SortSheet';
 import { Listing } from '../types';
@@ -270,8 +270,8 @@ const MobileHomeView: React.FC = () => {
 
   if (selectedListing) {
     return (
-      <ListingDetailView
-        listing={selectedListing}
+      <ListingPage
+        listingId={selectedListing.id}
         onBack={handleBackToList}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={isFavorite(selectedListing.id)}

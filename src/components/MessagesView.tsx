@@ -11,7 +11,7 @@ import {
   NoSymbolIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
-import ListingDetailView from './ListingDetailView';
+import { ListingPage } from './listing/ListingPage';
 import { Listing } from '../types';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
@@ -764,8 +764,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   // Если выбрано объявление для просмотра, показываем детальную страницу
   if (selectedListing) {
     return (
-      <ListingDetailView
-        listing={selectedListing}
+      <ListingPage
+        listingId={selectedListing.id}
         onBack={handleBackToChat}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={isFavorite(selectedListing.id)}

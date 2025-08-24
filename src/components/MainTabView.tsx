@@ -12,7 +12,7 @@ import MessagesView from './MessagesView';
 import MyListingsView from './MyListingsView';
 import AddListingView from './AddListingView';
 import FavoritesView from './FavoritesView';
-import ListingDetailView from './ListingDetailView';
+import { ListingPage } from './listing/ListingPage';
 import NotificationsSettingsView from './NotificationsSettingsView';
 import HelpAndSupportView from './HelpAndSupportView';
 import ReviewsView from './ReviewsView';
@@ -144,8 +144,8 @@ const FavoritesViewWrapper = () => {
 
   if (selectedListing) {
     return (
-      <ListingDetailView
-        listing={selectedListing}
+      <ListingPage
+        listingId={selectedListing.id}
         onBack={handleBackToList}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={isFavorite(selectedListing.id)}
