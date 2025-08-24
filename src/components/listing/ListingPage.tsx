@@ -57,6 +57,8 @@ export const ListingPage: React.FC<ListingPageProps> = ({
 
 
 
+
+
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
     const categoryMapping: { [key: string]: string } = {
@@ -140,8 +142,81 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   };
 
   const handleShareClick = () => {
-    // TODO: Добавить логику поделиться
-    console.log('Share listing:', listing?.id);
+    if (listing) {
+      // Создаем URL для текущей страницы
+      const shareUrl = `${window.location.origin}${window.location.pathname}?listingId=${listing.id}`;
+      
+      // Пытаемся использовать Web Share API, если доступен
+      if (navigator.share) {
+        navigator.share({
+          title: listing.title,
+          text: `${listing.title} - ${listing.price} ${listing.currency}`,
+          url: shareUrl
+        }).catch((error) => {
+          console.log('Ошибка при использовании Web Share API:', error);
+          // Fallback: копируем ссылку в буфер обмена
+          copyToClipboard(shareUrl);
+        });
+      } else {
+        // Fallback: копируем ссылку в буфер обмена
+        copyToClipboard(shareUrl);
+      }
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Показываем уведомление об успешном копировании
+        showNotification('Ссылка скопирована в буфер обмена!');
+      }).catch(() => {
+        // Fallback для старых браузеров
+        fallbackCopyToClipboard(text);
+      });
+    } else {
+      fallbackCopyToClipboard(text);
+    }
+  };
+
+  const fallbackCopyToClipboard = (text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+      document.execCommand('copy');
+      showNotification('Ссылка скопирована в буфер обмена!');
+    } catch (err) {
+      console.error('Ошибка при копировании:', err);
+      showNotification('Ошибка при копировании ссылки');
+    }
+    document.body.removeChild(textArea);
+  };
+
+  const showNotification = (message: string) => {
+    // Создаем простое уведомление
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 1000000;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    // Убираем уведомление через 3 секунды
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 3000);
   };
 
   const handleContactClick = () => {

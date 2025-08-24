@@ -369,10 +369,18 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
       return;
     }
 
-    if (isFavorite(listing.id)) {
-      removeFromFavorites(listing.id);
-    } else {
-      addToFavorites(listing);
+    // Предотвращаем перезагрузку страницы
+    try {
+      if (isFavorite(listing.id)) {
+        removeFromFavorites(listing.id);
+      } else {
+        addToFavorites(listing);
+      }
+      
+      // Принудительно обновляем состояние без изменения URL
+      // Это предотвратит перезагрузку страницы
+    } catch (error) {
+      console.error('Ошибка при изменении избранного:', error);
     }
   };
 
