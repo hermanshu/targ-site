@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Review, SellerRating } from '../types';
+import { newId } from '../utils/id';
+import { nowIso } from '../utils/datetime';
 
 interface ReviewsContextType {
   reviews: Review[];
@@ -32,7 +34,7 @@ const initialReviews: Review[] = [
     listingId: 'listing1',
     rating: 5,
     comment: 'Отличный продавец! Товар точно как на фото, доставка быстрая.',
-    createdAt: new Date('2024-01-15'),
+    createdAt: '2024-01-15T00:00:00.000Z',
     isVerified: true,
     reviewerName: 'Анна К.'
   },
@@ -43,7 +45,7 @@ const initialReviews: Review[] = [
     listingId: 'listing2',
     rating: 4,
     comment: 'Хороший продавец, рекомендую. Товар качественный.',
-    createdAt: new Date('2024-01-10'),
+    createdAt: '2024-01-10T00:00:00.000Z',
     isVerified: true,
     reviewerName: 'Михаил П.'
   },
@@ -54,7 +56,7 @@ const initialReviews: Review[] = [
     listingId: 'listing3',
     rating: 3,
     comment: 'Нормально, но можно было бы лучше.',
-    createdAt: new Date('2024-01-08'),
+    createdAt: '2024-01-08T00:00:00.000Z',
     isVerified: true,
     reviewerName: 'Елена С.'
   },
@@ -65,7 +67,7 @@ const initialReviews: Review[] = [
     listingId: 'listing4',
     rating: 5,
     comment: 'Отличная компания! Быстрая доставка, качественный товар.',
-    createdAt: new Date('2024-01-12'),
+    createdAt: '2024-01-12T00:00:00.000Z',
     isVerified: true,
     reviewerName: 'Дмитрий В.'
   },
@@ -76,7 +78,7 @@ const initialReviews: Review[] = [
     listingId: 'listing5',
     rating: 4,
     comment: 'Хорошая компания, рекомендую.',
-    createdAt: new Date('2024-01-09'),
+    createdAt: '2024-01-09T00:00:00.000Z',
     isVerified: true,
     reviewerName: 'Ольга М.'
   }
@@ -95,8 +97,8 @@ export const ReviewsProvider: React.FC<ReviewsProviderProps> = ({ children }) =>
   const addReview = (reviewData: Omit<Review, 'id' | 'createdAt'>) => {
     const newReview: Review = {
       ...reviewData,
-      id: Date.now().toString(),
-      createdAt: new Date()
+      id: newId(),
+      createdAt: nowIso()
     };
 
     setReviews(prev => {
@@ -123,7 +125,7 @@ export const ReviewsProvider: React.FC<ReviewsProviderProps> = ({ children }) =>
     return {
       averageRating,
       totalReviews: sellerReviews.length,
-      reviews: sellerReviews.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      reviews: sellerReviews.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     };
   };
 

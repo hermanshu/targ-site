@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '../types';
+import { newId } from '../utils/id';
+import { nowIso } from '../utils/datetime';
 
 interface AuthContextType {
   currentUser: User | null;
@@ -54,7 +56,7 @@ const loadMockUsers = (): User[] => {
       const users = JSON.parse(savedUsers);
       return users.map((user: any) => ({
         ...user,
-        createdAt: new Date(user.createdAt)
+        createdAt: user.createdAt || nowIso()
       }));
     } catch (error) {
       console.error('Ошибка при загрузке пользователей из localStorage:', error);
@@ -67,7 +69,7 @@ const loadMockUsers = (): User[] => {
       name: 'Админ',
       email: 'admin@admin.ru',
       isCompany: false,
-      createdAt: new Date(),
+      createdAt: nowIso(),
       emailVerified: true
     }
   ];
@@ -113,8 +115,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (savedUser) {
       try {
         const user = JSON.parse(savedUser);
-        if (user.createdAt) {
-          user.createdAt = new Date(user.createdAt);
+        if (!user.createdAt) {
+          user.createdAt = nowIso();
         }
         setCurrentUser(user);
         setUserProfile(user);
@@ -192,11 +194,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setPendingVerification({ email, code: verificationCode });
       
       const newUser: User = {
-        id: Date.now().toString(),
+        id: newId(),
         name,
         email,
         isCompany,
-        createdAt: new Date(),
+        createdAt: nowIso(),
         emailVerified: false
       };
       

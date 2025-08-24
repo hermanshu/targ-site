@@ -98,6 +98,20 @@ const MobileHomeView: React.FC = () => {
 
   const initialListings = getPublishedListings();
 
+  // Отладочная информация
+  React.useEffect(() => {
+    console.log('MobileHomeView: Получены объявления:', initialListings.listings.length);
+    initialListings.listings.forEach((listing, index) => {
+      console.log(`Мобильное объявление ${index + 1}:`, {
+        id: listing.id,
+        title: listing.title,
+        hasImages: !!listing.images,
+        imagesCount: listing.images?.length || 0,
+        imageName: listing.imageName
+      });
+    });
+  }, [initialListings.listings]);
+
   // Фильтрация объявлений
   const filteredListings = useMemo(() => {
     let filtered = initialListings.listings;
@@ -474,7 +488,17 @@ const MobileHomeView: React.FC = () => {
               onClick={() => handleCardClick(listing)}
             >
               <div className="mobile-listing-image">
-                {listing.imageName ? (
+                {listing.images && listing.images.length > 0 ? (
+                  <img 
+                    src={listing.images[0]?.src || ''} 
+                    alt={listing.images[0]?.alt || listing.title}
+                    className="mobile-listing-img"
+                    onError={(e) => {
+                      console.error('Ошибка загрузки изображения:', listing.images?.[0]?.src);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
+                ) : listing.imageName ? (
                   <img 
                     src={`/images/${listing.imageName}.jpg`} 
                     alt={listing.title}
@@ -489,6 +513,13 @@ const MobileHomeView: React.FC = () => {
                     <HomeIcon className="placeholder-icon" />
                   </div>
                 )}
+                {/* Индикатор количества изображений */}
+                {listing.images && listing.images.length > 1 && (
+                  <div className="mobile-image-count-badge">
+                    <span className="mobile-image-count-text">{listing.images.length}</span>
+                  </div>
+                )}
+                
                 <div className="mobile-category-badge">
                   {(() => {
                     const category = categories.find(cat => cat.key === listing.category);

@@ -1,19 +1,33 @@
 // Модели данных, основанные на Swift коде
 
 // Основные типы
+export type Currency = 'RSD' | 'EUR';
+
+export interface ListingImage {
+  id: string;
+  src: string;
+  w?: number;
+  h?: number;
+  alt?: string;
+}
+
 export interface Listing {
   id: string;
   title: string;
   price: string;
-  currency: 'EUR' | 'RSD';
+  currency: Currency;
   city: string;
   category: string;
   subcategory?: string;
   sellerName: string;
   isCompany: boolean;
-  imageName: string;
+  // НОВОЕ: предпочтительно использовать images[]
+  images?: ListingImage[];
+  // СТАРОЕ: fallback для обратной совместимости
+  imageName?: string;
   description?: string;
-  createdAt: Date | string;
+  createdAt: string; // ISO строка
+  updatedAt?: string; // ISO строка
   userId: string;
   // Дополнительные поля для "Мои объявления"
   status?: 'active' | 'archived' | 'draft';
@@ -32,10 +46,6 @@ export interface Category {
   subcategories?: string[];
 }
 
-
-
-
-
 export interface User {
   id: string;
   name: string;
@@ -43,7 +53,7 @@ export interface User {
   isCompany: boolean;
   phone?: string;
   avatar?: string;
-  createdAt?: Date;
+  createdAt: string; // ISO строка
   emailVerified?: boolean;
 }
 
@@ -63,7 +73,7 @@ export interface Review {
   listingId: string;
   rating: 1 | 2 | 3 | 4 | 5;
   comment: string;
-  createdAt: Date;
+  createdAt: string; // ISO строка
   isVerified: boolean;
   reviewerName: string;
 }

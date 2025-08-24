@@ -17,6 +17,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
 import AuthRequiredView from './AuthRequiredView';
+import { nowIso } from '../utils/datetime';
 
 
 interface Chat {
@@ -35,6 +36,7 @@ interface Chat {
     category: string;
     subcategory?: string;
     imageName?: string;
+    images?: { id: string; src: string; alt?: string; w?: number; h?: number }[];
     contactMethod?: 'phone' | 'chat';
   };
 }
@@ -296,7 +298,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
           isCompany: isCompany === 'true',
           imageName: imageName || '',
           description: '',
-          createdAt: new Date(),
+          createdAt: nowIso(),
           userId: sellerId,
           contactMethod: (contactMethod as 'phone' | 'chat') || 'chat',
           views: 0
@@ -643,7 +645,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                   city: t('favorites.notSpecified'),
         sellerName: selectedChat.name,
         isCompany: false,
-        createdAt: new Date(Date.now()),
+        createdAt: nowIso(),
         userId: selectedChat.id,
         views: Math.floor(Math.random() * 200) + 50
       };
@@ -898,7 +900,16 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                 title={t('favorites.clickToViewListing')}
               >
                 <div className="listing-preview-image">
-                  {selectedChat.listing.imageName ? (
+                  {selectedChat.listing.images && selectedChat.listing.images.length > 0 ? (
+                    <img 
+                      src={selectedChat.listing.images[0]?.src || ''} 
+                      alt={selectedChat.listing.images[0]?.alt || selectedChat.listing.title}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : selectedChat.listing.imageName ? (
                     <img 
                       src={`/images/${selectedChat.listing.imageName}.jpg`} 
                       alt={selectedChat.listing.title}
@@ -908,7 +919,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                       }}
                     />
                   ) : null}
-                  <div className={`listing-preview-placeholder ${selectedChat.listing.imageName ? 'hidden' : ''}`}>
+                  <div className={`listing-preview-placeholder ${(selectedChat.listing.images && selectedChat.listing.images.length > 0) || selectedChat.listing.imageName ? 'hidden' : ''}`}>
                     <div className="placeholder-icon">📷</div>
                   </div>
                 </div>

@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import type { ListingImage } from '../types';
+import { newId } from '../utils/id';
 
 interface UseListingImagesProps {
-  imageName: string;
+  images?: ListingImage[];
+  imageName?: string;
 }
 
 /**
@@ -42,26 +45,46 @@ const MULTI_IMAGE_CONFIG: { [key: string]: number } = {
 };
 
 /**
+ * Функция для построения массива изображений из разных источников
+ * Поддерживает как новую схему (images[]), так и старую (imageName + MULTI_IMAGE_CONFIG)
+ */
+export function buildImages(input: { images?: ListingImage[]; imageName?: string }, multiMap: Record<string, number>): ListingImage[] {
+  if (input.images && input.images.length) return input.images;
+  if (input.imageName) {
+    const count = multiMap[input.imageName] ?? 1;
+    return Array.from({ length: count }, (_, i) => ({
+      id: newId(),
+      src: `/images/${input.imageName}${i === 0 ? '' : `-${i+1}`}.jpg`,
+      alt: input.imageName
+    }));
+  }
+  return [];
+}
+
+/**
  * Хук для работы с изображениями объявлений
  * 
  * Автоматически определяет количество изображений для объявления
  * и предоставляет функции для навигации между ними
  * 
- * @param imageName - имя изображения из объявления
+ * @param images - массив изображений (предпочтительно)
+ * @param imageName - имя изображения из объявления (fallback)
  * @returns объект с функциями и состоянием для работы с изображениями
  */
-export const useListingImages = ({ imageName }: UseListingImagesProps) => {
+export const useListingImages = ({ images, imageName }: UseListingImagesProps) => {
   const [totalImages, setTotalImages] = useState(1);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [processedImages, setProcessedImages] = useState<ListingImage[]>([]);
 
   useEffect(() => {
     // Сбрасываем индекс при смене объявления
     setCurrentIndex(0);
     
-    // Определяем количество изображений из конфигурации
-    const imageCount = MULTI_IMAGE_CONFIG[imageName] || 1;
-    setTotalImages(imageCount);
-  }, [imageName]);
+    // Строим массив изображений с поддержкой обеих схем
+    const builtImages = buildImages({ images, imageName }, MULTI_IMAGE_CONFIG);
+    setProcessedImages(builtImages);
+    setTotalImages(builtImages.length);
+  }, [images, imageName]);
 
   /**
    * Переход к следующему изображению
@@ -81,15 +104,17 @@ export const useListingImages = ({ imageName }: UseListingImagesProps) => {
    * Получение пути к текущему изображению
    */
   const getImageSrc = () => {
-    // Если это объявление с множественными изображениями
-    if (MULTI_IMAGE_CONFIG[imageName]) {
-      // Извлекаем базовое имя из imageName (например, 'studio-1' -> 'studio')
-      const baseName = imageName.replace(/-1$/, '');
-      return `/images/${baseName}-${currentIndex + 1}.jpg`;
+    if (processedImages.length > 0) {
+      return processedImages[currentIndex]?.src || '';
     }
-    
-    // Для обычных объявлений с одним изображением
-    return `/images/${imageName}.jpg`;
+    return '';
+  };
+
+  /**
+   * Получение текущего изображения
+   */
+  const getCurrentImage = () => {
+    return processedImages[currentIndex];
   };
 
   return {
@@ -98,6 +123,8 @@ export const useListingImages = ({ imageName }: UseListingImagesProps) => {
     nextImage,          // Функция для перехода к следующему изображению
     prevImage,          // Функция для перехода к предыдущему изображению
     getImageSrc,        // Функция для получения пути к текущему изображению
-    hasMultipleImages: totalImages > 1  // Флаг наличия множественных изображений
+    getCurrentImage,    // Функция для получения текущего изображения
+    hasMultipleImages: totalImages > 1,  // Флаг наличия множественных изображений
+    images: processedImages               // Обработанный массив изображений
   };
 }; 

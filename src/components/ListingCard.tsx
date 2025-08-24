@@ -39,6 +39,18 @@ const ListingCard: React.FC<ListingCardProps> = ({
   const [animateHeart, setAnimateHeart] = useState(false);
   const { t } = useTranslation();
 
+  // Отладочная информация
+  React.useEffect(() => {
+    console.log('ListingCard render:', {
+      id: listing.id,
+      title: listing.title,
+      hasImages: !!listing.images,
+      imagesCount: listing.images?.length || 0,
+      imageName: listing.imageName,
+      firstImageSrc: listing.images?.[0]?.src
+    });
+  }, [listing]);
+
 
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
@@ -81,7 +93,22 @@ const ListingCard: React.FC<ListingCardProps> = ({
     >
       {/* Фото с бейджем категории */}
       <div className="listing-image-container">
-        {listing.imageName ? (
+        {listing.images && listing.images.length > 0 ? (
+          <div className="listing-image">
+            <img 
+              src={listing.images[0].src} 
+              alt={listing.images[0].alt || listing.title}
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+            <div className="listing-image-placeholder hidden">
+              <div className="placeholder-icon">📷</div>
+              <span>{t('common.noPhoto')}</span>
+            </div>
+          </div>
+        ) : listing.imageName ? (
           <div className="listing-image">
             <img 
               src={`/images/${listing.imageName}.jpg`} 
@@ -107,6 +134,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
         <div className="category-badge">
           <CategoryIcon className="category-icon-hero" />
         </div>
+
+        {/* Индикатор количества изображений */}
+        {listing.images && listing.images.length > 1 && (
+          <div className="image-count-badge">
+            <span className="image-count-text">{listing.images.length}</span>
+          </div>
+        )}
 
         {/* Кнопка избранного поверх изображения */}
         <button 

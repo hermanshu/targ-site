@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { Listing } from '../types';
+import { newId } from '../utils/id';
 
 interface ListingsContextType {
   listings: Listing[];
@@ -31,8 +32,14 @@ const initialListings: Listing[] = [
     sellerName: "Алексей Петров", 
     isCompany: false, 
     imageName: "chest-1", 
+    images: [
+      { id: 'img-chest-1-1', src: "/images/chest-1.jpg", alt: "Комод из массива дерева", w: 800, h: 600 },
+      { id: 'img-chest-1-2', src: "/images/chest-2.jpg", alt: "Комод из массива дерева", w: 800, h: 600 },
+      { id: 'img-chest-1-3', src: "/images/chest-3.jpg", alt: "Комод из массива дерева", w: 800, h: 600 },
+      { id: 'img-chest-1-4', src: "/images/chest-4.jpg", alt: "Комод из массива дерева", w: 800, h: 600 }
+    ],
     description: "Качественный комод из массива дерева, изготовленный вручную. Идеально подходит для спальни или детской комнаты. Имеет 4 вместительных ящика и стильный дизайн. Состояние отличное, все механизмы работают исправно.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '1', 
     status: 'active', 
     views: 45, 
@@ -57,8 +64,14 @@ const initialListings: Listing[] = [
     sellerName: "Мария Иванова", 
     isCompany: false, 
     imageName: "vintage-chest-1", 
+    images: [
+      { id: 'img-vintage-1', src: "/images/vintage-chest-1.jpg", alt: "Винтажный комод", w: 800, h: 600 },
+      { id: 'img-vintage-2', src: "/images/vintage-chest-2.jpg", alt: "Винтажный комод", w: 800, h: 600 },
+      { id: 'img-vintage-3', src: "/images/vintage-chest-3.jpg", alt: "Винтажный комод", w: 800, h: 600 },
+      { id: 'img-vintage-4', src: "/images/vintage-chest-4.jpg", alt: "Винтажный комод", w: 800, h: 600 }
+    ],
     description: "Уникальный винтажный комод с большим зеркалом в стиле ретро. Идеально подходит для прихожей или спальни. Зеркало в отличном состоянии, рама украшена резными элементами. Комод имеет 3 ящика и полку для обуви.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '2', 
     status: 'active', 
     views: 32, 
@@ -83,8 +96,12 @@ const initialListings: Listing[] = [
     sellerName: "Игорь Сидоров", 
     isCompany: true, 
     imageName: "modern-chest-1", 
+    images: [
+      { id: 'img-modern-1', src: "/images/modern-chest-1.jpg", alt: "Современный комод", w: 800, h: 600 },
+      { id: 'img-modern-2', src: "/images/modern-chest-2.jpg", alt: "Современный комод", w: 800, h: 600 }
+    ],
     description: "Современный белый комод в стиле минимализм. Идеально подходит для современного интерьера. Имеет 5 ящиков с плавным выдвижением и скрытые ручки. Материал высокого качества, легко собирается.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '3', 
     status: 'active', 
     views: 28, 
@@ -109,8 +126,12 @@ const initialListings: Listing[] = [
     sellerName: "Елена Козлова", 
     isCompany: false, 
     imageName: "loft-chest-1", 
+    images: [
+      { id: "img-loft-1", src: "/images/loft-chest-1.jpg", alt: "Комод в стиле лофт", w: 800, h: 600 },
+      { id: "img-loft-2", src: "/images/loft-chest-2.jpg", alt: "Комод в стиле лофт", w: 800, h: 600 }
+    ],
     description: "Стильный комод в стиле лофт с металлическим каркасом и деревянными фасадами. Идеально подходит для современных интерьеров. Имеет 4 ящика с металлическими ручками и открытую полку сверху.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '4', 
     status: 'active', 
     views: 38, 
@@ -120,6 +141,7 @@ const initialListings: Listing[] = [
       "Стиль": "Лофт",
       "Материал": "Металл + дерево",
       "Состояние": "Отличное",
+      "Размеры": "120x45x80 см",
       "Цвет": "Черный"
     },
     delivery: 'delivery',
@@ -137,7 +159,7 @@ const initialListings: Listing[] = [
     isCompany: true, 
     imageName: "office-admin", 
     description: "Требуется администратор в современный офис в центре Белграда. Обязанности: прием звонков, работа с документами, координация встреч. Условия: полная занятость, официальное трудоустройство, социальный пакет.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '5', 
     status: 'active', 
     views: 156, 
@@ -163,7 +185,7 @@ const initialListings: Listing[] = [
     isCompany: true, 
     imageName: "office-manager", 
     description: "IT компания в Нови Саде ищет офис-менеджера. Обязанности: организация офисных процессов, координация команды, работа с поставщиками. Требования: опыт работы в IT сфере, знание английского языка.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '6', 
     status: 'active', 
     views: 189, 
@@ -188,7 +210,7 @@ const initialListings: Listing[] = [
     isCompany: true, 
     imageName: "secretary", 
     description: "Международная компания в Нише приглашает на работу секретаря. Обязанности: делопроизводство, организация встреч, работа с клиентами. Условия: стабильная зарплата, карьерный рост, обучение.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '7', 
     status: 'active', 
     views: 134, 
@@ -214,20 +236,25 @@ const initialListings: Listing[] = [
     sellerName: "Мария Иванова", 
     isCompany: false, 
     imageName: "apartment-2room", 
+    images: [
+      { id: "img-apartment-1", src: "/images/apartment-2room-1.jpg", alt: "2-комнатная квартира", w: 800, h: 600 },
+      { id: "img-apartment-2", src: "/images/apartment-2room-2.jpg", alt: "2-комнатная квартира", w: 800, h: 600 }
+    ],
     description: "Уютная 2-комнатная квартира в центре Белграда. Идеальное расположение рядом с транспортом и магазинами. Квартира полностью меблирована, есть кондиционер и интернет. Отличное состояние, свежий ремонт.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '8', 
     status: 'active', 
     views: 567, 
-    favorites: 23, 
+    favorites: 45, 
     isPublished: true,
     characteristics: {
       "Тип недвижимости": "Квартира",
-      "Количество комнат": "2",
+      "Комнаты": "2",
       "Площадь": "65 м²",
       "Этаж": "5",
       "Состояние": "Отличное"
     },
+    delivery: 'pickup',
     contactMethod: 'chat'
   },
   { 
@@ -241,8 +268,15 @@ const initialListings: Listing[] = [
     sellerName: "Игорь Сидоров", 
     isCompany: true, 
     imageName: "studio-1", 
+    images: [
+      { id: "img-studio-1", src: "/images/studio-1.jpg", alt: "Студия с ремонтом", w: 800, h: 600 },
+      { id: "img-studio-2", src: "/images/studio-2.jpg", alt: "Студия с ремонтом", w: 800, h: 600 },
+      { id: "img-studio-3", src: "/images/studio-3.jpg", alt: "Студия с ремонтом", w: 800, h: 600 },
+      { id: "img-studio-4", src: "/images/studio-4.jpg", alt: "Студия с ремонтом", w: 800, h: 600 },
+      { id: "img-studio-5", src: "/images/studio-5.jpg", alt: "Студия с ремонтом", w: 800, h: 600 }
+    ],
     description: "Современная студия в Нови Саде с качественным ремонтом. Идеально подходит для одного человека или пары. Есть вся необходимая мебель и техника. Рядом парк и остановка транспорта.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '9', 
     status: 'active', 
     views: 423, 
@@ -255,6 +289,7 @@ const initialListings: Listing[] = [
       "Этаж": "3",
       "Состояние": "С ремонтом"
     },
+    delivery: 'pickup',
     contactMethod: 'phone'
   },
   // Домашние растения
@@ -269,7 +304,7 @@ const initialListings: Listing[] = [
     isCompany: false, 
     imageName: "monstera-1", 
     description: "Красивая монстера деликатесная высотой 80 см. Растение здоровое, с крупными резными листьями. Продается в красивом керамическом горшке. Идеально подходит для украшения интерьера.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '10', 
     status: 'active', 
     views: 67, 
@@ -295,7 +330,7 @@ const initialListings: Listing[] = [
     isCompany: false, 
     imageName: "ficus-1", 
     description: "Фикус Бенджамина высотой 60 см в отличном состоянии. Растение с густой кроной и здоровыми листьями. Продается в пластиковом горшке. Неприхотлив в уходе, идеален для начинающих.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '11', 
     status: 'active', 
     views: 45, 
@@ -321,23 +356,29 @@ const initialListings: Listing[] = [
     sellerName: "Анна Смирнова", 
     isCompany: true, 
     imageName: "bmw-1", 
-    description: "BMW X5 2019 года в отличном состоянии. Автомобиль с полным пакетом опций, один владелец, полная история обслуживания. Пробег 45,000 км, автоматическая коробка передач, бензиновый двигатель.",
-    createdAt: new Date(), 
+    images: [
+      { id: "img-bmw-1", src: "/images/bmw-1.jpg", alt: "BMW X5 2019", w: 800, h: 600 },
+      { id: "img-bmw-2", src: "/images/bmw-2.jpg", alt: "BMW X5 2019", w: 800, h: 600 },
+      { id: "img-bmw-3", src: "/images/bmw-3.jpg", alt: "BMW X5 2019", w: 800, h: 600 },
+      { id: "img-bmw-4", src: "/images/bmw-4.jpg", alt: "BMW X5 2019", w: 800, h: 600 }
+    ],
+    description: "BMW X5 2019 года в отличном состоянии. Пробег 45,000 км, полный привод, автоматическая коробка передач. Комплектация: кожаный салон, навигация, камера заднего вида, парктроники.",
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '12', 
     status: 'active', 
-    views: 892, 
-    favorites: 45, 
+    views: 234, 
+    favorites: 12, 
     isPublished: true,
     characteristics: {
       "Марка": "BMW",
       "Модель": "X5",
-      "Год выпуска": "2019",
+      "Год": "2019",
       "Пробег": "45,000 км",
-      "Тип топлива": "Бензин",
-      "Коробка передач": "Автомат"
+      "Топливо": "Бензин",
+      "Коробка": "Автомат"
     },
-        delivery: 'pickup',
-    contactMethod: 'phone'
+    delivery: 'pickup',
+    contactMethod: 'chat'
   },
   // Визаран
   { 
@@ -351,7 +392,7 @@ const initialListings: Listing[] = [
     isCompany: false, 
     imageName: "visaran-1", 
     description: "Профессиональные услуги по оформлению визарана. Опыт работы более 5 лет, все документы включены в стоимость. Быстрое оформление, индивидуальный подход к каждому клиенту.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '14', 
     status: 'active', 
     views: 234, 
@@ -377,8 +418,13 @@ const initialListings: Listing[] = [
     sellerName: "Игорь Сидоров", 
     isCompany: false, 
     imageName: "iphone-1", 
+    images: [
+      { id: "img-iphone-1", src: "/images/iphone-1.jpg", alt: "iPhone 16 Plus", w: 800, h: 600 },
+      { id: "img-iphone-2", src: "/images/iphone-2.jpg", alt: "iPhone 16 Plus", w: 800, h: 600 },
+      { id: "img-iphone-3", src: "/images/iphone-3.jpg", alt: "iPhone 16 Plus", w: 800, h: 600 }
+    ],
     description: "Новый iPhone 16 Plus 256GB в черном цвете. Телефон в оригинальной упаковке с полной гарантией. Все аксессуары в комплекте. Покупка в официальном магазине Apple.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '15', 
     status: 'active', 
     views: 345, 
@@ -406,19 +452,22 @@ const initialListings: Listing[] = [
     sellerName: "Елена Козлова", 
     isCompany: false, 
     imageName: "lamp-1", 
+    images: [
+      { id: "img-lamp-1", src: "/images/lamp-1.jpg", alt: "Дизайнерская лампа", w: 800, h: 600 },
+      { id: "img-lamp-2", src: "/images/lamp-2.jpg", alt: "Дизайнерская лампа", w: 800, h: 600 }
+    ],
     description: "Элегантная дизайнерская настольная лампа в золотом цвете. Изготовлена из металла и стекла, создает уютную атмосферу. Идеально подходит для рабочего стола или прикроватной тумбочки.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '16', 
     status: 'active', 
-    views: 78, 
-    favorites: 6, 
+    views: 89, 
+    favorites: 7, 
     isPublished: true,
     characteristics: {
-      "Тип": "Настольная лампа",
-      "Стиль": "Дизайнерская",
+      "Стиль": "Дизайнерский",
       "Материал": "Металл + стекло",
-      "Состояние": "Отличное",
-      "Цвет": "Золотой"
+      "Цвет": "Золотой",
+      "Тип": "Настольная"
     },
     delivery: 'pickup',
     contactMethod: 'chat'
@@ -435,7 +484,7 @@ const initialListings: Listing[] = [
     isCompany: false, 
     imageName: "grooming-1", 
     description: "Профессиональный груминг собак на дому в Нови Саде. Опыт работы более 3 лет. Выезжаю к вам домой со всем необходимым оборудованием. Стрижка, мытье, стрижка когтей.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '17', 
     status: 'active', 
     views: 89, 
@@ -461,8 +510,15 @@ const initialListings: Listing[] = [
     sellerName: "Анна Смирнова", 
     isCompany: false, 
     imageName: "bike-1", 
+    images: [
+      { id: "img-bike-1", src: "/images/bike-1.jpg", alt: "Горный велосипед", w: 800, h: 600 },
+      { id: "img-bike-2", src: "/images/bike-2.jpg", alt: "Горный велосипед", w: 800, h: 600 },
+      { id: "img-bike-3", src: "/images/bike-3.jpg", alt: "Горный велосипед", w: 800, h: 600 },
+      { id: "img-bike-4", src: "/images/bike-4.jpg", alt: "Горный велосипед", w: 800, h: 600 },
+      { id: "img-bike-5", src: "/images/bike-5.jpg", alt: "Горный велосипед", w: 800, h: 600 }
+    ],
     description: "Горный велосипед Trek 2020 года выпуска в хорошем состоянии. Размер рамы 18 дюймов, подходит для роста 170-185 см. Идеален для активного отдыха и спорта.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '18', 
     status: 'active', 
     views: 56, 
@@ -489,8 +545,14 @@ const initialListings: Listing[] = [
     sellerName: "Алексей Петров", 
     isCompany: false, 
     imageName: "books-1", 
+    images: [
+      { id: "img-books-1", src: "/images/books-1.jpg", alt: "Книги по программированию", w: 800, h: 600 },
+      { id: "img-books-2", src: "/images/books-2.jpg", alt: "Книги по программированию", w: 800, h: 600 },
+      { id: "img-books-3", src: "/images/books-3.jpg", alt: "Книги по программированию", w: 800, h: 600 },
+      { id: "img-books-4", src: "/images/books-4.jpg", alt: "Книги по программированию", w: 800, h: 600 }
+    ],
     description: "Коллекция из 5 книг по программированию на русском языке. Все книги в отличном состоянии, без пометок. Идеально подходят для изучения программирования с нуля.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '19', 
     status: 'active', 
     views: 34, 
@@ -499,8 +561,8 @@ const initialListings: Listing[] = [
     characteristics: {
       "Жанр": "Программирование",
       "Язык": "Русский",
-      "Состояние": "Отличное",
-      "Количество": "5 книг"
+      "Количество": "5 книг",
+      "Состояние": "Отличное"
     },
     delivery: 'pickup',
     contactMethod: 'chat'
@@ -516,8 +578,14 @@ const initialListings: Listing[] = [
     sellerName: "Мария Иванова", 
     isCompany: false, 
     imageName: "kids-clothes-1", 
+    images: [
+      { id: "img-kids-1", src: "/images/kids-clothes-1.jpg", alt: "Детская одежда", w: 800, h: 600 },
+      { id: "img-kids-2", src: "/images/kids-clothes-2.jpg", alt: "Детская одежда", w: 800, h: 600 },
+      { id: "img-kids-3", src: "/images/kids-clothes-3.jpg", alt: "Детская одежда", w: 800, h: 600 },
+      { id: "img-kids-4", src: "/images/kids-clothes-4.jpg", alt: "Детская одежда", w: 800, h: 600 }
+    ],
     description: "Качественная детская одежда для детей 3-4 лет. Комплект включает футболки, штаны и кофты. Все вещи в отличном состоянии, из натуральных материалов. Подходит для мальчиков и девочек.",
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '20', 
     status: 'active', 
     views: 67, 
@@ -543,7 +611,7 @@ const initialListings: Listing[] = [
     sellerName: "Петр Козлов", 
     isCompany: false, 
     imageName: "", 
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '21', 
     status: 'active', 
     views: 89, 
@@ -569,7 +637,7 @@ const initialListings: Listing[] = [
     sellerName: "Строительная компания", 
     isCompany: true, 
     imageName: "", 
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '22', 
     status: 'active', 
     views: 45, 
@@ -594,7 +662,7 @@ const initialListings: Listing[] = [
     sellerName: "Анна Смирнова", 
     isCompany: false, 
     imageName: "", 
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '23', 
     status: 'active', 
     views: 156, 
@@ -619,7 +687,7 @@ const initialListings: Listing[] = [
     sellerName: "Иван Дмитриев", 
     isCompany: false, 
     imageName: "", 
-    createdAt: new Date(), 
+    createdAt: "2024-01-15T00:00:00.000Z", 
     userId: '24', 
     status: 'active', 
     views: 23, 
@@ -642,11 +710,19 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (savedListings) {
       try {
         const listings = JSON.parse(savedListings);
-        // Преобразуем строки дат обратно в объекты Date
-        return listings.map((listing: any) => ({
-          ...listing,
-          createdAt: new Date(listing.createdAt)
-        }));
+        // Проверяем, что у объявлений есть поле images
+        return listings.map((listing: any) => {
+          // Если у объявления нет поля images, но есть imageName, создаем fallback
+          if (!listing.images && listing.imageName) {
+            return {
+              ...listing,
+              images: [
+                { id: `fallback-${listing.id}`, src: `/images/${listing.imageName}.jpg`, alt: listing.title }
+              ]
+            };
+          }
+          return listing;
+        });
       } catch (error) {
         console.error('Ошибка при загрузке объявлений из localStorage:', error);
         localStorage.removeItem('listings');
@@ -666,17 +742,33 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [hasMore, setHasMore] = useState(true);
   const [loadedListings, setLoadedListings] = useState<Listing[]>([]);
 
+  // Отладочная информация
+  React.useEffect(() => {
+    console.log('ListingsContext: Загружено объявлений:', listings.length);
+    listings.forEach((listing, index) => {
+      console.log(`Объявление ${index + 1}:`, {
+        id: listing.id,
+        title: listing.title,
+        hasImages: !!listing.images,
+        imagesCount: listing.images?.length || 0,
+        imageName: listing.imageName
+      });
+    });
+  }, [listings]);
+
   const ITEMS_PER_PAGE = 20;
 
   const addListing = (listingData: Omit<Listing, 'id' | 'createdAt' | 'views' | 'favorites'>) => {
     const newListing: Listing = {
       ...listingData,
-      id: Date.now().toString(), // Простая генерация ID
-      createdAt: new Date(),
+      id: newId(),
+      createdAt: "2024-01-15T00:00:00.000Z",
       views: 0,
       favorites: 0,
       status: 'active',
-      isPublished: true
+      isPublished: true,
+      // Обработка изображений: добавляем id если их нет
+      images: listingData.images?.map(img => ({ ...img, id: img.id || newId() }))
     };
     
     setListings(prev => {
@@ -688,9 +780,20 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
 
   const updateListing = (id: string, updates: Partial<Listing>) => {
     setListings(prev => {
-      const updatedListings = prev.map(listing => 
-        listing.id === id ? { ...listing, ...updates } : listing
-      );
+      const updatedListings = prev.map(listing => {
+        if (listing.id === id) {
+          const updatedListing = { ...listing, ...updates };
+          // Если обновляются изображения, добавляем id для новых
+          if (updates.images) {
+            updatedListing.images = updates.images.map(img => ({ 
+              ...img, 
+              id: img.id || newId() 
+            }));
+          }
+          return updatedListing;
+        }
+        return listing;
+      });
       saveListingsToStorage(updatedListings);
       return updatedListings;
     });

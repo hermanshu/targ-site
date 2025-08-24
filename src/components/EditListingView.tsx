@@ -15,6 +15,7 @@ import { useListings } from '../contexts/ListingsContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
 import { Listing } from '../types';
+import { nowIso } from '../utils/datetime';
 
 // Кастомный компонент выпадающего списка
 interface CustomSelectProps {
@@ -139,10 +140,12 @@ const EditListingView: React.FC<EditListingViewProps> = ({ listing, onBack }) =>
 
   // Инициализация существующих изображений
   useEffect(() => {
-    if (listing.imageName) {
+    if (listing.images && listing.images.length > 0) {
+      setExistingImages(listing.images.map(img => img.src));
+    } else if (listing.imageName) {
       setExistingImages([`/images/${listing.imageName}.jpg`]);
     }
-  }, [listing.imageName]);
+  }, [listing.imageName, listing.images]);
 
   const categories = [
     { value: 'electronics', label: t('home.electronics'), emoji: '📱' },
@@ -316,7 +319,7 @@ const EditListingView: React.FC<EditListingViewProps> = ({ listing, onBack }) =>
         imageName: newImageName,
         contactMethod: formData.contactMethod,
         characteristics: formData.characteristics,
-        updatedAt: new Date()
+        updatedAt: nowIso()
       };
 
       await updateListing(listing.id, updatedListing);

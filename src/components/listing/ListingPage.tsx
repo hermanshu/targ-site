@@ -48,6 +48,17 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   
   const { listing, loading, error } = useListingData(id);
 
+  // Отладочная информация
+  React.useEffect(() => {
+    if (listing) {
+      console.log('ListingPage - listing:', listing);
+      console.log('ListingPage - listing.images:', listing.images);
+      console.log('ListingPage - listing.imageName:', listing.imageName);
+      console.log('ListingPage - fallback images:', [{ src: `/images/${listing.imageName}.jpg`, alt: listing.title }]);
+      console.log('ListingPage - final images array:', listing.images || [{ src: `/images/${listing.imageName}.jpg`, alt: listing.title }]);
+    }
+  }, [listing]);
+
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
     const categoryMapping: { [key: string]: string } = {
@@ -146,15 +157,15 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         city: listing.city,
         category: listing.category,
         subcategory: listing.subcategory,
-        sellerName: listing.seller.name,
-        isCompany: listing.seller.isCompany,
-        imageName: listing.images[0]?.src || '',
+        sellerName: listing.sellerName,
+        isCompany: listing.isCompany,
+        imageName: listing.imageName || '',
         description: listing.description,
         createdAt: listing.createdAt,
-        userId: listing.seller.id,
+        userId: listing.userId,
         views: listing.views,
         characteristics: listing.characteristics,
-        contactMethod: listing.contactMethod === 'both' ? 'chat' : listing.contactMethod, // приводим к правильному типу
+        contactMethod: listing.contactMethod,
         delivery: listing.delivery
       };
       
@@ -229,7 +240,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         <div className="detail-main-content">
           {/* Левая колонка с изображением */}
           <div className="detail-image-section">
-            <Gallery images={listing.images} />
+            <Gallery images={listing.images || [{ src: `/images/${listing.imageName}.jpg`, alt: listing.title }]} />
           </div>
 
           {/* Основная информация в одном контейнере */}
@@ -249,7 +260,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
             {/* Информация о продавце */}
             <div className="seller-info">
               <div className="seller-avatar">
-                {listing.seller.isCompany ? (
+                {listing.isCompany ? (
                   <BuildingOfficeIcon className="seller-icon" />
                 ) : (
                   <UserIcon className="seller-icon" />
@@ -258,26 +269,24 @@ export const ListingPage: React.FC<ListingPageProps> = ({
               <div className="seller-details">
                 <div 
                   className="seller-name clickable"
-                  onClick={() => onNavigateToSellerProfile?.(listing.seller.id, listing.seller.name, listing.seller.isCompany)}
+                  onClick={() => onNavigateToSellerProfile?.(listing.userId, listing.sellerName, listing.isCompany)}
                   style={{ cursor: 'pointer' }}
                 >
-                  {listing.seller.name}
+                  {listing.sellerName}
                 </div>
                 <div className="seller-type">
-                  {listing.seller.isCompany ? 'Компания' : 'Частное лицо'}
+                  {listing.isCompany ? 'Компания' : 'Частное лицо'}
                 </div>
                 
                 {/* Рейтинг продавца */}
-                {listing.seller.rating > 0 && (
-                  <div className="seller-rating-info">
-                    <div className="rating-stars">
-                      {'⭐'.repeat(Math.floor(listing.seller.rating))}
-                    </div>
-                    <span className="rating-text">
-                      {listing.seller.rating} ({listing.seller.deals} сделок)
-                    </span>
+                <div className="seller-rating-info">
+                  <div className="rating-stars">
+                    ⭐⭐⭐⭐⭐
                   </div>
-                )}
+                  <span className="rating-text">
+                    Рейтинг продавца
+                  </span>
+                </div>
               </div>
               <div className="seller-actions">
                 <button 
@@ -378,7 +387,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         isOpen={showReviewModal}
         onClose={handleCloseReviewModal}
         onSubmit={handleSubmitReview}
-        sellerName={listing?.seller.name || ''}
+        sellerName={listing?.sellerName || ''}
         listingTitle={listing?.title || ''}
       />
     </>

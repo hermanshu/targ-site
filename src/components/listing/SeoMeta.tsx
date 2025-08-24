@@ -1,22 +1,22 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { NormalizedListing } from './useListingData';
+import { Listing } from '../../types';
 
 interface SeoMetaProps {
-  listing: NormalizedListing;
+  listing: Listing;
 }
 
 export const SeoMeta: React.FC<SeoMetaProps> = ({ listing }) => {
-  const description = listing.description.length > 160 
-    ? `${listing.description.slice(0, 157)}...` 
-    : listing.description;
+  const description = listing.description || `${listing.title} в городе ${listing.city}. Цена: ${listing.price} ${listing.currency}`;
+  const imageUrl = listing.images?.[0]?.src || `/images/${listing.imageName}.jpg`;
+  const fullDescription = listing.description || `Купить ${listing.title} в городе ${listing.city}. Цена: ${listing.price} ${listing.currency}. Подробное описание и фото.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     "name": listing.title,
-    "image": listing.images?.[0]?.src,
-    "description": listing.description.slice(0, 300),
+    "image": imageUrl,
+    "description": fullDescription.slice(0, 300),
     "sku": listing.id,
     "brand": { 
       "@type": "Brand", 
@@ -40,7 +40,7 @@ export const SeoMeta: React.FC<SeoMetaProps> = ({ listing }) => {
       {/* Open Graph */}
       <meta property="og:title" content={listing.title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={listing.images?.[0]?.src} />
+      <meta property="og:image" content={imageUrl} />
       <meta property="og:url" content={`https://targ.app/p/${listing.id}`} />
       <meta property="og:type" content="product" />
       <meta property="og:site_name" content="Targ" />
@@ -49,7 +49,7 @@ export const SeoMeta: React.FC<SeoMetaProps> = ({ listing }) => {
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={listing.title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={listing.images?.[0]?.src} />
+      <meta name="twitter:image" content={imageUrl} />
       
       {/* JSON-LD */}
       <script type="application/ld+json">

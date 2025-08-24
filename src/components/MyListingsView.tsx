@@ -341,7 +341,11 @@ const MyListingsView: React.FC = () => {
                 onClick={() => handleCardClick(listing)}
               >
                 <div className="listing-image-container">
-                  {listing.imageName ? (
+                  {listing.images && listing.images.length > 0 ? (
+                    <div className="listing-image">
+                      <img src={listing.images[0]?.src || ''} alt={listing.images[0]?.alt || listing.title} />
+                    </div>
+                  ) : listing.imageName ? (
                     <div className="listing-image">
                       <img src={`/images/${listing.imageName}.jpg`} alt={listing.title} />
                     </div>

@@ -15,6 +15,7 @@ import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
 import AuthRequiredView from './AuthRequiredView';
+import { nowIso } from '../utils/datetime';
 
 interface Chat {
   id: string;
@@ -325,7 +326,7 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
           isCompany: isCompany === 'true',
           imageName: imageName || '',
           description: '',
-          createdAt: new Date(),
+          createdAt: nowIso(),
           userId: sellerId,
           contactMethod: (contactMethod as 'phone' | 'chat') || 'chat',
           views: 0

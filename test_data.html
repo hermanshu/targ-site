@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Targ Data</title>
+</head>
+<body>
+    <h1>Test Targ Data</h1>
+    <button onclick="checkData()">Check localStorage</button>
+    <button onclick="clearData()">Clear localStorage</button>
+    <button onclick="setTestData()">Set Test Data</button>
+    <div id="output"></div>
+
+    <script>
+        function checkData() {
+            const output = document.getElementById('output');
+            const listings = localStorage.getItem('listings');
+            
+            if (listings) {
+                try {
+                    const parsed = JSON.parse(listings);
+                    output.innerHTML = '<h3>Data in localStorage:</h3><pre>' + JSON.stringify(parsed, null, 2) + '</pre>';
+                } catch (e) {
+                    output.innerHTML = '<p>Error parsing data: ' + e.message + '</p>';
+                }
+            } else {
+                output.innerHTML = '<p>No listings data in localStorage</p>';
+            }
+        }
+
+        function clearData() {
+            localStorage.removeItem('listings');
+            localStorage.removeItem('mockUsers');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('reviews');
+            output.innerHTML = '<p>localStorage cleared</p>';
+        }
+
+        function setTestData() {
+            const testListings = [
+                {
+                    id: '1',
+                    title: "Test Комод",
+                    price: "45.000",
+                    currency: 'RSD',
+                    city: "Белград",
+                    category: "furniture",
+                    sellerName: "Test Seller",
+                    isCompany: false,
+                    imageName: "chest-1",
+                    images: [
+                        { id: 'img-test-1', src: "/images/chest-1.jpg", alt: "Test Image 1", w: 800, h: 600 },
+                        { id: 'img-test-2', src: "/images/chest-2.jpg", alt: "Test Image 2", w: 800, h: 600 },
+                        { id: 'img-test-3', src: "/images/chest-3.jpg", alt: "Test Image 3", w: 800, h: 600 }
+                    ],
+                    description: "Test description",
+                    createdAt: new Date().toISOString(),
+                    userId: '1',
+                    status: 'active',
+                    views: 45,
+                    favorites: 3,
+                    isPublished: true
+                }
+            ];
+            
+            localStorage.setItem('listings', JSON.stringify(testListings));
+            output.innerHTML = '<p>Test data set</p>';
+        }
+    </script>
+</body>
+</html> 

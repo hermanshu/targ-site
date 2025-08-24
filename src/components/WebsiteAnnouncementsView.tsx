@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { 
   HomeIcon,
@@ -55,6 +55,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   setSelectedSort: externalSetSelectedSort
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { getPublishedListings, isLoading, incrementViews } = useListings();
@@ -150,8 +151,31 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   // Получаем данные из контекста
   useEffect(() => {
     const { listings: publishedListings } = getPublishedListings();
+    console.log('WebsiteAnnouncementsView: Получены объявления:', publishedListings.length);
+    publishedListings.forEach((listing, index) => {
+      console.log(`Объявление ${index + 1}:`, {
+        id: listing.id,
+        title: listing.title,
+        hasImages: !!listing.images,
+        imagesCount: listing.images?.length || 0,
+        imageName: listing.imageName
+      });
+    });
     setListings(publishedListings);
   }, [getPublishedListings]);
+
+  // Синхронизируем состояние selectedListing с URL параметрами
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const listingId = searchParams.get('listingId');
+    
+    if (listingId && listings.length > 0) {
+      const listing = listings.find(l => l.id === listingId);
+      if (listing) {
+        setSelectedListing(listing);
+      }
+    }
+  }, [location.search, listings]);
 
   // Обновляем selectedCategory при изменении языка только при первой загрузке
   useEffect(() => {
@@ -366,10 +390,20 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     // Увеличиваем счетчик просмотров при клике на карточку
     incrementViews(listing.id);
     setSelectedListing(listing);
+    
+    // Добавляем параметр в URL для возможности прямых ссылок
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set('listingId', listing.id);
+    navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
   };
 
   const handleBackToList = () => {
     setSelectedListing(null);
+    
+    // Очищаем параметр из URL
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.delete('listingId');
+    navigate(`${location.pathname}?${searchParams.toString()}`, { replace: true });
   };
 
   const handleNavigateToMessages = (listing: Listing) => {
@@ -468,17 +502,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
 
   if (selectedListing) {
-    return (
-      <ListingPage
-        listingId={selectedListing.id}
-        onBack={handleBackToList}
-        onFavoriteToggle={handleFavoriteToggle}
-        isFavorite={isFavorite(selectedListing.id)}
-        onNavigateToMessages={handleNavigateToMessages}
-        onNavigateToProfile={handleNavigateToProfile}
-        onNavigateToSellerProfile={handleNavigateToSellerProfile}
-      />
-    );
+    return renderListingDetail();
   }
 
   return (

@@ -92,7 +92,13 @@ const SellerProfileView: React.FC<SellerProfileViewProps> = ({
         
         <div className="listing-detail-card">
           <div className="listing-image-section">
-            {selectedListing.imageName ? (
+            {selectedListing.images && selectedListing.images.length > 0 ? (
+              <img 
+                src={selectedListing.images[0]?.src || ''} 
+                alt={selectedListing.images[0]?.alt || selectedListing.title}
+                className="listing-detail-image"
+              />
+            ) : selectedListing.imageName ? (
               <img 
                 src={`/images/${selectedListing.imageName}.jpg`} 
                 alt={selectedListing.title}
@@ -232,7 +238,13 @@ const SellerProfileView: React.FC<SellerProfileViewProps> = ({
                 onClick={() => handleListingClick(listing)}
               >
                 <div className="listing-image-container">
-                  {listing.imageName ? (
+                  {listing.images && listing.images.length > 0 ? (
+                    <img 
+                      src={listing.images[0]?.src || ''} 
+                      alt={listing.images[0]?.alt || listing.title}
+                      className="listing-image"
+                    />
+                  ) : listing.imageName ? (
                     <img 
                       src={`/images/${listing.imageName}.jpg`} 
                       alt={listing.title}
