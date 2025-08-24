@@ -13778,3 +13778,67 @@ body .form-section select.characteristic-select:focus {
   display: flex;
   justify-content: center;
 }
+
+/* Стили для модального окна юридических документов */
+.legal-document-modal {
+  max-width: 800px;
+  max-height: 90vh;
+}
+
+.language-selector {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.lang-button {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-button:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.lang-button.active {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.document-content {
+  max-height: 60vh;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  background: #f9fafb;
+}
+
+.document-text {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #374151;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* Стили для полезных ссылок в HelpAndSupportView */
+.useful-link {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.useful-link:hover {
+  background-color: #f3f4f6;
+}

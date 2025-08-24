@@ -11,6 +11,7 @@ import {
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { LegalDocumentModal } from './legal/LegalDocumentModal';
 import '../auth-form-styles.css';
 import '../auth-required-styles.css';
 
@@ -57,9 +58,10 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
     terms?: string;
   }>({});
   
-  // Состояния для чекбокса и модального окна
+  // Состояния для чекбокса и модальных окон
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   
   // Состояния для обработки ошибок и загрузки
   const [isLoading, setIsLoading] = useState(false);
@@ -519,7 +521,7 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
                        {' '}{t('common.and')}{' '}
                        <button
                          type="button"
-                         onClick={() => setShowTermsModal(true)}
+                         onClick={() => setShowPrivacyModal(true)}
                          className="terms-link"
                        >
                          {t('profile.privacyPolicy')}
@@ -575,40 +577,17 @@ const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
          </div>
       </div>
 
-      {/* Модальные окна остаются без изменений */}
-      {showTermsModal && (
-        <div className="modal-overlay" onClick={() => setShowTermsModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h2 className="modal-title">{t('profile.termsAndConditions')}</h2>
-              <button
-                type="button"
-                onClick={() => setShowTermsModal(false)}
-                className="modal-close"
-              >
-                <XMarkIcon className="modal-close-icon" />
-              </button>
-            </div>
-            <div className="modal-body">
-              <div className="terms-content">
-                <h3>{t('profile.termsTitle')}</h3>
-                <p>{t('profile.termsText')}</p>
-                <h3>{t('profile.privacyTitle')}</h3>
-                <p>{t('profile.privacyText')}</p>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                onClick={() => setShowTermsModal(false)}
-                className="auth-button"
-              >
-                {t('profile.understand')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Модальные окна для юридических документов */}
+      <LegalDocumentModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        documentType="terms"
+      />
+      <LegalDocumentModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        documentType="privacy"
+      />
 
       {/* Модальное окно подтверждения email */}
       {showEmailVerificationModal && (

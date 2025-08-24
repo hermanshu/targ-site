@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { LegalDocumentModal } from './legal/LegalDocumentModal';
 
 interface FAQItem {
   question: string;
@@ -19,6 +20,8 @@ const HelpAndSupportView: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
   const faqItems: FAQItem[] = [
     {
@@ -128,7 +131,7 @@ const HelpAndSupportView: React.FC = () => {
         <section className="help-section">
           <h2 className="section-title">{t('help.usefulLinks')}</h2>
           <div className="useful-links">
-            <div className="useful-link">
+            <div className="useful-link" onClick={() => setShowTermsModal(true)}>
               <DocumentTextIcon className="link-icon" />
               <div className="link-info">
                 <h3 className="link-title">{t('help.termsOfService')}</h3>
@@ -136,7 +139,7 @@ const HelpAndSupportView: React.FC = () => {
               </div>
               <ArrowLeftIcon className="link-arrow" />
             </div>
-            <div className="useful-link">
+            <div className="useful-link" onClick={() => setShowPrivacyModal(true)}>
               <DocumentTextIcon className="link-icon" />
               <div className="link-info">
                 <h3 className="link-title">{t('help.privacyPolicy')}</h3>
@@ -147,6 +150,18 @@ const HelpAndSupportView: React.FC = () => {
           </div>
         </section>
       </div>
+
+      {/* Модальные окна для юридических документов */}
+      <LegalDocumentModal
+        isOpen={showTermsModal}
+        onClose={() => setShowTermsModal(false)}
+        documentType="terms"
+      />
+      <LegalDocumentModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        documentType="privacy"
+      />
     </div>
   );
 };
