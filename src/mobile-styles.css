@@ -1557,10 +1557,11 @@
     font-size: 9px !important; /* Очень маленький шрифт */
     line-height: 1.2 !important; /* Компактная высота строки */
     margin: 2px 0 !important; /* Минимальные отступы */
-    max-height: 16px !important; /* Ограничиваем высоту */
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    max-height: none !important; /* Убираем ограничение высоты */
+    overflow: visible !important; /* Показываем весь текст */
+    text-overflow: clip !important; /* Убираем многоточие */
+    white-space: normal !important; /* Разрешаем перенос строк */
+    word-wrap: break-word !important; /* Перенос длинных слов */
   }
 
   /* Уменьшаем отступы для групп с ошибками */
@@ -1573,6 +1574,7 @@
   .terms-checkbox {
     margin: 2px 0 !important; /* Минимальные отступы */
     gap: 4px !important; /* Минимальный отступ между чекбоксом и текстом */
+    flex-wrap: wrap !important; /* Разрешаем перенос строк */
   }
 
   .terms-checkbox input[type="checkbox"] {
