@@ -38,7 +38,7 @@
     align-items: center;
     background: #f3f4f6;
     border-radius: 12px;
-    padding: 12px 16px;
+    padding: 8px 12px;
     gap: 8px;
   }
 
@@ -48,12 +48,18 @@
     display: flex;
     align-items: center;
   }
+  
+  .mobile-search-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
 
   .search-icon {
     position: absolute;
-    left: 0;
-    width: 20px;
-    height: 20px;
+    left: 8px;
+    width: 18px;
+    height: 18px;
     color: #6b7280;
     z-index: 1;
   }
@@ -77,7 +83,7 @@
     font-size: 16px !important;
     outline: none !important;
     color: #1f2937 !important;
-    padding: 12px 12px 12px 40px !important;
+    padding: 8px 8px 8px 36px !important;
     border-radius: 8px !important;
     background: #f3f4f6 !important;
   }
@@ -391,7 +397,7 @@
     flex: 1 !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    white-space: nowrap !important;
+    white-space: normal !important;
   }
 
   .mobile-listing-price {
@@ -1489,7 +1495,8 @@
   .mobile-listings-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 20px;
+    padding: 0 16px;
   }
 
   .mobile-listing-card {
@@ -1501,6 +1508,8 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    margin-bottom: 8px;
+    min-height: 280px !important;
   }
 
   .mobile-listing-card:hover {
@@ -1515,6 +1524,7 @@
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     border-radius: 16px 16px 0 0;
     overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
   }
 
   .mobile-listing-img {
@@ -1575,6 +1585,30 @@
     cursor: pointer !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
+  
+  /* Кнопка избранного в правом верхнем углу */
+  .mobile-favorite-button-top {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 50% !important;
+    width: 36px !important;
+    height: 36px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    z-index: 10 !important;
+  }
+  
+  .mobile-favorite-button-top:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    transform: scale(1.1) !important;
+  }
 
   .mobile-favorite-button:hover {
     background: rgba(239, 68, 68, 0.1) !important;
@@ -1594,18 +1628,23 @@
 
   .mobile-listing-content {
     padding: 16px !important;
-    padding-top: 8px !important; /* Уменьшаем верхний отступ, так как плашка цены уже создает визуальное разделение */
+    padding-top: 12px !important; /* Увеличиваем верхний отступ для лучшего разделения */
+    padding-bottom: 12px !important; /* Добавляем нижний отступ */
   }
 
   .mobile-listing-title {
-    font-size: 15px !important;
-    font-weight: 600 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
     color: #1f2937 !important;
-    margin: 0 0 10px 0 !important;
+    margin: 0 0 12px 0 !important;
     line-height: 1.4 !important;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    min-height: 2.8em !important;
+    max-height: none !important;
   }
 
 
@@ -1624,6 +1663,14 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+  }
+  
+  .location-icon {
+    font-size: 12px !important;
+    color: #6b7280 !important;
   }
 
   /* Плашка цены для мобильной версии */
@@ -1637,12 +1684,12 @@
     border-radius: 0 0 16px 16px !important;
     box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
     z-index: 2 !important;
-    margin-top: -16px !important; /* Поднимаем плашку, чтобы она перекрывала нижнюю часть изображения */
+    margin-top: 0 !important; /* Убираем отрицательный margin */
   }
 
   .mobile-listing-card .price-text {
-    font-size: 14px !important;
-    font-weight: 700 !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
     color: rgba(15, 23, 42, 0.95) !important;
     text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
   }

@@ -1786,6 +1786,14 @@ body:has(.review-modal-overlay) .detail-header {
     font-size: 14px !important;
     color: rgba(30, 41, 59, 0.9) !important;
   }
+  
+  /* Специальные стили для города на мобильной версии */
+  .listing-detail-container.mobile .meta-item:has(.meta-icon:first-child) {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: rgba(30, 41, 59, 0.95) !important;
+    margin-bottom: 12px !important;
+  }
 
   .listing-detail-container.mobile .meta-item:last-child {
     margin-bottom: 0 !important;
@@ -1795,6 +1803,13 @@ body:has(.review-modal-overlay) .detail-header {
     width: 16px !important;
     height: 16px !important;
     color: rgba(107, 114, 128, 0.8) !important;
+  }
+  
+  /* Специальные стили для иконки города */
+  .listing-detail-container.mobile .meta-item:has(.meta-icon:first-child) .meta-icon {
+    width: 18px !important;
+    height: 18px !important;
+    color: rgba(59, 130, 246, 0.9) !important;
   }
 
   .listing-detail-container.mobile .category-label,
@@ -1867,20 +1882,26 @@ body:has(.review-modal-overlay) .detail-header {
   }
 
   .listing-detail-container.mobile .detail-title {
-    font-size: 22px !important;
-    font-weight: 700 !important;
-    color: rgba(30, 41, 59, 0.95) !important;
-    margin-bottom: 12px !important;
-    line-height: 1.3 !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: rgba(30, 41, 59, 0.9) !important;
+    margin-bottom: 16px !important;
+    line-height: 1.4 !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     max-width: 100% !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-height: 2.8em !important;
   }
 
   .listing-detail-container.mobile .detail-price {
-    font-size: 26px !important;
-    font-weight: 700 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
     color: rgba(30, 41, 59, 0.95) !important;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
     word-wrap: break-word !important;
@@ -1890,16 +1911,16 @@ body:has(.review-modal-overlay) .detail-header {
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
-    margin-bottom: 12px !important;
+    margin-bottom: 0 !important;
     display: flex !important;
     align-items: baseline !important;
-    gap: 4px !important;
+    gap: 6px !important;
     flex-wrap: wrap !important;
   }
   
   .listing-detail-container.mobile .price-amount {
-    font-size: 30px !important;
-    font-weight: 800 !important;
+    font-size: 36px !important;
+    font-weight: 900 !important;
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
@@ -1907,6 +1928,16 @@ body:has(.review-modal-overlay) .detail-header {
   }
   
   .listing-detail-container.mobile .price-currency {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    opacity: 0.9 !important;
+  }
+  
+  .listing-detail-container.mobile .price-period {
     font-size: 20px !important;
     font-weight: 600 !important;
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
@@ -1914,16 +1945,6 @@ body:has(.review-modal-overlay) .detail-header {
     -webkit-text-fill-color: transparent !important;
     background-clip: text !important;
     opacity: 0.8 !important;
-  }
-  
-  .listing-detail-container.mobile .price-period {
-    font-size: 18px !important;
-    font-weight: 500 !important;
-    background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-    opacity: 0.7 !important;
   }
 
 
@@ -2048,6 +2069,17 @@ body:has(.review-modal-overlay) .detail-header {
   .listing-detail-container.mobile .contact-text,
   .listing-detail-container.mobile .review-text {
     font-size: 12px !important;
+  }
+  
+  /* Улучшенные отступы для мобильных карточек */
+  .listing-detail-container.mobile .listing-card,
+  .listing-detail-container.mobile .mobile-listing-card {
+    margin-bottom: 12px !important;
+  }
+  
+  .listing-detail-container.mobile .listing-card:last-child,
+  .listing-detail-container.mobile .mobile-listing-card:last-child {
+    margin-bottom: 0 !important;
   }
 
 .detail-title-section {

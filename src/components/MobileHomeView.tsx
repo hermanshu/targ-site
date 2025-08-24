@@ -299,19 +299,21 @@ const MobileHomeView: React.FC = () => {
                 className="mobile-search-input"
               />
             </div>
-            <button 
-              className="mobile-filter-button"
-              onClick={() => setShowFilters(true)}
-            >
-              <FunnelIcon className="filter-icon" />
-            </button>
-            <button 
-              className="mobile-language-button"
-              onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-            >
-              <GlobeAltIcon className="language-icon" />
-              <span className="language-text">{currentLanguageOption?.flag}</span>
-            </button>
+            <div className="mobile-search-actions">
+              <button 
+                className="mobile-filter-button"
+                onClick={() => setShowFilters(true)}
+              >
+                <FunnelIcon className="filter-icon" />
+              </button>
+              <button 
+                className="mobile-language-button"
+                onClick={() => setShowLanguageMenu(!showLanguageMenu)}
+              >
+                <GlobeAltIcon className="language-icon" />
+                <span className="language-text">{currentLanguageOption?.flag}</span>
+              </button>
+            </div>
           </div>
           
           {/* Выпадающее меню языков */}
@@ -497,6 +499,15 @@ const MobileHomeView: React.FC = () => {
                     return <HomeIcon className="mobile-category-badge-icon" />;
                   })()}
                 </div>
+                <button 
+                  className="mobile-favorite-button-top"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleFavoriteToggle(listing);
+                  }}
+                >
+                  <HeartIcon className={`favorite-icon ${isFavorite(listing.id) ? 'active' : ''}`} />
+                </button>
               </div>
               <div className="price-bar">
                 <div className="price-text">{listing.price} {listing.currency}</div>
@@ -504,16 +515,10 @@ const MobileHomeView: React.FC = () => {
               <div className="mobile-listing-content">
                 <h3 className="mobile-listing-title">{listing.title}</h3>
                 <div className="mobile-listing-footer">
-                  <div className="mobile-listing-location">{listing.city}</div>
-                  <button 
-                    className="mobile-favorite-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFavoriteToggle(listing);
-                    }}
-                  >
-                    <HeartIcon className={`favorite-icon ${isFavorite(listing.id) ? 'active' : ''}`} />
-                  </button>
+                  <div className="mobile-listing-location">
+                    <span className="location-icon">📍</span>
+                    {listing.city}
+                  </div>
                 </div>
               </div>
             </div>
