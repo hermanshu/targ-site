@@ -403,7 +403,7 @@
   .mobile-listing-price {
     font-size: 14px !important;
     font-weight: 600 !important;
-    color: #059669 !important;
+    color: #14b8a6 !important;
     margin-left: 8px !important;
   }
 
@@ -1701,13 +1701,13 @@
   /* Плашка цены для мобильной версии */
   .mobile-listing-card .price-bar {
     position: relative !important;
-    background: rgba(94, 234, 212, 0.9) !important;
+    background: rgba(20, 184, 166, 0.6) !important;
     backdrop-filter: blur(20px) !important;
     padding: 8px 12px !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 0 0 16px 16px !important;
-    box-shadow: 0 4px 16px rgba(94, 234, 212, 0.3) !important;
+    box-shadow: 0 4px 16px rgba(20, 184, 166, 0.15) !important;
     z-index: 2 !important;
     margin-top: 0 !important; /* Убираем отрицательный margin */
   }
@@ -1716,7 +1716,7 @@
     font-size: 18px !important;
     font-weight: 800 !important;
     color: rgba(15, 23, 42, 0.95) !important;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+    text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6) !important;
   }
 
   /* Скрываем десктопные элементы на мобильных */
