@@ -22,11 +22,8 @@ export const useListingData = (id: string) => {
 
         // Получаем данные из контекста
         const { listings } = getPublishedListings();
-        console.log('useListingData - all listings:', listings);
         
         const foundListing = listings.find(l => l.id === id);
-        console.log('useListingData - found listing:', foundListing);
-        console.log('useListingData - found listing.images:', foundListing?.images);
         
         if (!foundListing) {
           setError(`Объявление с ID ${id} не найдено`);
@@ -51,7 +48,7 @@ export const useListingData = (id: string) => {
       setLoading(false);
       setError('ID объявления не указан');
     }
-  }, [id, getPublishedListings]);
+  }, [id, getPublishedListings]); // Добавляем getPublishedListings обратно для корректной работы
 
   return { listing, loading, error };
 }; 

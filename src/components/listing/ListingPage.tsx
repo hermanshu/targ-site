@@ -47,6 +47,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [selectedReportType, setSelectedReportType] = useState('');
   const [reportReason, setReportReason] = useState('');
   
@@ -188,10 +189,14 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   const handleReportSubmit = () => {
     if (selectedReportType && reportReason.trim()) {
       setShowReportModal(false);
-      alert('Жалоба отправлена!');
+      setShowThankYouModal(true);
       setReportReason('');
       setSelectedReportType('');
     }
+  };
+
+  const handleCloseThankYouModal = () => {
+    setShowThankYouModal(false);
   };
 
   const handleContactClick = () => {
@@ -530,9 +535,9 @@ export const ListingPage: React.FC<ListingPageProps> = ({
 
               {selectedReportType && (
                 <div className="report-reason-input">
-                  <label htmlFor="reportReason" className="report-reason-label">
+                  <div className="report-reason-label">
                     Дополнительная информация:
-                  </label>
+                  </div>
                   <textarea
                     id="reportReason"
                     value={reportReason}
@@ -557,6 +562,42 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                   disabled={!selectedReportType || !reportReason.trim()}
                 >
                   Отправить жалобу
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно благодарности за жалобу */}
+      {showThankYouModal && (
+        <div className="modal-overlay" onClick={handleCloseThankYouModal}>
+          <div className="modal-content thank-you-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="modal-title">Спасибо за обращение!</h3>
+              <button 
+                className="modal-close"
+                onClick={handleCloseThankYouModal}
+              >
+                <XMarkIcon className="close-icon" />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="thank-you-content">
+                <div className="thank-you-icon">✅</div>
+                <p className="thank-you-message">
+                  Ваша жалоба успешно отправлена. Мы рассмотрим её в ближайшее время и примем необходимые меры.
+                </p>
+                <p className="thank-you-note">
+                  Спасибо, что помогаете сделать нашу платформу лучше!
+                </p>
+              </div>
+              <div className="modal-actions">
+                <button 
+                  className="modal-button submit"
+                  onClick={handleCloseThankYouModal}
+                >
+                  Понятно
                 </button>
               </div>
             </div>

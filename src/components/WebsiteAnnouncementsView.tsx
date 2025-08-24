@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { 
@@ -149,12 +149,14 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   };
 
   // Получаем данные из контекста
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const { listings: publishedListings } = getPublishedListings();
     setListings(publishedListings);
   }, [getPublishedListings]);
 
   // Синхронизируем состояние selectedListing с URL параметрами
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const listingId = searchParams.get('listingId');
@@ -165,7 +167,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
         setSelectedListing(listing);
       }
     }
-  }, [location.search, listings]);
+  }, [location.search, listings]); // Добавляем listings обратно для корректной работы
 
   // Обновляем selectedCategory при изменении языка только при первой загрузке
   useEffect(() => {
@@ -362,7 +364,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     return Boolean(searchText) || isFilterActive || selectedCategory !== 'allListings';
   }, [searchText, isFilterActive, selectedCategory]);
 
-  const handleFavoriteToggle = (listing: Listing) => {
+  const handleFavoriteToggle = useCallback((listing: Listing) => {
     if (!currentUser) {
       // Редирект на профиль для авторизации
       navigate('/profile');
@@ -371,6 +373,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
     // Предотвращаем перезагрузку страницы
     try {
+      // Обновляем избранное напрямую, минуя контекст списков
       if (isFavorite(listing.id)) {
         removeFromFavorites(listing.id);
       } else {
@@ -382,7 +385,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     } catch (error) {
       console.error('Ошибка при изменении избранного:', error);
     }
-  };
+  }, [currentUser, isFavorite, removeFromFavorites, addToFavorites, navigate]);
 
   const handleCardClick = (listing: Listing) => {
     // Увеличиваем счетчик просмотров при клике на карточку

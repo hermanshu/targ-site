@@ -13678,3 +13678,103 @@ body .form-section select.characteristic-select:focus {
     font-size: 20px;
   }
 }
+
+/* Стили для улучшения модального окна жалобы */
+.report-reason-input {
+  margin-top: 24px;
+}
+
+.report-reason-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.report-reason-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.report-reason-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.report-reason-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Стили для модального окна благодарности */
+.thank-you-modal {
+  max-width: 480px;
+}
+
+.thank-you-modal .modal-header {
+  text-align: center;
+}
+
+.thank-you-modal .modal-title {
+  text-align: center;
+  width: 100%;
+}
+
+.thank-you-modal .modal-body {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.thank-you-content {
+  text-align: center;
+  padding: 20px 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.thank-you-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  text-align: center;
+}
+
+.thank-you-message {
+  font-size: 16px;
+  color: #374151;
+  margin-bottom: 12px;
+  line-height: 1.5;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.thank-you-note {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
+.thank-you-modal .modal-actions {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
