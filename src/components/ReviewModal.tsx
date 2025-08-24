@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from '../hooks/useTranslation';
 import StarRating from './StarRating';
 
 interface ReviewModalProps {
@@ -17,7 +16,6 @@ const ReviewModal: React.FC<ReviewModalProps> = ({
   sellerName,
   listingTitle
 }) => {
-  const { t } = useTranslation();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);

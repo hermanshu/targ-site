@@ -44,6 +44,7 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
   const categories = ["", t('home.electronics'), t('home.furniture'), t('home.fashion'), t('home.books'), t('home.sport'), t('home.transport'), t('home.kids'), t('home.realEstate'), t('home.services'), t('home.animals'), t('home.construction'), t('home.free'), t('home.other'), t('home.plants')];
   
   // Скрытые поля для совместимости с основным интерфейсом
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   React.useEffect(() => {
     if (localFilters.selectedCondition === undefined) {
       handleFilterChange('selectedCondition', 'any');
@@ -54,7 +55,7 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
     if (localFilters.selectedSeller === undefined) {
       handleFilterChange('selectedSeller', 'any');
     }
-  }, []);
+  }, [localFilters.selectedCondition, localFilters.selectedDelivery, localFilters.selectedSeller]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFilterChange = (key: keyof FilterState, value: any) => {
     const newFilters = { ...localFilters, [key]: value };

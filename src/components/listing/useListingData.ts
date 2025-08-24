@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Listing } from '../../types';
 
 export interface NormalizedListing {
   id: string;

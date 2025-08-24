@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { XMarkIcon, UserIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from '../hooks/useTranslation';
-import { useReviews } from '../contexts/ReviewsContext';
 import StarRating from './StarRating';
 
 interface SaleConfirmationModalProps {
@@ -31,7 +30,6 @@ const SaleConfirmationModal: React.FC<SaleConfirmationModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const [selectedBuyer, setSelectedBuyer] = useState<string>('');
-  const [showReviewForm, setShowReviewForm] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
   const [step, setStep] = useState<'confirm' | 'select-buyer' | 'review'>('confirm');
@@ -75,7 +73,6 @@ const SaleConfirmationModal: React.FC<SaleConfirmationModalProps> = ({
 
   const resetForm = () => {
     setSelectedBuyer('');
-    setShowReviewForm(false);
     setRating(0);
     setComment('');
     setStep('confirm');

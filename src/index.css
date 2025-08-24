@@ -1,25 +1,25 @@
+/* Tailwind CSS директивы */
+/* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind base;
+/* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind components;
+/* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind utilities;
 
 /* Классы для определения устройства */
-.device-mobile {
-  /* Специфичные стили для мобильных устройств */
-}
-
-.device-tablet {
-  /* Специфичные стили для планшетов */
-}
-
+.device-mobile,
+.device-tablet,
 .device-desktop {
-  /* Специфичные стили для десктопа */
+  /* Стили наследуются от основных правил */
+  display: block;
 }
 
 /* Адаптивные стили по размеру экрана (не влияют на определение устройства) */
 @media (max-width: 768px) {
   /* Стили для маленьких экранов на любом устройстве */
   .responsive-small {
-    /* Адаптивные стили */
+    /* Адаптивные стили наследуются от основных правил */
+    display: block;
   }
   
   /* Адаптация десктопной версии для узких окон */
@@ -114,7 +114,8 @@
 @media (min-width: 769px) and (max-width: 1024px) {
   /* Стили для средних экранов */
   .responsive-medium {
-    /* Адаптивные стили */
+    /* Адаптивные стили наследуются от основных правил */
+    display: block;
   }
   
   /* Адаптация десктопной версии для средних окон */
@@ -127,7 +128,8 @@
 @media (min-width: 1025px) {
   /* Стили для больших экранов */
   .responsive-large {
-    /* Адаптивные стили */
+    /* Адаптивные стили наследуются от основных правил */
+    display: block;
   }
   
   /* Десктопная версия для больших экранов */
@@ -1892,8 +1894,14 @@ body:has(.review-modal-overlay) .detail-header {
     overflow-wrap: break-word !important;
     max-width: 100% !important;
     display: -webkit-box !important;
+    display: -moz-box !important;
+    display: flex !important;
     -webkit-line-clamp: 2 !important;
+    -moz-line-clamp: 2 !important;
+    line-clamp: 2 !important;
     -webkit-box-orient: vertical !important;
+    -moz-box-orient: vertical !important;
+    box-orient: vertical !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     max-height: 2.8em !important;
@@ -1909,8 +1917,10 @@ body:has(.review-modal-overlay) .detail-header {
     max-width: 100% !important;
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
     -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+    -moz-background-clip: text !important;
     background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    -moz-text-fill-color: transparent !important;
     margin-bottom: 0 !important;
     display: flex !important;
     align-items: baseline !important;
@@ -1923,8 +1933,10 @@ body:has(.review-modal-overlay) .detail-header {
     font-weight: 900 !important;
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
     -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+    -moz-background-clip: text !important;
     background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    -moz-text-fill-color: transparent !important;
   }
   
   .listing-detail-container.mobile .price-currency {
@@ -1932,8 +1944,10 @@ body:has(.review-modal-overlay) .detail-header {
     font-weight: 700 !important;
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
     -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+    -moz-background-clip: text !important;
     background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    -moz-text-fill-color: transparent !important;
     opacity: 0.9 !important;
   }
   
@@ -1942,8 +1956,10 @@ body:has(.review-modal-overlay) .detail-header {
     font-weight: 600 !important;
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%) !important;
     -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
+    -moz-background-clip: text !important;
     background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    -moz-text-fill-color: transparent !important;
     opacity: 0.8 !important;
   }
 
@@ -4076,6 +4092,7 @@ body:has(.review-modal-overlay) .detail-header {
 /* ЗАКРЕПЛЕННЫЕ СТИЛИ ДЛЯ CONTENT-AREA - НЕ ИЗМЕНЯТЬ */
 .content-area .auth-required-container {
   /* Убираем все старые стили для мобильной версии */
+  display: block;
 }
 
 /* Включаем прокрутку для страницы профиля */

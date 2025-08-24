@@ -67,7 +67,6 @@ const AnnouncementsView: React.FC = () => {
   const [showSortSheet, setShowSortSheet] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [selectedSort, setSelectedSort] = useState('newest');
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [filterState, setFilterState] = useState<FilterState>({
     cityInput: '',
     selectedCategory: '',
@@ -78,16 +77,6 @@ const AnnouncementsView: React.FC = () => {
     minPrice: '',
     maxPrice: ''
   });
-
-  // Слушатель изменения размера окна
-  React.useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Отладочная информация
 
@@ -338,21 +327,13 @@ const AnnouncementsView: React.FC = () => {
 
       {/* Модальные окна */}
       {/* Мобильный фильтр */}
-      {(() => {
-        const isMobileDevice = windowWidth <= 767;
-        const mobileFilterIsOpen = showFilters && isMobileDevice;
-
-        
-        return (
-          <MobileFilterSheet
-            isOpen={showFilters} // Принудительно показываем на всех устройствах
-            onClose={() => setShowFilters(false)}
-            filterState={filterState}
-            onFilterChange={handleFilterChange}
-            onReset={handleFilterReset}
-          />
-        );
-      })()}
+      <MobileFilterSheet
+        isOpen={showFilters} // Принудительно показываем на всех устройствах
+        onClose={() => setShowFilters(false)}
+        filterState={filterState}
+        onFilterChange={handleFilterChange}
+        onReset={handleFilterReset}
+      />
 
       {/* Десктопный фильтр */}
       <FilterView

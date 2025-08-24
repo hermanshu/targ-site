@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { XMarkIcon, MapPinIcon, TagIcon, SparklesIcon, TruckIcon, UserIcon, CurrencyDollarIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from '../hooks/useTranslation';
 
 export interface FilterState {

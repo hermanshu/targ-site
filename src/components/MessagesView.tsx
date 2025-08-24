@@ -233,6 +233,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   });
 
   // Обработка URL параметров для создания нового чата
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const listingId = searchParams.get('listingId');
@@ -308,29 +309,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       // Очищаем URL параметры
       navigate('/messages', { replace: true });
     }
-  }, [location.search, navigate, t]);
-
-  // Функция для загрузки сообщений чата
-  const loadChatMessages = useCallback((chatId: string) => {
-    // Сначала пытаемся загрузить сообщения из localStorage
-    const savedMessages = loadMessagesFromStorage(chatId);
-    
-    if (savedMessages.length > 0) {
-      setMessages(savedMessages);
-    } else {
-      // Проверяем, является ли это новым чатом (созданным из URL параметров)
-      // Новые чаты имеют ID вида 'chat-{userId}', а существующие имеют ID '1', '2', etc.
-      const isNewChat = chatId.startsWith('chat-') && chatId.length > 5;
-      
-      if (isNewChat) {
-        // Для новых чатов загружаем пустые сообщения
-        setMessages([]);
-      } else {
-        // Для существующих чатов загружаем мок-данные
-        setMessages(initialMessages);
-      }
-    }
-  }, []);
+  }, [location.search, navigate, t]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Мок-данные для сообщений
   const initialMessages = useMemo(() => [
@@ -356,6 +335,28 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       isRead: false
     }
   ], []);
+
+  // Функция для загрузки сообщений чата
+  const loadChatMessages = useCallback((chatId: string) => {
+    // Сначала пытаемся загрузить сообщения из localStorage
+    const savedMessages = loadMessagesFromStorage(chatId);
+    
+    if (savedMessages.length > 0) {
+      setMessages(savedMessages);
+    } else {
+      // Проверяем, является ли это новым чатом (созданным из URL параметров)
+      // Новые чаты имеют ID вида 'chat-{userId}', а существующие имеют ID '1', '2', etc.
+      const isNewChat = chatId.startsWith('chat-') && chatId.length > 5;
+      
+      if (isNewChat) {
+        // Для новых чатов загружаем пустые сообщения
+        setMessages([]);
+      } else {
+        // Для существующих чатов загружаем мок-данные
+        setMessages(initialMessages);
+      }
+    }
+  }, [initialMessages]);
 
   // Инициализация сообщений при выборе чата
   useEffect(() => {

@@ -449,85 +449,29 @@
 
 /* Стили для мобильных устройств */
 @media (max-width: 768px) {
-  .content-area.profile-background {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-container {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content {
-    /* Убираем все старые стили */
-  }
-
-  /* Стили для форм внутри auth-required-content */
-  .auth-required-content .auth-form-container {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .auth-form {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .form-group {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .form-label {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .form-input {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .input-icon {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .password-toggle {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .auth-button {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .auth-mode-toggle {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .terms-checkbox {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .terms-checkbox input[type="checkbox"] {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .terms-checkbox label {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .terms-link {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .error-message {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .success-message {
-    /* Убираем все старые стили */
-  }
-
-  .auth-required-content .auth-error-message {
-    /* Убираем все старые стили */
-  }
-
+  /* Мобильные стили для auth-required компонентов */
+  .content-area.profile-background,
+  .auth-required-container,
+  .auth-required-content,
+  .auth-required-content .auth-form-container,
+  .auth-required-content .auth-form,
+  .auth-required-content .form-group,
+  .auth-required-content .form-label,
+  .auth-required-content .form-input,
+  .auth-required-content .input-icon,
+  .auth-required-content .password-toggle,
+  .auth-required-content .auth-button,
+  .auth-required-content .auth-mode-toggle,
+  .auth-required-content .terms-checkbox,
+  .auth-required-content .terms-checkbox input[type="checkbox"],
+  .auth-required-content .terms-checkbox label,
+  .auth-required-content .terms-link,
+  .auth-required-content .error-message,
+  .auth-required-content .success-message,
+  .auth-required-content .auth-error-message,
   .auth-required-content .terms-text {
-    /* Убираем все старые стили */
+    /* Мобильные стили наследуются от основных правил */
+    display: block;
   }
 } 
 

@@ -11,7 +11,6 @@ import {
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
-import { useDeviceType } from '../hooks/useDeviceType';
 import '../auth-form-styles.css';
 import '../auth-required-styles.css';
 
@@ -24,7 +23,6 @@ interface ProfileViewProps {
 const ProfileView: React.FC<ProfileViewProps> = ({ onLogin, onRegister }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const { isMobile } = useDeviceType();
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

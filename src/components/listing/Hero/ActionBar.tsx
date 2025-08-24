@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { 
   HeartIcon, 
-  ShareIcon, 
-  XMarkIcon 
+  ShareIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 
