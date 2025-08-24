@@ -17,7 +17,7 @@
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(30px);
   border-radius: 20px;
-  padding: 24px;
+  padding: 16px 24px 24px 24px;
   max-width: 460px;
   width: 90%;
   max-height: 85vh;
@@ -34,7 +34,7 @@
 
 .welcome-modal-close {
   position: absolute;
-  top: 12px;
+  top: 8px;
   right: 12px;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
@@ -278,7 +278,7 @@
 /* Адаптивность */
 @media (max-width: 480px) {
   .welcome-modal {
-    padding: 12px;
+    padding: 8px 12px 12px 12px;
     margin: 12px;
     max-height: 92vh;
   }
@@ -326,7 +326,7 @@
 @media (min-width: 1920px) {
   .welcome-modal {
     max-width: 500px;
-    padding: 24px;
+    padding: 16px 24px 24px 24px;
     max-height: 75vh;
   }
   
@@ -387,7 +387,7 @@
 @media (min-width: 2560px) {
   .welcome-modal {
     max-width: 540px;
-    padding: 28px;
+    padding: 20px 28px 28px 28px;
     max-height: 70vh;
   }
   
@@ -448,7 +448,7 @@
 @media (min-width: 3440px) {
   .welcome-modal {
     max-width: 580px;
-    padding: 32px;
+    padding: 24px 32px 32px 32px;
     max-height: 65vh;
   }
   
