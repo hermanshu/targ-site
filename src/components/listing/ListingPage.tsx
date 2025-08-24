@@ -7,7 +7,9 @@ import {
   UserIcon,
   EyeIcon,
   ChatBubbleLeftRightIcon,
-  StarIcon
+  StarIcon,
+  ShareIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useListingData } from './useListingData';
@@ -43,6 +45,10 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   const isMobile = useIsMobile();
   const { t } = useTranslation();
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [selectedReportType, setSelectedReportType] = useState('');
+  const [reportReason, setReportReason] = useState('');
   
   // Используем ID из пропсов или из URL параметров
   const id = listingId || params.id || '';
@@ -142,81 +148,50 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   };
 
   const handleShareClick = () => {
-    if (listing) {
-      // Создаем URL для текущей страницы
-      const shareUrl = `${window.location.origin}${window.location.pathname}?listingId=${listing.id}`;
-      
-      // Пытаемся использовать Web Share API, если доступен
-      if (navigator.share) {
-        navigator.share({
-          title: listing.title,
-          text: `${listing.title} - ${listing.price} ${listing.currency}`,
-          url: shareUrl
-        }).catch((error) => {
-          console.log('Ошибка при использовании Web Share API:', error);
-          // Fallback: копируем ссылку в буфер обмена
-          copyToClipboard(shareUrl);
-        });
-      } else {
-        // Fallback: копируем ссылку в буфер обмена
-        copyToClipboard(shareUrl);
-      }
-    }
+    setShowShareModal(true);
   };
 
-  const copyToClipboard = (text: string) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
-        // Показываем уведомление об успешном копировании
-        showNotification('Ссылка скопирована в буфер обмена!');
-      }).catch(() => {
-        // Fallback для старых браузеров
-        fallbackCopyToClipboard(text);
-      });
-    } else {
-      fallbackCopyToClipboard(text);
-    }
+  const handleCloseShareModal = () => {
+    setShowShareModal(false);
   };
 
-  const fallbackCopyToClipboard = (text: string) => {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
+  const handleCopyLink = async () => {
     try {
-      document.execCommand('copy');
-      showNotification('Ссылка скопирована в буфер обмена!');
-    } catch (err) {
-      console.error('Ошибка при копировании:', err);
-      showNotification('Ошибка при копировании ссылки');
+      // Создаем ссылку на объявление
+      const shareUrl = `${window.location.origin}${window.location.pathname}?listingId=${listing?.id}`;
+      await navigator.clipboard.writeText(shareUrl);
+      
+      // Показываем уведомление об успешном копировании
+      alert(t('listingDetail.linkCopied') || 'Ссылка скопирована!');
+      setShowShareModal(false);
+    } catch (error) {
+      console.error('Ошибка при копировании ссылки:', error);
+      alert(t('listingDetail.copyError') || 'Ошибка при копировании');
     }
-    document.body.removeChild(textArea);
   };
 
-  const showNotification = (message: string) => {
-    // Создаем простое уведомление
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #10b981;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      z-index: 1000000;
-      font-size: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    // Убираем уведомление через 3 секунды
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
-    }, 3000);
+  const handleReportListing = () => {
+    setShowShareModal(false);
+    setShowReportModal(true);
+  };
+
+  const handleCloseReportModal = () => {
+    setShowReportModal(false);
+    setReportReason('');
+    setSelectedReportType('');
+  };
+
+  const handleReportTypeSelect = (type: string) => {
+    setSelectedReportType(type);
+  };
+
+  const handleReportSubmit = () => {
+    if (selectedReportType && reportReason.trim()) {
+      setShowReportModal(false);
+      alert('Жалоба отправлена!');
+      setReportReason('');
+      setSelectedReportType('');
+    }
   };
 
   const handleContactClick = () => {
@@ -463,6 +438,131 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         sellerName={listing?.sellerName || ''}
         listingTitle={listing?.title || ''}
       />
+
+      {/* Модальное окно для выбора действий с кнопкой "Поделиться" */}
+      {showShareModal && (
+        <div className="contact-modal-overlay" onClick={handleCloseShareModal}>
+          <div className="contact-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="contact-modal-header">
+              <h3 className="contact-modal-title">{t('listingDetail.shareOptions') || 'Поделиться'}</h3>
+              <button className="contact-modal-close" onClick={handleCloseShareModal}>
+                <XMarkIcon className="close-icon" />
+              </button>
+            </div>
+            <div className="contact-modal-body">
+              <div className="contact-modal-options">
+                <button 
+                  className="contact-option-button share"
+                  onClick={handleCopyLink}
+                >
+                  <ShareIcon className="contact-option-icon" />
+                  <div className="contact-option-content">
+                    <span className="contact-option-title">{t('listingDetail.copyLink') || 'Копировать ссылку'}</span>
+                    <span className="contact-option-description">{t('listingDetail.copyLinkDescription') || 'Скопировать ссылку на объявление'}</span>
+                  </div>
+                </button>
+                <button 
+                  className="contact-option-button report"
+                  onClick={handleReportListing}
+                >
+                  <XMarkIcon className="contact-option-icon" />
+                  <div className="contact-option-content">
+                    <span className="contact-option-title">{t('listingDetail.reportListing') || 'Пожаловаться на объявление'}</span>
+                    <span className="contact-option-description">{t('listingDetail.reportDescription') || 'Сообщить о нарушении'}</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Модальное окно жалобы на объявление */}
+      {showReportModal && (
+        <div className="modal-overlay" onClick={handleCloseReportModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="modal-title">{t('listingDetail.reportListing') || 'Пожаловаться на объявление'}</h3>
+              <button 
+                className="modal-close"
+                onClick={handleCloseReportModal}
+              >
+                <XMarkIcon className="close-icon" />
+              </button>
+            </div>
+            <div className="modal-body">
+              <p className="modal-message">Выберите причину жалобы:</p>
+              
+              <div className="report-reasons-grid">
+                <button 
+                  className={`report-reason-button ${selectedReportType === 'spam' ? 'selected' : ''}`}
+                  onClick={() => handleReportTypeSelect('spam')}
+                >
+                  <div className="report-reason-icon">🚫</div>
+                  <div className="report-reason-content">
+                    <span className="report-reason-title">Спам</span>
+                    <span className="report-reason-description">Нежелательная реклама</span>
+                  </div>
+                </button>
+                
+                <button 
+                  className={`report-reason-button ${selectedReportType === 'inappropriate' ? 'selected' : ''}`}
+                  onClick={() => handleReportTypeSelect('inappropriate')}
+                >
+                  <div className="report-reason-icon">⚠️</div>
+                  <div className="report-reason-content">
+                    <span className="report-reason-title">Неприемлемый контент</span>
+                    <span className="report-reason-description">Оскорбительный материал</span>
+                  </div>
+                </button>
+                
+                <button 
+                  className={`report-reason-button ${selectedReportType === 'fraud' ? 'selected' : ''}`}
+                  onClick={() => handleReportTypeSelect('fraud')}
+                >
+                  <div className="report-reason-icon">💸</div>
+                  <div className="report-reason-content">
+                    <span className="report-reason-title">Мошенничество</span>
+                    <span className="report-reason-description">Обман покупателей</span>
+                  </div>
+                </button>
+              </div>
+
+              {selectedReportType && (
+                <div className="report-reason-input">
+                  <label htmlFor="reportReason" className="report-reason-label">
+                    Дополнительная информация:
+                  </label>
+                  <textarea
+                    id="reportReason"
+                    value={reportReason}
+                    onChange={(e) => setReportReason(e.target.value)}
+                    placeholder="Опишите проблему подробнее..."
+                    className="report-reason-textarea"
+                    rows={3}
+                  />
+                </div>
+              )}
+
+              <div className="modal-actions">
+                <button 
+                  className="modal-button cancel"
+                  onClick={handleCloseReportModal}
+                >
+                  Отмена
+                </button>
+                <button 
+                  className="modal-button submit"
+                  onClick={handleReportSubmit}
+                  disabled={!selectedReportType || !reportReason.trim()}
+                >
+                  Отправить жалобу
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }; 
