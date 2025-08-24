@@ -13,6 +13,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useListingData } from './useListingData';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useListingImages } from '../../hooks/useListingImages';
 import { SeoMeta } from './SeoMeta';
 import { Gallery } from './Hero/Gallery';
 import { ActionBar } from './Hero/ActionBar';
@@ -48,16 +49,13 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   
   const { listing, loading, error } = useListingData(id);
 
-  // Отладочная информация
-  React.useEffect(() => {
-    if (listing) {
-      console.log('ListingPage - listing:', listing);
-      console.log('ListingPage - listing.images:', listing.images);
-      console.log('ListingPage - listing.imageName:', listing.imageName);
-      console.log('ListingPage - fallback images:', [{ src: `/images/${listing.imageName}.jpg`, alt: listing.title }]);
-      console.log('ListingPage - final images array:', listing.images || [{ src: `/images/${listing.imageName}.jpg`, alt: listing.title }]);
-    }
-  }, [listing]);
+  // Используем хук для правильной сборки изображений
+  const { images: galleryImages } = useListingImages({
+    images: listing?.images,          // новая схема (если есть)
+    imageName: listing?.imageName     // fallback по MULTI_IMAGE_CONFIG
+  });
+
+
 
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
@@ -240,7 +238,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         <div className="detail-main-content">
           {/* Левая колонка с изображением */}
           <div className="detail-image-section">
-            <Gallery images={listing.images || [{ src: `/images/${listing.imageName}.jpg`, alt: listing.title }]} />
+            <Gallery images={galleryImages} />
           </div>
 
           {/* Основная информация в одном контейнере */}

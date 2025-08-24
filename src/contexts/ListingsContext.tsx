@@ -710,19 +710,9 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     if (savedListings) {
       try {
         const listings = JSON.parse(savedListings);
-        // Проверяем, что у объявлений есть поле images
-        return listings.map((listing: any) => {
-          // Если у объявления нет поля images, но есть imageName, создаем fallback
-          if (!listing.images && listing.imageName) {
-            return {
-              ...listing,
-              images: [
-                { id: `fallback-${listing.id}`, src: `/images/${listing.imageName}.jpg`, alt: listing.title }
-              ]
-            };
-          }
-          return listing;
-        });
+        // Просто возвращаем сохраненные данные без модификации
+        // Хук useListingImages сам разберется с изображениями
+        return listings;
       } catch (error) {
         console.error('Ошибка при загрузке объявлений из localStorage:', error);
         localStorage.removeItem('listings');
@@ -742,19 +732,7 @@ export const ListingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [hasMore, setHasMore] = useState(true);
   const [loadedListings, setLoadedListings] = useState<Listing[]>([]);
 
-  // Отладочная информация
-  React.useEffect(() => {
-    console.log('ListingsContext: Загружено объявлений:', listings.length);
-    listings.forEach((listing, index) => {
-      console.log(`Объявление ${index + 1}:`, {
-        id: listing.id,
-        title: listing.title,
-        hasImages: !!listing.images,
-        imagesCount: listing.images?.length || 0,
-        imageName: listing.imageName
-      });
-    });
-  }, [listings]);
+
 
   const ITEMS_PER_PAGE = 20;
 

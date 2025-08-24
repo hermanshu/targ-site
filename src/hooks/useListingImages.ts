@@ -49,15 +49,34 @@ const MULTI_IMAGE_CONFIG: { [key: string]: number } = {
  * Поддерживает как новую схему (images[]), так и старую (imageName + MULTI_IMAGE_CONFIG)
  */
 export function buildImages(input: { images?: ListingImage[]; imageName?: string }, multiMap: Record<string, number>): ListingImage[] {
-  if (input.images && input.images.length) return input.images;
+  // Проверяем, содержит ли массив images только fallback изображения
+  const hasOnlyFallbackImages = input.images && input.images.length > 0 && 
+    input.images.every(img => img.id && img.id.startsWith('fallback-'));
+  
+  // Если есть только fallback изображения, игнорируем их и используем imageName
+  if (hasOnlyFallbackImages) {
+    // Игнорируем fallback изображения
+  } else if (input.images && input.images.length) {
+    return input.images;
+  }
+  
   if (input.imageName) {
     const count = multiMap[input.imageName] ?? 1;
-    return Array.from({ length: count }, (_, i) => ({
-      id: newId(),
-      src: `/images/${input.imageName}${i === 0 ? '' : `-${i+1}`}.jpg`,
-      alt: input.imageName
-    }));
+    
+    const result = Array.from({ length: count }, (_, i) => {
+      // Для первого изображения используем базовое имя, для остальных добавляем номер
+      const baseName = input.imageName!; // Мы знаем, что imageName существует здесь
+      const fileName = i === 0 ? baseName : `${baseName.replace(/-1$/, '')}-${i + 1}`;
+      return {
+        id: newId(),
+        src: `/images/${fileName}.jpg`,
+        alt: baseName
+      };
+    });
+    
+    return result;
   }
+  
   return [];
 }
 
@@ -82,6 +101,7 @@ export const useListingImages = ({ images, imageName }: UseListingImagesProps) =
     
     // Строим массив изображений с поддержкой обеих схем
     const builtImages = buildImages({ images, imageName }, MULTI_IMAGE_CONFIG);
+    
     setProcessedImages(builtImages);
     setTotalImages(builtImages.length);
   }, [images, imageName]);

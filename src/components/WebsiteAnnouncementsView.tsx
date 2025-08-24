@@ -151,16 +151,6 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   // Получаем данные из контекста
   useEffect(() => {
     const { listings: publishedListings } = getPublishedListings();
-    console.log('WebsiteAnnouncementsView: Получены объявления:', publishedListings.length);
-    publishedListings.forEach((listing, index) => {
-      console.log(`Объявление ${index + 1}:`, {
-        id: listing.id,
-        title: listing.title,
-        hasImages: !!listing.images,
-        imagesCount: listing.images?.length || 0,
-        imageName: listing.imageName
-      });
-    });
     setListings(publishedListings);
   }, [getPublishedListings]);
 

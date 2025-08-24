@@ -21,6 +21,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { Listing } from '../types';
 import { useTranslation } from '../hooks/useTranslation';
+import { useListingImages } from '../hooks/useListingImages';
 
 
 interface ListingCardProps {
@@ -39,17 +40,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
   const [animateHeart, setAnimateHeart] = useState(false);
   const { t } = useTranslation();
 
-  // Отладочная информация
-  React.useEffect(() => {
-    console.log('ListingCard render:', {
-      id: listing.id,
-      title: listing.title,
-      hasImages: !!listing.images,
-      imagesCount: listing.images?.length || 0,
-      imageName: listing.imageName,
-      firstImageSrc: listing.images?.[0]?.src
-    });
-  }, [listing]);
+  // Используем хук для правильной сборки изображений
+  const { images } = useListingImages({ 
+    images: listing.images, 
+    imageName: listing.imageName 
+  });
+
+
 
 
 
@@ -93,11 +90,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
     >
       {/* Фото с бейджем категории */}
       <div className="listing-image-container">
-        {listing.images && listing.images.length > 0 ? (
+        {images && images.length > 0 ? (
           <div className="listing-image">
             <img 
-              src={listing.images[0].src} 
-              alt={listing.images[0].alt || listing.title}
+              src={images[0].src} 
+              alt={images[0].alt || listing.title}
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
                 e.currentTarget.nextElementSibling?.classList.remove('hidden');
@@ -136,9 +133,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
         </div>
 
         {/* Индикатор количества изображений */}
-        {listing.images && listing.images.length > 1 && (
+        {images && images.length > 1 && (
           <div className="image-count-badge">
-            <span className="image-count-text">{listing.images.length}</span>
+            <span className="image-count-text">{images.length}</span>
           </div>
         )}
 

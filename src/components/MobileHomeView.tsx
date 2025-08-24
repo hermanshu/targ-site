@@ -98,19 +98,7 @@ const MobileHomeView: React.FC = () => {
 
   const initialListings = getPublishedListings();
 
-  // Отладочная информация
-  React.useEffect(() => {
-    console.log('MobileHomeView: Получены объявления:', initialListings.listings.length);
-    initialListings.listings.forEach((listing, index) => {
-      console.log(`Мобильное объявление ${index + 1}:`, {
-        id: listing.id,
-        title: listing.title,
-        hasImages: !!listing.images,
-        imagesCount: listing.images?.length || 0,
-        imageName: listing.imageName
-      });
-    });
-  }, [initialListings.listings]);
+
 
   // Фильтрация объявлений
   const filteredListings = useMemo(() => {
