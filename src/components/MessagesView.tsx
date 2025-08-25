@@ -30,6 +30,7 @@ interface Chat {
   timestamp: string;
   unreadCount: number;
   isOnline: boolean;
+  isPinned?: boolean; // Закреплен ли чат
   userLanguage?: 'RU' | 'EN' | 'SR'; // Язык собеседника
   listing: {
     id: string;
@@ -148,19 +149,23 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   // Функция для сохранения чатов в localStorage
   const saveChatsToStorage = (chats: Chat[]) => {
     try {
-      // Убеждаемся, что у всех чатов есть информация о языке
+      // Убеждаемся, что у всех чатов есть информация о языке и закреплении
       const chatsWithLanguage = chats.map((chat: Chat) => {
+        let updatedChat = chat;
+        
         if (!chat.userLanguage) {
           // Добавляем язык на основе имени собеседника
           if (chat.name === 'Мария Иванова') {
-            return { ...chat, userLanguage: 'SR' };
+            updatedChat = { ...updatedChat, userLanguage: 'SR' };
           } else if (chat.name === 'Дмитрий Козлов') {
-            return { ...chat, userLanguage: 'EN' };
+            updatedChat = { ...updatedChat, userLanguage: 'EN' };
           } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
-            return { ...chat, userLanguage: 'RU' };
+            updatedChat = { ...updatedChat, userLanguage: 'RU' };
           }
         }
-        return chat;
+        
+        // Убеждаемся что поле isPinned присутствует
+        return { ...updatedChat, isPinned: updatedChat.isPinned || false };
       });
       
       localStorage.setItem('targ-chats', JSON.stringify(chatsWithLanguage));
@@ -180,6 +185,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       timestamp: '14:30',
       unreadCount: 5,
       isOnline: true,
+      isPinned: true, // Закрепленный чат
       userLanguage: 'RU',
       listing: {
         id: '1',
@@ -714,9 +720,114 @@ const MessagesView: React.FC<MessagesViewProps> = ({
     };
   }, []);
 
-  const filteredChats = chatList.filter((chat: Chat) => 
-    chat.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredChats = useMemo(() => {
+    if (!searchQuery.trim()) return chatList;
+    return chatList.filter((chat: Chat) => 
+      chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chat.listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [chatList, searchQuery]);
+
+  // Получаем уникальные категории из чатов для фильтров
+  const chatCategories = useMemo(() => {
+    const categories = new Set<string>();
+    chatList.forEach(chat => {
+      if (chat.listing.category) {
+        categories.add(chat.listing.category);
+      }
+      if (chat.listing.subcategory) {
+        categories.add(chat.listing.subcategory);
+      }
+    });
+    return Array.from(categories);
+  }, [chatList]);
+
+  // Состояние для выбранной категории фильтра
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Функция для переключения закрепления чата
+  const togglePinChat = (chatId: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Предотвращаем открытие чата
+    setChatList(prevChats => {
+      const updatedChats = prevChats.map(chat => 
+        chat.id === chatId 
+          ? { ...chat, isPinned: !chat.isPinned }
+          : chat
+      );
+      saveChatsToStorage(updatedChats);
+      return updatedChats;
+    });
+  };
+
+  // Фильтрованные и отсортированные чаты (закрепленные сверху)
+  const filteredChatsByCategory = useMemo(() => {
+    let filtered = selectedCategory === null ? filteredChats : filteredChats.filter(chat => 
+      chat.listing.category === selectedCategory || 
+      chat.listing.subcategory === selectedCategory
+    );
+    
+    // Сортируем: закрепленные сверху, затем по времени
+    return filtered.sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1;
+      if (!a.isPinned && b.isPinned) return 1;
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+    });
+  }, [filteredChats, selectedCategory]);
+
+  // Обработчик клика на категорию
+  const handleCategoryClick = (category: string | null) => {
+    setSelectedCategory(selectedCategory === category ? null : category);
+  };
+
+  // Функция для получения иконки категории
+  const getCategoryIcon = (category: string) => {
+    const icons: { [key: string]: string } = {
+      'electronics': '📱',
+      'transport': '🚗',
+      'realEstate': '🏠',
+      'furniture': '🪑',
+      'work': '💼',
+      'vacancies': '💼',
+      'rent': '🏠',
+      'services': '🔧',
+      'clothing': '👕',
+      'sports': '⚽',
+      'books': '📚',
+      'pets': '🐕',
+      'garden': '🌱',
+      'music': '🎵',
+      'art': '🎨',
+      'food': '🍕',
+      'health': '💊',
+      'education': '🎓'
+    };
+    return icons[category] || '📦';
+  };
+
+  // Функция для получения названия категории
+  const getCategoryName = (category: string) => {
+    const names: { [key: string]: string } = {
+      'electronics': 'Электроника',
+      'transport': 'Транспорт',
+      'realEstate': 'Недвижимость',
+      'furniture': 'Мебель',
+      'work': 'Работа',
+      'vacancies': 'Вакансии',
+      'rent': 'Аренда',
+      'services': 'Услуги',
+      'clothing': 'Одежда',
+      'sports': 'Спорт',
+      'books': 'Книги',
+      'pets': 'Животные',
+      'garden': 'Сад',
+      'music': 'Музыка',
+      'art': 'Искусство',
+      'food': 'Еда',
+      'health': 'Здоровье',
+      'education': 'Образование'
+    };
+    return names[category] || category;
+  };
 
   // Обработчик клика на превью объявления
   const handleListingPreviewClick = () => {
@@ -896,10 +1007,10 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         </div>
 
         <div className="chats-list">
-          {filteredChats.map((chat) => (
+          {filteredChatsByCategory.map((chat) => (
             <div 
               key={chat.id} 
-              className={`chat-item ${selectedChat?.id === chat.id ? 'active' : ''}`}
+              className={`chat-item ${selectedChat?.id === chat.id ? 'active' : ''} ${chat.isPinned ? 'pinned' : ''}`}
               onClick={() => {
                 // Сначала сбрасываем счетчик непрочитанных сообщений
                 setChatList(prevChats => {
@@ -911,6 +1022,9 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                   saveChatsToStorage(updatedChats);
                   return updatedChats;
                 });
+                
+                // Сбрасываем фильтр по категориям при открытии диалога
+                setSelectedCategory(null);
                 
                 // Затем устанавливаем выбранный чат и загружаем сообщения
                 setSelectedChat(chat);
@@ -932,7 +1046,16 @@ const MessagesView: React.FC<MessagesViewProps> = ({
               <div className="chat-content">
                 <div className="chat-header-row">
                   <h3 className="chat-name">{chat.name}</h3>
-                  <span className="chat-time">{chat.timestamp}</span>
+                  <div className="chat-header-actions">
+                    <button
+                      className={`pin-button ${chat.isPinned ? 'pinned' : ''}`}
+                      onClick={(e) => togglePinChat(chat.id, e)}
+                      title={chat.isPinned ? 'Открепить чат' : 'Закрепить чат'}
+                    >
+                      📌
+                    </button>
+                    <span className="chat-time">{chat.timestamp}</span>
+                  </div>
                 </div>
                 
                 <div className="chat-listing-info">
@@ -959,10 +1082,11 @@ const MessagesView: React.FC<MessagesViewProps> = ({
             {/* Заголовок чата */}
             <div className="chat-header">
               <button 
-                className="sidebar-toggle"
-                onClick={() => setShowSidebar(!showSidebar)}
+                className="back-button"
+                onClick={() => setSelectedChat(null)}
+                title="Вернуться к списку сообщений"
               >
-                <ArrowLeftIcon className="toggle-icon" />
+                <ArrowLeftIcon className="back-icon" />
               </button>
               
               <div className="chat-info">
@@ -1192,11 +1316,45 @@ const MessagesView: React.FC<MessagesViewProps> = ({
           // Пустое состояние
           <div className="empty-chat">
             <div className="empty-chat-content">
-              <div className="empty-chat-icon">💬</div>
-              <h2 className="empty-chat-title">{t('favorites.selectChat')}</h2>
-              <p className="empty-chat-description">
-                {t('favorites.selectChatDescription')}
-              </p>
+              <div className="empty-chat-icon">🔍</div>
+              
+              {/* Кнопки категорий в строчку */}
+              {chatCategories.length > 0 && (
+                <div className="category-filters-row">
+                  <p className="category-filters-hint">Выбери категорию, чтобы увидеть сообщения по ней</p>
+                  <div className="category-filters-buttons">
+                    {/* Кнопка "Все сообщения" всегда первая */}
+                    <button
+                      className={`website-category-button ${selectedCategory === null ? 'active' : ''}`}
+                      onClick={() => handleCategoryClick(null)}
+                    >
+                      <span className="website-category-emoji">💬</span>
+                      <span>Все сообщения</span>
+                    </button>
+                    
+                    {/* Остальные категории */}
+                    {chatCategories.map((category, index) => (
+                      <button
+                        key={category}
+                        className={`website-category-button ${selectedCategory === category ? 'active' : ''}`}
+                        onClick={() => handleCategoryClick(category)}
+                      >
+                        <span className="website-category-emoji">
+                          {getCategoryIcon(category)}
+                        </span>
+                        <span>{getCategoryName(category)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Если нет категорий, показываем подсказку */}
+              {chatCategories.length === 0 && (
+                <div className="no-categories-hint">
+                  <p>Нет активных диалогов</p>
+                </div>
+              )}
             </div>
           </div>
         )}
