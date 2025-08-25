@@ -81,7 +81,7 @@ export const SellerCard: React.FC<SellerCardProps> = React.memo(({
   const handleAuthAction = (action: 'signin' | 'signup') => {
     setShowAuthModal(false);
     // TODO: Добавить навигацию к авторизации
-    console.log('Navigate to auth:', action);
+
   };
 
   return (

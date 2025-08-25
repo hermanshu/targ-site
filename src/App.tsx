@@ -38,7 +38,7 @@ function App() {
       // }
       
       // Временная логика для демо
-      console.log('App loaded, checking for email links...');
+  
     };
 
     handleEmailLink();

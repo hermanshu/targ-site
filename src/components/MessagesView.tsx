@@ -363,8 +363,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       const existingChat = savedChats.find((chat: Chat) => chat.id === chatId);
       
       if (existingChat) {
-        console.log('Чат уже существует в localStorage, просто переходим к нему');
-        
         // Используем функциональное обновление состояния для безопасной проверки
         setChatList(prevChats => {
           const existingInList = prevChats.find(chat => chat.id === chatId);
@@ -460,7 +458,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       const savedMessages = loadMessagesFromStorage(selectedChat.id);
       
       if (savedMessages.length > 0) {
-        console.log('Загружаем сохраненные сообщения из localStorage');
         setMessages(savedMessages);
       } else {
         // Проверяем, является ли это новым чатом (созданным из URL параметров)
@@ -900,7 +897,6 @@ const MessagesView: React.FC<MessagesViewProps> = ({
     
     if (existingChatBySeller || existingChatByListing) {
       const existingChat = existingChatBySeller || existingChatByListing;
-      console.log('Чат уже существует в localStorage, просто переходим к нему');
       setSelectedChat(existingChat);
       loadChatMessages(existingChat.id);
       setSelectedListing(null);

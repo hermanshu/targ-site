@@ -273,7 +273,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Email link verification:', emailLink);
+  
       
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
@@ -290,7 +290,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Email verification sent');
+  
       
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
@@ -306,7 +306,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Verification email resent');
+  
       
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');
@@ -320,7 +320,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       // Временная логика для демо
       await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Password reset email sent to:', email);
+  
       
     } catch (error: any) {
       throw new Error(error.message || 'NETWORK_ERROR');

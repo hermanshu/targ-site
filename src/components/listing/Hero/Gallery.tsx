@@ -15,17 +15,15 @@ export const Gallery: React.FC<GalleryProps> = React.memo(({ images }) => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  console.log('Gallery received images:', images);
-  console.log('Images length:', images?.length);
-  console.log('Current index:', currentIndex);
+
 
   const nextImage = useCallback(() => {
-    console.log('nextImage called, current:', currentIndex, 'new:', (currentIndex + 1) % images.length);
+
     setCurrentIndex((prev) => (prev + 1) % images.length);
   }, [images.length, currentIndex]);
 
   const prevImage = useCallback(() => {
-    console.log('prevImage called, current:', currentIndex, 'new:', (currentIndex - 1 + images.length) % images.length);
+
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
   }, [images.length, currentIndex]);
 
@@ -118,7 +116,7 @@ export const Gallery: React.FC<GalleryProps> = React.memo(({ images }) => {
               e.currentTarget.nextElementSibling?.classList.remove('hidden');
             }}
             onLoad={() => {
-              console.log('Image loaded successfully:', images[currentIndex].src);
+      
             }}
           />
           
@@ -130,7 +128,7 @@ export const Gallery: React.FC<GalleryProps> = React.memo(({ images }) => {
                 className="photo-nav-button prev" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log('Prev button clicked, current index:', currentIndex);
+            
                   prevImage();
                 }}
               >
@@ -141,7 +139,7 @@ export const Gallery: React.FC<GalleryProps> = React.memo(({ images }) => {
                 className="photo-nav-button next" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  console.log('Next button clicked, current index:', currentIndex);
+            
                   nextImage();
                 }}
               >

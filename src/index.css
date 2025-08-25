@@ -11366,26 +11366,53 @@ body:has(.review-modal-overlay) .detail-header {
 }
 
 .favorites-header {
-  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background: white;
+  flex-shrink: 0;
+  border-radius: 12px;
+  margin: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .favorites-title {
   font-size: 1.5rem;
   font-weight: bold;
   color: #1f2937;
-  margin: 0 0 8px 0;
+  margin: 0;
 }
 
 .favorites-count {
   color: #6b7280;
   font-size: 0.875rem;
+  margin: 0;
 }
 
-.favorites-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  padding: 16px;
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.favorites-hint {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+.favorites-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ЗАКРЕПЛЕННЫЕ СТИЛИ ДЛЯ ЗАГЛУШКИ ИЗБРАННОГО - НЕ ИЗМЕНЯТЬ */

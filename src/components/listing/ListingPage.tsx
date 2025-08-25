@@ -244,8 +244,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         delivery: listing.delivery
       };
       
-      console.log('listing:', listing);
-      console.log('listingForMessages:', listingForMessages);
+      
       
       onNavigateToMessages(listingForMessages);
     }

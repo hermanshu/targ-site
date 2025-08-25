@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
-import ListingCard from './ListingCard';
+import DesktopListingsGrid from './DesktopListingsGrid';
 
 import { Listing } from '../types';
 
@@ -34,21 +34,27 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
     <div className="favorites-container">
       
       <div className="favorites-header">
-        <h1 className="favorites-title">{t('favorites.title')}</h1>
-        <span className="favorites-count">{favorites.length} {t('favorites.listingsCount')}</span>
+        <div className="header-center">
+          <h1 className="favorites-title">{t('favorites.title')}</h1>
+          <span className="favorites-count">{favorites.length} {t('favorites.listingsCount')}</span>
+          {favorites.length > 0 && (
+            <div className="favorites-hint">
+              Рекомендуем связаться с продавцом как можно скорее, пока объявление еще активно
+            </div>
+          )}
+        </div>
       </div>
       
-      <div className="favorites-grid">
-        {favorites.map((listing) => (
-          <ListingCard
-            key={listing.id}
-            listing={listing}
-            onFavoriteToggle={handleFavoriteToggle}
-            isFavorite={isFavorite(listing.id)}
-            onCardClick={onCardClick}
-          />
-        ))}
-      </div>
+      <DesktopListingsGrid
+        listings={favorites}
+        onFavoriteToggle={handleFavoriteToggle}
+        isFavorite={isFavorite}
+        onCardClick={onCardClick}
+        hasMore={false}
+        onLoadMore={() => {}}
+        isLoading={false}
+        hasFilters={false}
+      />
     </div>
   );
 };
