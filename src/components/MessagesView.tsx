@@ -16,8 +16,10 @@ import { Listing } from '../types';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import AuthRequiredView from './AuthRequiredView';
 import { nowIso } from '../utils/datetime';
+import LanguageInfoModal from './LanguageInfoModal';
 
 
 interface Chat {
@@ -28,6 +30,7 @@ interface Chat {
   timestamp: string;
   unreadCount: number;
   isOnline: boolean;
+  userLanguage?: 'RU' | 'EN' | 'SR'; // Язык собеседника
   listing: {
     id: string;
     title: string;
@@ -63,6 +66,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const location = useLocation();
   const { currentUser } = useAuth();
   const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messageText, setMessageText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -95,6 +99,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const [showChatMenu, setShowChatMenu] = useState(false);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [showSidebar, setShowSidebar] = useState(true);
+  const [showLanguageInfoModal, setShowLanguageInfoModal] = useState(false);
   
   // Состояния для кастомных модальных окон
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -114,10 +119,51 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const processedRequestsRef = useRef<Set<string>>(new Set());
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
 
+  // Функция для определения языка собеседника и создания предупреждения
+  const getLanguageWarning = (chat: Chat) => {
+    if (!chat.userLanguage || chat.userLanguage === currentLanguage) {
+      return null;
+    }
+
+    const languageNames = {
+      'RU': 'русском',
+      'EN': 'английском', 
+      'SR': 'сербском'
+    };
+
+    const currentLanguageName = languageNames[currentLanguage];
+    const chatLanguageName = languageNames[chat.userLanguage];
+
+    return {
+      text: `Собеседник говорит на ${chatLanguageName}`,
+      type: 'warning' as const
+    };
+  };
+
+  // Обработчик клика на предупреждение о языке
+  const handleLanguageWarningClick = () => {
+    setShowLanguageInfoModal(true);
+  };
+
   // Функция для сохранения чатов в localStorage
   const saveChatsToStorage = (chats: Chat[]) => {
     try {
-      localStorage.setItem('targ-chats', JSON.stringify(chats));
+      // Убеждаемся, что у всех чатов есть информация о языке
+      const chatsWithLanguage = chats.map((chat: Chat) => {
+        if (!chat.userLanguage) {
+          // Добавляем язык на основе имени собеседника
+          if (chat.name === 'Мария Иванова') {
+            return { ...chat, userLanguage: 'SR' };
+          } else if (chat.name === 'Дмитрий Козлов') {
+            return { ...chat, userLanguage: 'EN' };
+          } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
+            return { ...chat, userLanguage: 'RU' };
+          }
+        }
+        return chat;
+      });
+      
+      localStorage.setItem('targ-chats', JSON.stringify(chatsWithLanguage));
       // Отправляем кастомное событие для обновления счетчика
       window.dispatchEvent(new Event('targ-chats-updated'));
     } catch (e) {
@@ -134,6 +180,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       timestamp: '14:30',
       unreadCount: 5,
       isOnline: true,
+      userLanguage: 'RU',
       listing: {
         id: '1',
         title: 'iPhone 14 Pro Max',
@@ -147,19 +194,20 @@ const MessagesView: React.FC<MessagesViewProps> = ({
     },
     {
       id: '2',
-      name: 'Мария Сидорова',
+      name: 'Мария Иванова',
       lastMessage: 'Спасибо за быструю доставку!',
       timestamp: '12:15',
       unreadCount: 0,
       isOnline: false,
+      userLanguage: 'SR',
       listing: {
-        id: '2',
-        title: 'Квартира в центре',
-        price: '150000',
+        id: '8',
+        title: '2-комнатная квартира в центре',
+        price: '850',
         currency: 'EUR',
         category: 'realEstate',
         subcategory: 'rent',
-        imageName: 'apartment',
+        imageName: 'apartment-2room',
         contactMethod: 'chat'
       }
     },
@@ -170,6 +218,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       timestamp: 'Вчера',
       unreadCount: 1,
       isOnline: true,
+      userLanguage: 'EN',
       listing: {
         id: '3',
         title: 'BMW X5 2020',
@@ -188,6 +237,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       timestamp: 'Пн',
       unreadCount: 3,
       isOnline: false,
+      userLanguage: 'RU',
       listing: {
         id: '4',
         title: 'MacBook Pro 2023',
@@ -206,6 +256,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       timestamp: 'Пн',
       unreadCount: 7,
       isOnline: true,
+      userLanguage: 'RU',
       listing: {
         id: '5',
         title: 'PlayStation 5',
@@ -214,6 +265,25 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         category: 'electronics',
         subcategory: undefined,
         imageName: 'ps5',
+        contactMethod: 'phone'
+      }
+    },
+    {
+      id: '6',
+      name: 'Мария Иванова',
+      lastMessage: 'Комод еще доступен?',
+      timestamp: 'Вт',
+      unreadCount: 2,
+      isOnline: true,
+      userLanguage: 'SR',
+      listing: {
+        id: '2',
+        title: 'Винтажный комод с зеркалом',
+        price: '32.000',
+        currency: 'RSD',
+        category: 'furniture',
+        subcategory: undefined,
+        imageName: 'vintage-chest-1',
         contactMethod: 'phone'
       }
     }
@@ -225,7 +295,24 @@ const MessagesView: React.FC<MessagesViewProps> = ({
     const savedChats = localStorage.getItem('targ-chats');
     if (savedChats) {
       try {
-        return JSON.parse(savedChats);
+        const parsedChats = JSON.parse(savedChats);
+        
+        // Обновляем чаты, добавляя информацию о языке, если её нет
+        const updatedChats = parsedChats.map((chat: Chat) => {
+          if (!chat.userLanguage) {
+            // Добавляем язык на основе имени собеседника
+            if (chat.name === 'Мария Иванова') {
+              return { ...chat, userLanguage: 'SR' };
+            } else if (chat.name === 'Дмитрий Козлов') {
+              return { ...chat, userLanguage: 'EN' };
+            } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
+              return { ...chat, userLanguage: 'RU' };
+            }
+          }
+          return chat;
+        });
+        
+        return updatedChats;
       } catch (e) {
         console.error('Ошибка при загрузке чатов из localStorage:', e);
         return initialChats;
@@ -893,6 +980,19 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                 </div>
               </div>
               
+              {/* Предупреждение о языке собеседника */}
+              {(() => {
+                const warning = getLanguageWarning(selectedChat);
+                return warning ? (
+                  <div className="language-warning" onClick={handleLanguageWarningClick}>
+                    <div className="language-warning-icon">🌐</div>
+                    <span className="language-warning-text">
+                      {warning.text}
+                    </span>
+                  </div>
+                ) : null;
+              })()}
+              
               {/* Превью объявления */}
               <div 
                 className="chat-listing-preview clickable"
@@ -1305,6 +1405,14 @@ const MessagesView: React.FC<MessagesViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Модальное окно информации о языке */}
+      <LanguageInfoModal
+        isOpen={showLanguageInfoModal}
+        onClose={() => setShowLanguageInfoModal(false)}
+        interlocutorLanguage={selectedChat?.userLanguage || 'RU'}
+        currentLanguage={currentLanguage}
+      />
     </div>
   );
 };

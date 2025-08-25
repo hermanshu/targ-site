@@ -132,12 +132,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
           <CategoryIcon className="category-icon-hero" />
         </div>
 
-        {/* Индикатор количества изображений */}
-        {images && images.length > 1 && (
-          <div className="image-count-badge">
-            <span className="image-count-text">{images.length}</span>
-          </div>
-        )}
+
 
         {/* Кнопка избранного поверх изображения */}
         <button 

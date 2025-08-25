@@ -82,4 +82,19 @@ export interface SellerRating {
   averageRating: number;
   totalReviews: number;
   reviews: Review[];
+}
+
+// Система отслеживания диалогов
+export interface Dialog {
+  id: string;
+  buyerId: string;
+  sellerId: string;
+  listingId: string;
+  createdAt: string; // ISO строка
+  lastMessageAt: string; // ISO строка
+  messageCount: number;
+  isActive: boolean;
+  hasSellerResponse: boolean; // Есть ли ответ от продавца
+  buyerMessageCount: number; // Количество сообщений от покупателя
+  sellerMessageCount: number; // Количество сообщений от продавца
 } 

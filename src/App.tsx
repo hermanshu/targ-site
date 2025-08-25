@@ -5,6 +5,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { ListingsProvider } from './contexts/ListingsContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
 import { ReviewsProvider } from './contexts/ReviewsContext';
+import { DialogsProvider } from './contexts/DialogsContext';
 import MainTabView from './components/MainTabView';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useDeviceType } from './hooks/useDeviceType';
@@ -51,9 +52,11 @@ function App() {
             <ListingsProvider>
               <FavoritesProvider>
                 <ReviewsProvider>
-                  <div className={`App device-${type}`}>
-                    <MainTabView />
-                  </div>
+                  <DialogsProvider>
+                    <div className={`App device-${type}`}>
+                      <MainTabView />
+                    </div>
+                  </DialogsProvider>
                 </ReviewsProvider>
               </FavoritesProvider>
             </ListingsProvider>

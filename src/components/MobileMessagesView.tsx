@@ -14,8 +14,10 @@ import { Listing } from '../types';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import AuthRequiredView from './AuthRequiredView';
 import { nowIso } from '../utils/datetime';
+import LanguageInfoModal from './LanguageInfoModal';
 
 interface Chat {
   id: string;
@@ -25,6 +27,7 @@ interface Chat {
   timestamp: string;
   unreadCount: number;
   isOnline: boolean;
+  userLanguage?: 'RU' | 'EN' | 'SR'; // Язык собеседника
   listing: {
     id: string;
     title: string;
@@ -59,7 +62,34 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
   const location = useLocation();
   const { currentUser } = useAuth();
   const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
+
+  // Функция для определения языка собеседника и создания предупреждения
+  const getLanguageWarning = (chat: Chat) => {
+    if (!chat.userLanguage || chat.userLanguage === currentLanguage) {
+      return null;
+    }
+
+    const languageNames = {
+      'RU': 'русском',
+      'EN': 'английском', 
+      'SR': 'сербском'
+    };
+
+    const currentLanguageName = languageNames[currentLanguage];
+    const chatLanguageName = languageNames[chat.userLanguage];
+
+    return {
+      text: `Собеседник говорит на ${chatLanguageName}`,
+      type: 'warning' as const
+    };
+  };
+
+  // Обработчик клика на предупреждение о языке
+  const handleLanguageWarningClick = () => {
+    setShowLanguageInfoModal(true);
+  };
   
   // Все хуки должны быть в начале компонента
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
@@ -69,6 +99,7 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
   const [attachments, setAttachments] = useState<string[]>([]);
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [view, setView] = useState<'list' | 'chat'>('list');
+  const [showLanguageInfoModal, setShowLanguageInfoModal] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -103,7 +134,24 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
     const savedChats = localStorage.getItem('targ-chats');
     if (savedChats) {
       try {
-        return JSON.parse(savedChats);
+        const parsedChats = JSON.parse(savedChats);
+        
+        // Обновляем чаты, добавляя информацию о языке, если её нет
+        const updatedChats = parsedChats.map((chat: Chat) => {
+          if (!chat.userLanguage) {
+            // Добавляем язык на основе имени собеседника
+            if (chat.name === 'Мария Иванова') {
+              return { ...chat, userLanguage: 'SR' };
+            } else if (chat.name === 'Дмитрий Козлов') {
+              return { ...chat, userLanguage: 'EN' };
+            } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
+              return { ...chat, userLanguage: 'RU' };
+            }
+          }
+          return chat;
+        });
+        
+        return updatedChats;
       } catch (e) {
         console.error('Ошибка при загрузке чатов из localStorage:', e);
         return [];
@@ -130,7 +178,22 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
   // Функция для сохранения чатов в localStorage
   const saveChatsToStorage = (chats: Chat[]) => {
     try {
-      localStorage.setItem('targ-chats', JSON.stringify(chats));
+      // Убеждаемся, что у всех чатов есть информация о языке
+      const chatsWithLanguage = chats.map((chat: Chat) => {
+        if (!chat.userLanguage) {
+          // Добавляем язык на основе имени собеседника
+          if (chat.name === 'Мария Иванова') {
+            return { ...chat, userLanguage: 'SR' };
+          } else if (chat.name === 'Дмитрий Козлов') {
+            return { ...chat, userLanguage: 'EN' };
+          } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
+            return { ...chat, userLanguage: 'RU' };
+          }
+        }
+        return chat;
+      });
+      
+      localStorage.setItem('targ-chats', JSON.stringify(chatsWithLanguage));
       // Отправляем кастомное событие для обновления счетчика
       window.dispatchEvent(new Event('targ-chats-updated'));
     } catch (e) {
@@ -474,6 +537,19 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
               </div>
             </div>
             
+            {/* Предупреждение о языке собеседника */}
+            {selectedChat && (() => {
+              const warning = getLanguageWarning(selectedChat);
+              return warning ? (
+                <div className="mobile-language-warning" onClick={handleLanguageWarningClick}>
+                  <div className="mobile-language-warning-icon">🌐</div>
+                  <span className="mobile-language-warning-text">
+                    {warning.text}
+                  </span>
+                </div>
+              ) : null;
+            })()}
+            
             <button 
               className="mobile-chat-menu-button"
               onClick={() => {}}
@@ -577,6 +653,14 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Модальное окно информации о языке */}
+      <LanguageInfoModal
+        isOpen={showLanguageInfoModal}
+        onClose={() => setShowLanguageInfoModal(false)}
+        interlocutorLanguage={selectedChat?.userLanguage || 'RU'}
+        currentLanguage={currentLanguage}
+      />
     </div>
   );
 };

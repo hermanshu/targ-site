@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeftIcon, 
   MapPinIcon,
@@ -16,10 +16,15 @@ import { useListingData } from './useListingData';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useListingImages } from '../../hooks/useListingImages';
+import { useAuth } from '../../contexts/AuthContext';
+import { useReviews } from '../../contexts/ReviewsContext';
+import { useDialogs } from '../../contexts/DialogsContext';
 import { SeoMeta } from './SeoMeta';
 import { Gallery } from './Hero/Gallery';
 import { ActionBar } from './Hero/ActionBar';
 import ReviewModal from '../ReviewModal';
+import SellerReviewsModal from '../SellerReviewsModal';
+import ReviewRestrictionModal from '../ReviewRestrictionModal';
 
 interface ListingPageProps {
   listingId?: string; // Добавляем ID как пропс
@@ -44,10 +49,15 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { t } = useTranslation();
+  const { currentUser } = useAuth();
+  const { getSellerRating, addReview } = useReviews();
+  const { hasDialogWithSeller } = useDialogs();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
+  const [showSellerReviewsModal, setShowSellerReviewsModal] = useState(false);
+  const [showReviewRestrictionModal, setShowReviewRestrictionModal] = useState(false);
   const [selectedReportType, setSelectedReportType] = useState('');
   const [reportReason, setReportReason] = useState('');
   
@@ -61,6 +71,18 @@ export const ListingPage: React.FC<ListingPageProps> = ({
     images: listing?.images,          // новая схема (если есть)
     imageName: listing?.imageName     // fallback по MULTI_IMAGE_CONFIG
   });
+
+  // Получаем рейтинг продавца
+  const [sellerRating, setSellerRating] = useState(
+    listing ? getSellerRating(listing.userId) : { averageRating: 0, totalReviews: 0, reviews: [] }
+  );
+
+  // Обновляем рейтинг при изменении данных
+  useEffect(() => {
+    if (listing) {
+      setSellerRating(getSellerRating(listing.userId));
+    }
+  }, [getSellerRating, listing?.userId]);
 
 
 
@@ -230,19 +252,59 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   };
 
   const handleReviewClick = () => {
+    if (!currentUser) {
+      // Если пользователь не авторизован, предлагаем войти
+      if (onNavigateToProfile) {
+        onNavigateToProfile('signin');
+      }
+      return;
+    }
+
+    if (!listing) return;
+
+    // Проверяем, есть ли диалог с продавцом
+    if (!hasDialogWithSeller(currentUser.id, listing.userId)) {
+      setShowReviewRestrictionModal(true);
+      return;
+    }
+
     setShowReviewModal(true);
   };
+
+  const handleSellerRatingClick = () => {
+    setShowSellerReviewsModal(true);
+  };
+
+  const handleContactSellerForReview = () => {
+    if (listing && onNavigateToMessages) {
+      onNavigateToMessages(listing);
+    }
+  };
+
+
 
   const handleCloseReviewModal = () => {
     setShowReviewModal(false);
   };
 
   const handleSubmitReview = async (rating: number, comment: string) => {
-    // TODO: Добавить реальную логику отправки отзыва
-    console.log('Submitting review:', { rating, comment, listingId: listing?.id });
+    if (!currentUser || !listing) return;
+
+    addReview({
+      reviewerId: currentUser.id,
+      sellerId: listing.userId,
+      listingId: listing.id,
+      rating: rating as 1 | 2 | 3 | 4 | 5,
+      comment,
+      isVerified: true,
+      reviewerName: currentUser.name
+    });
     
-    // Модальное окно само покажет благодарность и закроется
-    // Никаких дополнительных alert'ов не нужно
+    // Обновляем рейтинг продавца
+    setSellerRating(getSellerRating(listing.userId));
+    
+    // Закрываем модальное окно отзыва
+    setShowReviewModal(false);
   };
 
   if (loading) {
@@ -332,14 +394,21 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                 </div>
                 
                 {/* Рейтинг продавца */}
-                <div className="seller-rating-info">
-                  <div className="rating-stars">
-                    ⭐⭐⭐⭐⭐
+                {sellerRating.totalReviews > 0 && (
+                  <div 
+                    className="seller-rating-info clickable"
+                    onClick={handleSellerRatingClick}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="rating-stars">
+                      {'⭐'.repeat(Math.floor(sellerRating.averageRating))}
+                      {'☆'.repeat(5 - Math.floor(sellerRating.averageRating))}
+                    </div>
+                    <span className="rating-text">
+                      {sellerRating.averageRating} ({sellerRating.totalReviews} отзывов)
+                    </span>
                   </div>
-                  <span className="rating-text">
-                    Рейтинг продавца
-                  </span>
-                </div>
+                )}
               </div>
               <div className="seller-actions">
                 <button 
@@ -443,6 +512,27 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         sellerName={listing?.sellerName || ''}
         listingTitle={listing?.title || ''}
       />
+
+      {/* Модальное окно отзывов о продавце */}
+      {listing && (
+        <SellerReviewsModal
+          isOpen={showSellerReviewsModal}
+          onClose={() => setShowSellerReviewsModal(false)}
+          sellerName={listing.sellerName}
+          sellerRating={sellerRating}
+          isCompany={listing.isCompany}
+        />
+      )}
+
+      {/* Модальное окно ограничения отзывов */}
+      {listing && (
+        <ReviewRestrictionModal
+          isOpen={showReviewRestrictionModal}
+          onClose={() => setShowReviewRestrictionModal(false)}
+          onContactSeller={handleContactSellerForReview}
+          sellerName={listing.sellerName}
+        />
+      )}
 
       {/* Модальное окно для выбора действий с кнопкой "Поделиться" */}
       {showShareModal && (

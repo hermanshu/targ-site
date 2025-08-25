@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeftIcon, 
   HeartIcon, 
@@ -22,8 +22,11 @@ import { useTranslation } from '../hooks/useTranslation';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useListingImages } from '../hooks/useListingImages';
 import { useReviews } from '../contexts/ReviewsContext';
+import { useDialogs } from '../contexts/DialogsContext';
 import StarRating from './StarRating';
 import ReviewModal from './ReviewModal';
+import SellerReviewsModal from './SellerReviewsModal';
+import ReviewRestrictionModal from './ReviewRestrictionModal';
 
 
 interface ListingDetailViewProps {
@@ -62,10 +65,18 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showSellerReviewsModal, setShowSellerReviewsModal] = useState(false);
 
-  // Хуки для рейтинга
+  // Хуки для рейтинга и диалогов
   const { getSellerRating, addReview, hasUserReviewedSeller } = useReviews();
-  const sellerRating = getSellerRating(listing.userId);
+  const { hasDialogWithSeller } = useDialogs();
+  const [sellerRating, setSellerRating] = useState(getSellerRating(listing.userId));
+  const [showReviewRestrictionModal, setShowReviewRestrictionModal] = useState(false);
+
+  // Обновляем рейтинг при изменении данных
+  useEffect(() => {
+    setSellerRating(getSellerRating(listing.userId));
+  }, [getSellerRating, listing.userId]);
 
   // Используем хук для работы с изображениями
   const {
@@ -332,6 +343,18 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
     }
   };
 
+  const handleContactSellerForReview = () => {
+    if (listing.contactMethod === 'chat') {
+      if (onNavigateToMessages) {
+        onNavigateToMessages(listing);
+      }
+    } else {
+      setShowContactModal(true);
+    }
+  };
+
+
+
   const handleCloseModal = () => {
     setShowContactModal(false);
   };
@@ -360,7 +383,18 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
       setShowAuthModal(true);
       return;
     }
+
+    // Проверяем, есть ли диалог с продавцом
+    if (!hasDialogWithSeller(currentUser.id, listing.userId)) {
+      setShowReviewRestrictionModal(true);
+      return;
+    }
+
     setShowReviewModal(true);
+  };
+
+  const handleSellerRatingClick = () => {
+    setShowSellerReviewsModal(true);
   };
 
   const handleSubmitReview = async (rating: number, comment: string) => {
@@ -375,6 +409,12 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
       isVerified: true,
       reviewerName: currentUser.name
     });
+    
+    // Обновляем рейтинг продавца
+    setSellerRating(getSellerRating(listing.userId));
+    
+    // Закрываем модальное окно отзыва
+    setShowReviewModal(false);
   };
 
   const canLeaveReview = currentUser && 
@@ -650,7 +690,11 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
               
               {/* Рейтинг продавца */}
               {sellerRating.totalReviews > 0 && (
-                <div className="seller-rating-info">
+                <div 
+                  className="seller-rating-info clickable"
+                  onClick={handleSellerRatingClick}
+                  style={{ cursor: 'pointer' }}
+                >
                   <StarRating 
                     rating={sellerRating.averageRating} 
                     readonly={true} 
@@ -1032,6 +1076,22 @@ const ListingDetailView: React.FC<ListingDetailViewProps> = ({
         sellerName={listing.sellerName}
         listingTitle={listing.title}
       />
+
+      {/* Модальное окно отзывов о продавце */}
+      <SellerReviewsModal
+        isOpen={showSellerReviewsModal}
+        onClose={() => setShowSellerReviewsModal(false)}
+        sellerName={listing.sellerName}
+        sellerRating={sellerRating}
+        isCompany={listing.isCompany}
+      />
+
+              <ReviewRestrictionModal
+          isOpen={showReviewRestrictionModal}
+          onClose={() => setShowReviewRestrictionModal(false)}
+          onContactSeller={handleContactSellerForReview}
+          sellerName={listing.sellerName}
+        />
     </div>
   );
 };

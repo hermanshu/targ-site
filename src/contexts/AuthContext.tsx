@@ -71,6 +71,14 @@ const loadMockUsers = (): User[] => {
       isCompany: false,
       createdAt: nowIso(),
       emailVerified: true
+    },
+    {
+      id: 'user6',
+      name: 'Тестовый Пользователь',
+      email: 'test@test.ru',
+      isCompany: false,
+      createdAt: nowIso(),
+      emailVerified: true
     }
   ];
 };

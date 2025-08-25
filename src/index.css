@@ -2211,6 +2211,16 @@ body:has(.review-modal-overlay) .detail-header {
   overflow: hidden;
 }
 
+.seller-rating-info.clickable {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.seller-rating-info.clickable:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
 .rating-text {
   font-size: 0.75rem;
   color: #6b7280;
@@ -4738,9 +4748,7 @@ body:has(.review-modal-overlay) .detail-header {
     justify-content: center;
   }
   
-  .listing-card {
-    max-width: 360px;
-  }
+
   
   /* Захардкодим позиционирование плашки с ценой */
   .listing-card .price-bar {
@@ -4791,9 +4799,7 @@ body:has(.review-modal-overlay) .detail-header {
     justify-content: center;
   }
   
-  .listing-card {
-    max-width: 400px;
-  }
+
   
   /* Захардкодим позиционирование плашки с ценой */
   .listing-card .price-bar {
@@ -4827,9 +4833,7 @@ body:has(.review-modal-overlay) .detail-header {
 
 /* Дополнительные ограничения для очень больших экранов */
 @media (min-width: 2000px) {
-  .listing-card {
-    max-width: 350px;
-  }
+
   
   .listings-grid {
     grid-template-columns: repeat(5, 1fr) !important;
@@ -5753,8 +5757,8 @@ body:has(.review-modal-overlay) .detail-header {
   left: 8px;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5766,30 +5770,7 @@ body:has(.review-modal-overlay) .detail-header {
   font-size: 18px;
 }
 
-/* Индикатор количества изображений */
-.image-count-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border-radius: 12px;
-  padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  z-index: 3;
-  backdrop-filter: blur(10px);
-}
 
-.image-count-text {
-  color: white;
-  font-weight: 600;
-}
 
 .price-bar {
   position: absolute !important;
@@ -5892,8 +5873,8 @@ body:has(.review-modal-overlay) .detail-header {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  padding: 8px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 14px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -5908,8 +5889,8 @@ body:has(.review-modal-overlay) .detail-header {
 }
 
 .heart-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   color: rgba(100, 116, 139, 0.8);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
@@ -5937,6 +5918,959 @@ body:has(.review-modal-overlay) .detail-header {
 .location-text {
   font-size: 12px;
   color: #6b7280;
+}
+
+/* Стили для модального окна отзывов о продавце */
+.seller-reviews-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+.seller-reviews-modal-content {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 32px;
+  width: 100%;
+  max-width: 650px;
+  max-height: 85vh;
+  overflow: hidden;
+  animation: slideUp 0.3s ease;
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.seller-reviews-modal-content .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 32px 20px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 32px 32px 0 0;
+  flex-shrink: 0;
+}
+
+.seller-reviews-modal-content .modal-title-section {
+  flex: 1;
+}
+
+.seller-reviews-modal-content .modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(30, 41, 59, 0.95);
+  margin: 0 0 10px 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.seller-reviews-modal-content .seller-info-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seller-reviews-modal-content .seller-name {
+  font-size: 17px;
+  font-weight: 600;
+  color: rgba(30, 41, 59, 0.9);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.seller-reviews-modal-content .company-badge {
+  background: rgba(139, 92, 246, 0.2);
+  color: rgba(139, 92, 246, 0.9);
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.seller-reviews-modal-content .modal-close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: rgba(100, 116, 139, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seller-reviews-modal-content .modal-close-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: rgba(100, 116, 139, 1);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.seller-reviews-modal-content .close-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Общий рейтинг */
+.seller-reviews-modal-content .rating-summary {
+  padding: 24px 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  flex-shrink: 0;
+}
+
+.seller-reviews-modal-content .rating-main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.seller-reviews-modal-content .rating-stars-large {
+  display: flex;
+  gap: 3px;
+}
+
+.seller-reviews-modal-content .rating-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.seller-reviews-modal-content .rating-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(30, 41, 59, 0.95);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.seller-reviews-modal-content .rating-count {
+  font-size: 15px;
+  color: rgba(100, 116, 139, 0.8);
+  font-weight: 500;
+}
+
+/* Список отзывов */
+.seller-reviews-modal-content .reviews-list {
+  padding: 20px 32px 32px 32px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: calc(85vh - 200px);
+}
+
+.seller-reviews-modal-content .review-item {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  margin-bottom: 12px;
+  border-radius: 20px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.seller-reviews-modal-content .review-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.seller-reviews-modal-content .review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.seller-reviews-modal-content .reviewer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seller-reviews-modal-content .reviewer-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(30, 41, 59, 0.9);
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.seller-reviews-modal-content .verified-badge {
+  background: rgba(34, 197, 94, 0.2);
+  color: rgba(34, 197, 94, 0.9);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  backdrop-filter: blur(5px);
+}
+
+.seller-reviews-modal-content .review-rating {
+  display: flex;
+  gap: 2px;
+}
+
+.seller-reviews-modal-content .review-comment {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(30, 41, 59, 0.85);
+  margin-bottom: 10px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.seller-reviews-modal-content .review-date {
+  font-size: 12px;
+  color: rgba(100, 116, 139, 0.7);
+  font-weight: 500;
+}
+
+/* Состояние без отзывов */
+.seller-reviews-modal-content .no-reviews {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  margin: 20px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.seller-reviews-modal-content .no-reviews-icon {
+  font-size: 56px;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.seller-reviews-modal-content .no-reviews-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(30, 41, 59, 0.9);
+  margin: 0 0 10px 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.seller-reviews-modal-content .no-reviews-subtext {
+  font-size: 15px;
+  color: rgba(100, 116, 139, 0.8);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Анимации */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стили для предупреждения о языке собеседника */
+.language-warning {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  margin: 12px 0;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.language-warning::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.language-warning:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.15),
+    0 3px 10px rgba(0, 0, 0, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.language-warning:hover::before {
+  opacity: 1;
+}
+
+.language-warning-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  color: rgba(59, 130, 246, 0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.language-warning-text {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 600;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+}
+
+/* Мобильные стили для предупреждения о языке */
+.mobile-language-warning {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 10px;
+  margin: 10px 0;
+  box-shadow: 
+    0 3px 10px rgba(0, 0, 0, 0.1),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.mobile-language-warning::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.mobile-language-warning:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.mobile-language-warning:hover::before {
+  opacity: 1;
+}
+
+.mobile-language-warning-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+  color: rgba(59, 130, 246, 0.8);
+  position: relative;
+  z-index: 1;
+}
+
+.mobile-language-warning-text {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 600;
+  line-height: 1.3;
+  position: relative;
+  z-index: 1;
+}
+
+
+
+.language-info-modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.3),
+    0 12px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.language-info-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 28px 20px 28px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 24px 24px 0 0;
+}
+
+.language-info-modal-title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-info-modal-icon {
+  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  border-radius: 12px;
+}
+
+.language-info-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0;
+}
+
+.language-info-modal-close {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.language-info-modal-close:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.language-info-modal-close .close-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.language-info-modal-body {
+  padding: 24px 28px;
+}
+
+.language-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.language-info-subtitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.language-info-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.language-info-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.language-info-benefit:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.benefit-icon {
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.benefit-content h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0 0 4px 0;
+}
+
+.benefit-content p {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.language-info-current {
+  margin-top: 8px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+}
+
+.language-info-text {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.language-info-modal-footer {
+  padding: 20px 28px 24px 28px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 0 0 24px 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.language-info-modal-button {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(147, 51, 234, 0.9) 100%);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.language-info-modal-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.language-info-modal-button:active {
+  transform: translateY(0);
+}
+
+/* Мобильные стили для модального окна */
+@media (max-width: 768px) {
+  .language-info-modal-content {
+    max-width: 95vw;
+    border-radius: 20px;
+  }
+
+  .language-info-modal-header {
+    padding: 20px 24px 16px 24px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .language-info-modal-title {
+    font-size: 18px;
+  }
+
+  .language-info-modal-body {
+    padding: 20px 24px;
+  }
+
+  .language-info-subtitle {
+    font-size: 16px;
+  }
+
+  .language-info-benefit {
+    padding: 12px;
+  }
+
+  .benefit-content h4 {
+    font-size: 13px;
+  }
+
+  .benefit-content p {
+    font-size: 12px;
+  }
+
+  .language-info-modal-footer {
+    padding: 16px 24px 20px 24px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  .language-info-modal-button {
+    padding: 10px 24px;
+    font-size: 13px;
+  }
+}
+
+/* Стили для модального окна ограничения отзывов */
+.review-restriction-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+.review-restriction-modal-content {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 32px;
+  width: 100%;
+  max-width: 550px;
+  animation: slideUp 0.3s ease;
+  box-shadow: 
+    0 25px 80px rgba(0, 0, 0, 0.4),
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.review-restriction-modal-content .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 32px 20px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 32px 32px 0 0;
+}
+
+.review-restriction-modal-content .modal-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.review-restriction-modal-content .warning-icon-container {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.review-restriction-modal-content .warning-icon {
+  width: 24px;
+  height: 24px;
+  color: rgba(245, 158, 11, 0.9);
+}
+
+.review-restriction-modal-content .modal-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(30, 41, 59, 0.95);
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.review-restriction-modal-content .modal-close-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: rgba(100, 116, 139, 0.8);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.review-restriction-modal-content .modal-close-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: rgba(100, 116, 139, 1);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.review-restriction-modal-content .close-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.review-restriction-modal-content .modal-body {
+  padding: 24px 32px;
+}
+
+.review-restriction-modal-content .restriction-message {
+  text-align: center;
+}
+
+.review-restriction-modal-content .main-message {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(30, 41, 59, 0.9);
+  margin: 0 0 24px 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.review-restriction-modal-content .reasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.review-restriction-modal-content .reason-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.review-restriction-modal-content .reason-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.review-restriction-modal-content .reason-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(30, 41, 59, 0.85);
+  text-align: left;
+}
+
+.review-restriction-modal-content .modal-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px 32px 32px 32px;
+  justify-content: flex-end;
+}
+
+.review-restriction-modal-content .modal-button {
+  padding: 12px 20px;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-restriction-modal-content .modal-button.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(100, 116, 139, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.review-restriction-modal-content .modal-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(100, 116, 139, 1);
+  transform: translateY(-1px);
+}
+
+.review-restriction-modal-content .modal-button.primary {
+  background: rgba(139, 92, 246, 0.2);
+  color: rgba(139, 92, 246, 0.9);
+  border-color: rgba(139, 92, 246, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.review-restriction-modal-content .modal-button.primary:hover {
+  background: rgba(139, 92, 246, 0.3);
+  color: rgba(139, 92, 246, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.review-restriction-modal-content .action-icon {
+  width: 16px;
+  height: 16px;
+}
+
+/* Мобильные стили для модального окна ограничения отзывов */
+@media (max-width: 768px) {
+  .review-restriction-modal-overlay {
+    padding: 10px;
+  }
+  
+  .review-restriction-modal-content {
+    border-radius: 24px;
+  }
+  
+  .review-restriction-modal-content .modal-header {
+    padding: 20px 24px 16px 24px;
+    border-radius: 24px 24px 0 0;
+  }
+  
+  .review-restriction-modal-content .modal-title-section {
+    gap: 12px;
+  }
+  
+  .review-restriction-modal-content .warning-icon-container {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .review-restriction-modal-content .warning-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .review-restriction-modal-content .modal-title {
+    font-size: 18px;
+  }
+  
+  .review-restriction-modal-content .modal-body {
+    padding: 20px 24px;
+  }
+  
+  .review-restriction-modal-content .main-message {
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .review-restriction-modal-content .reasons-list {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  
+  .review-restriction-modal-content .reason-item {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .review-restriction-modal-content .reason-icon {
+    font-size: 18px;
+  }
+  
+  .review-restriction-modal-content .reason-text {
+    font-size: 13px;
+  }
+  
+  .review-restriction-modal-content .modal-actions {
+    padding: 16px 24px 24px 24px;
+    flex-direction: column;
+  }
+  
+  .review-restriction-modal-content .modal-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Мобильные стили для модального окна отзывов */
+@media (max-width: 768px) {
+  .seller-reviews-modal-overlay {
+    padding: 10px;
+  }
+  
+  .seller-reviews-modal-content {
+    max-height: 90vh;
+    border-radius: 24px;
+  }
+  
+  .seller-reviews-modal-content .modal-header {
+    padding: 20px 24px 16px 24px;
+    border-radius: 24px 24px 0 0;
+  }
+  
+  .seller-reviews-modal-content .modal-title {
+    font-size: 20px;
+  }
+  
+  .seller-reviews-modal-content .rating-summary {
+    padding: 20px 24px;
+  }
+  
+  .seller-reviews-modal-content .rating-value {
+    font-size: 24px;
+  }
+  
+  .seller-reviews-modal-content .reviews-list {
+    padding: 16px 24px 24px 24px;
+    max-height: calc(90vh - 180px);
+  }
+  
+  .seller-reviews-modal-content .review-item {
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 8px;
+  }
+  
+  .seller-reviews-modal-content .no-reviews {
+    padding: 40px 16px;
+    margin: 16px;
+    border-radius: 20px;
+  }
+  
+  .seller-reviews-modal-content .no-reviews-icon {
+    font-size: 48px;
+  }
+  
+  .seller-reviews-modal-content .no-reviews-text {
+    font-size: 18px;
+  }
 }
 
 /* Стили для модальных окон */
@@ -8529,14 +9463,7 @@ body:has(.review-modal-overlay) .detail-header {
     justify-items: center;
   }
 
-  .listing-card {
-    max-width: 300px;
-    width: 100%;
-  }
 
-  .listing-image-container {
-    height: 220px;
-  }
 }
 
 /* Ландшафтная ориентация на мобильных */
@@ -9549,18 +10476,7 @@ body:has(.review-modal-overlay) .detail-header {
   gap: 20px;
 }
 
-.listing-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
-}
 
-.listing-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
 
 .listing-image {
   position: relative;

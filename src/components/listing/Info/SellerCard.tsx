@@ -8,6 +8,7 @@ import {
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../../../contexts/AuthContext';
+import { useDialogs } from '../../../contexts/DialogsContext';
 import { useTranslation } from '../../../hooks/useTranslation';
 import StarRating from '../../../components/StarRating';
 
@@ -39,6 +40,7 @@ export const SellerCard: React.FC<SellerCardProps> = React.memo(({
 }) => {
   const { t } = useTranslation();
   const { currentUser } = useAuth();
+  const { hasDialogWithSeller } = useDialogs();
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -133,7 +135,22 @@ export const SellerCard: React.FC<SellerCardProps> = React.memo(({
           {canLeaveReview && (
             <button 
               className="review-button"
-              onClick={onReviewClick}
+              onClick={() => {
+                if (!currentUser) {
+                  setShowAuthModal(true);
+                  return;
+                }
+
+                // Проверяем, есть ли диалог с продавцом
+                if (!hasDialogWithSeller(currentUser.id, seller.id)) {
+                  // Если диалога нет, показываем модальное окно ограничения
+                  // Это будет обработано в родительском компоненте
+                  onReviewClick?.();
+                  return;
+                }
+
+                onReviewClick?.();
+              }}
             >
               <StarIcon className="review-icon" />
               <span className="review-text">Отзыв</span>

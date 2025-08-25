@@ -501,12 +501,7 @@ const MobileHomeView: React.FC = () => {
                     <HomeIcon className="placeholder-icon" />
                   </div>
                 )}
-                {/* Индикатор количества изображений */}
-                {listing.images && listing.images.length > 1 && (
-                  <div className="mobile-image-count-badge">
-                    <span className="mobile-image-count-text">{listing.images.length}</span>
-                  </div>
-                )}
+
                 
                 <div className="mobile-category-badge">
                   {(() => {
