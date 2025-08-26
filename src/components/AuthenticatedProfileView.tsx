@@ -9,12 +9,12 @@ import {
   StarIcon,
   LanguageIcon,
   PencilIcon,
-  WalletIcon
+  WalletIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
-
 
 interface AuthenticatedProfileViewProps {
   onLogout: () => void;
@@ -40,48 +40,35 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showWalletModal, setShowWalletModal] = useState(false);
 
-  const settingsMenuItems = [
-    {
-      icon: BellIcon,
-      title: t('profile.notifications'),
-      subtitle: t('profile.notificationsDescription'),
-      action: () => navigate('/notifications-settings')
-    },
-    {
-      icon: QuestionMarkCircleIcon,
-      title: t('profile.helpAndSupport'),
-      subtitle: t('profile.helpAndSupportDescription'),
-      action: () => navigate('/help-support')
-    },
-    {
-      icon: LanguageIcon,
-      title: t('profile.languageChange'),
-      subtitle: t('profile.languageChangeDescription'),
-      action: () => alert(t('profile.goToLanguage'))
-    }
-  ];
+  // Моковые данные для демонстрации
+  const userStats = {
+    listings: 10,
+    sales: 5,
+    responseTime: '10 мин'
+  };
+
+
+
+  const analytics = {
+    weeklyViews: 120,
+    weeklyMessages: 8
+  };
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Проверяем тип файла
       if (!file.type.startsWith('image/')) {
         alert(t('profile.fileTypeError'));
         return;
       }
       
-      // Проверяем размер файла (максимум 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert(t('profile.fileSizeLimit'));
         return;
       }
       
-      // Создаем URL для предварительного просмотра
       const url = URL.createObjectURL(file);
       setAvatarUrl(url);
-      
-      // Здесь можно добавить логику загрузки файла на сервер
-  
     }
   };
 
@@ -89,7 +76,6 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
     fileInputRef.current?.click();
   };
 
-  // Валидация полей
   const validateField = (field: string, value: string): string => {
     switch (field) {
       case 'name':
@@ -98,24 +84,33 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
         return '';
       case 'email':
         if (!value.trim()) return t('profile.emailRequired');
-        if (!value.includes('@')) return t('profile.emailMissingAt');
-        if (value.split('@').length > 2) return t('profile.emailInvalidAt');
-        if (!value.split('@')[1] || !value.split('@')[1].includes('.')) return t('profile.emailInvalidDomain');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return t('profile.emailInvalid');
         return '';
       case 'phone':
-        if (!value.trim()) return t('profile.phoneRequired');
-        // Простая валидация телефона (можно улучшить)
-        const phoneRegex = /^[+]?[0-9\s\-()]{10,}$/;
-        if (!phoneRegex.test(value)) return t('profile.phoneInvalid');
+        if (value.trim() && !/^[\+]?[0-9\s\-\(\)]{10,}$/.test(value)) {
+          return t('profile.phoneInvalid');
+        }
         return '';
       default:
         return '';
     }
   };
 
-  // Начало редактирования профиля
+  const handleEditValueChange = (field: string, value: string) => {
+    setEditValues(prev => ({ ...prev, [field]: value }));
+    
+    const error = validateField(field, value);
+    setErrors(prev => ({ ...prev, [field]: error }));
+  };
+
   const startEditing = () => {
     setIsEditing(true);
+    setErrors({});
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
     setEditValues({
       name: currentUser?.name || '',
       email: currentUser?.email || '',
@@ -124,24 +119,14 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
     setErrors({});
   };
 
-  // Отмена редактирования
-  const cancelEditing = () => {
-    setIsEditing(false);
-    setErrors({});
-  };
-
-  // Сохранение изменений
   const saveChanges = async () => {
-    // Валидируем все поля
-    const nameError = validateField('name', editValues.name);
-    const emailError = validateField('email', editValues.email);
-    const phoneError = validateField('phone', editValues.phone);
-    
     const newErrors: Record<string, string> = {};
-    if (nameError) newErrors.name = nameError;
-    if (emailError) newErrors.email = emailError;
-    if (phoneError) newErrors.phone = phoneError;
     
+    Object.keys(editValues).forEach(field => {
+      const error = validateField(field, editValues[field as keyof typeof editValues]);
+      if (error) newErrors[field] = error;
+    });
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -152,26 +137,13 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
       await updateUserProfile(editValues);
       setIsEditing(false);
       setErrors({});
-      
-      // Показываем уведомление об успехе
-      alert('Профиль успешно обновлен');
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error) {
+      console.error('Ошибка при обновлении профиля:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Обработка изменения значений в полях редактирования
-  const handleEditValueChange = (field: string, value: string) => {
-    setEditValues(prev => ({ ...prev, [field]: value }));
-    // Очищаем ошибку при вводе
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
-
-  // Обработка нажатия Enter
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       saveChanges();
@@ -181,22 +153,15 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
   };
 
   return (
-    <div className="profile-container">
-      
-      {/* Заголовок профиля */}
-      <div className="profile-header">
-        <h1 className="profile-title">{t('profile.title')}</h1>
-      </div>
-
-      {/* Основная область профиля */}
-      <div className="profile-main-section">
-                {/* Аватар и основная информация */}
-        <div className="profile-user-section">
+    <div className="authenticated-profile-container">
+      {/* Карточка профиля */}
+      <div className="profile-card">
+        <div className="profile-header">
           {/* Аватар */}
           <div className="profile-avatar-container">
             <div className="profile-avatar" onClick={handleAvatarClick}>
               {avatarUrl ? (
-                <img src={avatarUrl} alt={t('profile.avatar')} className="profile-avatar-image" />
+                <img src={avatarUrl} alt="Avatar" className="profile-avatar-image" />
               ) : (
                 <UserIcon className="profile-avatar-icon" />
               )}
@@ -214,10 +179,20 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
           </div>
 
           {/* Информация о пользователе */}
-          <div className="profile-info-section">
-            {/* Кнопка редактирования */}
-            {!isEditing && (
-              <div className="profile-edit-header">
+          <div className="profile-info">
+            <div className="profile-name-section">
+              {isEditing ? (
+                <input
+                  type="text"
+                  value={editValues.name}
+                  onChange={(e) => handleEditValueChange('name', e.target.value)}
+                  className="profile-name-edit-input"
+                  placeholder="Введите имя"
+                />
+              ) : (
+                <h2 className="profile-name">{currentUser?.name}</h2>
+              )}
+              {!isEditing && (
                 <button 
                   className="profile-edit-button"
                   onClick={startEditing}
@@ -225,173 +200,213 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
                 >
                   <PencilIcon className="profile-edit-icon" />
                 </button>
-              </div>
-            )}
+              )}
+              {errors.name && <div className="field-error">{errors.name}</div>}
+            </div>
 
-            {/* Поля информации в три строки */}
-            <div className="profile-info-fields">
-              {/* Имя */}
-              <div className="profile-info-row">
-                <div className="profile-info-label">Имя:</div>
-                <div className="profile-info-value">
-                  {isEditing ? (
-                    <input
-                      type="text"
-                      value={editValues.name}
-                      onChange={(e) => handleEditValueChange('name', e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      className="profile-edit-input"
-                      placeholder={t('profile.enterName')}
-                    />
-                  ) : (
-                    <span className="user-name">{currentUser?.name}</span>
-                  )}
-                </div>
-                {errors.name && <div className="field-error">{errors.name}</div>}
-              </div>
-
-              {/* Email */}
-              <div className="profile-info-row">
-                <div className="profile-info-label">Email:</div>
-                <div className="profile-info-value">
-                  {isEditing ? (
-                    <input
-                      type="email"
-                      value={editValues.email}
-                      onChange={(e) => handleEditValueChange('email', e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      className="profile-edit-input"
-                      placeholder={t('profile.enterEmail')}
-                    />
-                  ) : (
-                    <span className="user-email">{currentUser?.email}</span>
-                  )}
-                </div>
+            {/* Контактная информация */}
+            <div className="profile-contact-info">
+              <div className="contact-item">
+                <span className="contact-label">Email:</span>
+                {isEditing ? (
+                  <input
+                    type="email"
+                    value={editValues.email}
+                    onChange={(e) => handleEditValueChange('email', e.target.value)}
+                    className="contact-edit-input"
+                    placeholder="Введите email"
+                  />
+                ) : (
+                  <span className="contact-value">{currentUser?.email}</span>
+                )}
                 {errors.email && <div className="field-error">{errors.email}</div>}
               </div>
-
-              {/* Телефон */}
-              <div className="profile-info-row">
-                <div className="profile-info-label">Телефон:</div>
-                <div className="profile-info-value">
-                  {isEditing ? (
-                    <input
-                      type="tel"
-                      value={editValues.phone}
-                      onChange={(e) => handleEditValueChange('phone', e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      className="profile-edit-input"
-                      placeholder={t('profile.enterPhone')}
-                    />
-                  ) : (
-                    <span className="user-phone">
-                      {currentUser?.phone || t('profile.phone')}
-                    </span>
-                  )}
-                </div>
+              <div className="contact-item">
+                <span className="contact-label">Телефон:</span>
+                {isEditing ? (
+                  <input
+                    type="tel"
+                    value={editValues.phone}
+                    onChange={(e) => handleEditValueChange('phone', e.target.value)}
+                    className="contact-edit-input"
+                    placeholder="Введите телефон"
+                  />
+                ) : (
+                  <span className="contact-value">
+                    {currentUser?.phone ? currentUser.phone : 'Подтвердить телефон'}
+                  </span>
+                )}
                 {errors.phone && <div className="field-error">{errors.phone}</div>}
               </div>
             </div>
 
+            {/* Мини-метрики */}
+            <div className="profile-metrics">
+              <span className="metric">
+                {userStats.listings} объявлений
+              </span>
+              <span className="metric-separator">•</span>
+              <span className="metric">
+                {userStats.sales} продаж
+              </span>
+              <span className="metric-separator">•</span>
+              <span className="metric">
+                отвечает за {userStats.responseTime}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Кнопки сохранения/отмены при редактировании */}
+        {/* Кнопки редактирования */}
         {isEditing && (
           <div className="profile-edit-actions">
-                            <button 
-                  onClick={saveChanges} 
-                  disabled={isLoading}
-                  className="profile-save-button"
-                >
-                  {isLoading ? 'Сохранение...' : 'Сохранить'}
-                </button>
-                <button 
-                  onClick={cancelEditing}
-                  className="profile-cancel-button"
-                >
-                  Отменить
-                </button>
+            <button 
+              onClick={saveChanges} 
+              disabled={isLoading}
+              className="profile-save-button"
+            >
+              {isLoading ? 'Сохранение...' : 'Сохранить'}
+            </button>
+            <button 
+              onClick={cancelEditing}
+              className="profile-cancel-button"
+            >
+              Отменить
+            </button>
           </div>
         )}
 
-        {/* Кнопки профиля */}
-        <div className="profile-actions-section">
+        {/* Кнопка создания объявления */}
+        <div className="create-listing-section">
           <button 
-            className="menu-item"
-            onClick={() => navigate('/my-listings')}
+            className="create-listing-button"
+            onClick={() => navigate('/add')}
           >
-            <div className="menu-item-content">
-              <PlusIcon className="menu-item-icon" />
-              <div className="menu-item-text">
-                <span className="menu-item-title">{t('profile.myListings')}</span>
-                <span className="menu-item-subtitle">{t('profile.myListingsDescription')}</span>
-              </div>
-            </div>
-            <ArrowRightOnRectangleIcon className="menu-item-arrow" />
-          </button>
-
-          <button 
-            className="menu-item"
-            onClick={() => setShowWalletModal(true)}
-          >
-            <div className="menu-item-content">
-              <WalletIcon className="menu-item-icon" />
-              <div className="menu-item-text">
-                <span className="menu-item-title">{t('profile.wallet')}</span>
-                <span className="menu-item-subtitle">{t('profile.walletDescription')}</span>
-              </div>
-            </div>
-            <ArrowRightOnRectangleIcon className="menu-item-arrow" />
-          </button>
-
-          <button 
-            className="menu-item"
-            onClick={() => navigate('/reviews')}
-          >
-            <div className="menu-item-content">
-              <StarIcon className="menu-item-icon" />
-              <div className="menu-item-text">
-                <span className="menu-item-title">{t('profile.reviews')}</span>
-                <span className="menu-item-subtitle">{t('profile.reviewsDescription')}</span>
-              </div>
-            </div>
-            <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            <PlusIcon className="create-listing-icon" />
+            Создать объявление
           </button>
         </div>
       </div>
 
-      {/* Меню настроек */}
-      <div className="settings-menu-section">
-        <h2 className="section-title">Общие настройки</h2>
-        <div className="settings-menu">
-          {settingsMenuItems.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={index}
-                className="menu-item"
-                onClick={item.action}
-              >
-                <div className="menu-item-content">
-                  <Icon className="menu-item-icon" />
-                  <div className="menu-item-text">
-                    <span className="menu-item-title">{item.title}</span>
-                    <span className="menu-item-subtitle">{item.subtitle}</span>
-                  </div>
+      {/* Блоки управления и настроек */}
+      <div className="profile-sections">
+        {/* Управление (для продавца) */}
+        <div className="profile-section">
+          <h3 className="section-title">Управление объявлениями</h3>
+          <div className="section-content">
+            <button 
+              className="menu-item"
+              onClick={() => navigate('/my-listings')}
+            >
+              <div className="menu-item-content">
+                <PlusIcon className="menu-item-icon" />
+                <div className="menu-item-text">
+                  <span className="menu-item-title">Мои объявления</span>
+                  <span className="menu-item-subtitle">Управляй своими объявлениями</span>
                 </div>
-                <ArrowRightOnRectangleIcon className="menu-item-arrow" />
-              </button>
-            );
-          })}
+              </div>
+              <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            </button>
+
+            <button 
+              className="menu-item"
+              onClick={() => setShowWalletModal(true)}
+            >
+              <div className="menu-item-content">
+                <WalletIcon className="menu-item-icon" />
+                <div className="menu-item-text">
+                  <span className="menu-item-title">Кошелёк</span>
+                  <span className="menu-item-subtitle">Баланс и пополнение</span>
+                </div>
+              </div>
+              <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            </button>
+
+            <button 
+              className="menu-item"
+              onClick={() => navigate('/reviews')}
+            >
+              <div className="menu-item-content">
+                <StarIcon className="menu-item-icon" />
+                <div className="menu-item-text">
+                  <span className="menu-item-title">Отзывы</span>
+                  <span className="menu-item-subtitle">Просмотр и управление отзывами</span>
+                </div>
+              </div>
+              <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            </button>
+          </div>
         </div>
+
+        {/* Настройки */}
+        <div className="profile-section">
+          <h3 className="section-title">Настройки аккаунта</h3>
+          <div className="section-content">
+            <button 
+              className="menu-item"
+              onClick={() => navigate('/notifications-settings')}
+            >
+              <div className="menu-item-content">
+                <BellIcon className="menu-item-icon" />
+                <div className="menu-item-text">
+                  <span className="menu-item-title">Уведомления</span>
+                  <span className="menu-item-subtitle">Настройка уведомлений</span>
+                </div>
+              </div>
+              <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            </button>
+
+            <button 
+              className="menu-item"
+              onClick={() => alert(t('profile.goToLanguage'))}
+            >
+              <div className="menu-item-content">
+                <LanguageIcon className="menu-item-icon" />
+                <div className="menu-item-text">
+                  <span className="menu-item-title">Смена языка</span>
+                  <span className="menu-item-subtitle">Выбери язык интерфейса</span>
+                </div>
+              </div>
+              <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            </button>
+
+            <button 
+              className="menu-item"
+              onClick={() => navigate('/help-support')}
+            >
+              <div className="menu-item-content">
+                <QuestionMarkCircleIcon className="menu-item-icon" />
+                <div className="menu-item-text">
+                  <span className="menu-item-title">Поддержка</span>
+                  <span className="menu-item-subtitle">Помощь и поддержка</span>
+                </div>
+              </div>
+              <ArrowRightOnRectangleIcon className="menu-item-arrow" />
+            </button>
+          </div>
+        </div>
+
+        {/* Аналитика */}
+        <div className="profile-section full-width">
+          <h3 className="section-title">Аналитика</h3>
+          <div className="analytics-content">
+            <div className="analytics-card">
+              <ChartBarIcon className="analytics-icon" />
+              <div className="analytics-text">
+                <p className="analytics-title">За неделю твои объявления посмотрели {analytics.weeklyViews} раз</p>
+                <p className="analytics-subtitle">Написали {analytics.weeklyMessages} человек</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       </div>
 
-      {/* Кнопка выхода */}
-      <div className="profile-actions">
-        <button className="logout-button" onClick={onLogout}>
-          <ArrowRightOnRectangleIcon className="logout-icon" />
-          <span>{t('profile.logoutFromAccount')}</span>
+      {/* Кнопка выхода внизу */}
+      <div className="profile-footer">
+        <button className="logout-link" onClick={onLogout}>
+          Выйти из аккаунта
         </button>
       </div>
 
