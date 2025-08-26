@@ -32,6 +32,7 @@ interface Chat {
   isOnline: boolean;
   isPinned?: boolean; // Закреплен ли чат
   userLanguage?: 'RU' | 'EN' | 'SR'; // Язык собеседника
+  status?: 'meeting' | 'waiting' | 'success' | 'archive'; // Статус чата
   listing: {
     id: string;
     title: string;
@@ -71,6 +72,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [messageText, setMessageText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'meeting' | 'waiting' | 'success' | 'archive'>('all');
   const [messages, setMessages] = useState<Message[]>([]);
   const [attachments, setAttachments] = useState<string[]>([]);
 
@@ -120,9 +122,31 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   const processedRequestsRef = useRef<Set<string>>(new Set());
   const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
 
+  // Функция для получения языка собеседника с учетом логики определения
+  const getInterlocutorLanguage = (chat: Chat) => {
+    if (chat.userLanguage) {
+      return chat.userLanguage;
+    }
+    
+    // Определяем язык на основе имени собеседника
+    if (chat.name === 'Мария Иванова') {
+      return 'SR';
+    } else if (chat.name === 'Дмитрий Козлов') {
+      return 'EN';
+    } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
+      return 'RU';
+    } else if (chat.name === 'Игорь Сидоров') {
+      return 'RU'; // Игорь Сидоров говорит на русском
+    }
+    
+    // По умолчанию возвращаем текущий язык
+    return currentLanguage;
+  };
+
   // Функция для определения языка собеседника и создания предупреждения
   const getLanguageWarning = (chat: Chat) => {
-    if (!chat.userLanguage || chat.userLanguage === currentLanguage) {
+    const interlocutorLang = getInterlocutorLanguage(chat);
+    if (interlocutorLang === currentLanguage) {
       return null;
     }
 
@@ -132,8 +156,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       'SR': 'сербском'
     };
 
-    const currentLanguageName = languageNames[currentLanguage];
-    const chatLanguageName = languageNames[chat.userLanguage];
+    const chatLanguageName = languageNames[interlocutorLang];
 
     return {
       text: `Собеседник говорит на ${chatLanguageName}`,
@@ -144,6 +167,27 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   // Обработчик клика на предупреждение о языке
   const handleLanguageWarningClick = () => {
     setShowLanguageInfoModal(true);
+  };
+
+  // Обработчик изменения статуса чата
+  const handleStatusChange = (chatId: string, newStatus: 'meeting' | 'waiting' | 'success' | 'archive') => {
+    setChatList(prevChats => {
+      const updatedChats = prevChats.map(chat => 
+        chat.id === chatId 
+          ? { ...chat, status: newStatus }
+          : chat
+      );
+      saveChatsToStorage(updatedChats);
+      return updatedChats;
+    });
+    
+    // Также обновляем selectedChat
+    setSelectedChat(prevSelectedChat => {
+      if (prevSelectedChat && prevSelectedChat.id === chatId) {
+        return { ...prevSelectedChat, status: newStatus };
+      }
+      return prevSelectedChat;
+    });
   };
 
   // Функция для сохранения чатов в localStorage
@@ -161,11 +205,17 @@ const MessagesView: React.FC<MessagesViewProps> = ({
             updatedChat = { ...updatedChat, userLanguage: 'EN' };
           } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
             updatedChat = { ...updatedChat, userLanguage: 'RU' };
+          } else if (chat.name === 'Игорь Сидоров') {
+            updatedChat = { ...updatedChat, userLanguage: 'RU' };
           }
         }
         
-        // Убеждаемся что поле isPinned присутствует
-        return { ...updatedChat, isPinned: updatedChat.isPinned || false };
+        // Убеждаемся что поля isPinned и status присутствуют
+        return { 
+          ...updatedChat, 
+          isPinned: updatedChat.isPinned || false,
+          status: updatedChat.status || undefined
+        };
       });
       
       localStorage.setItem('targ-chats', JSON.stringify(chatsWithLanguage));
@@ -187,6 +237,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       isOnline: true,
       isPinned: true, // Закрепленный чат
       userLanguage: 'RU',
+      status: 'meeting', // Договорились о встрече
       listing: {
         id: '1',
         title: 'iPhone 14 Pro Max',
@@ -206,6 +257,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       unreadCount: 0,
       isOnline: false,
       userLanguage: 'SR',
+      status: 'success', // Успешная сделка
       listing: {
         id: '8',
         title: '2-комнатная квартира в центре',
@@ -225,6 +277,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       unreadCount: 1,
       isOnline: true,
       userLanguage: 'EN',
+      status: 'waiting', // Жду ответа
       listing: {
         id: '3',
         title: 'BMW X5 2020',
@@ -244,6 +297,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       unreadCount: 3,
       isOnline: false,
       userLanguage: 'RU',
+      status: 'archive', // Архив
       listing: {
         id: '4',
         title: 'MacBook Pro 2023',
@@ -276,12 +330,12 @@ const MessagesView: React.FC<MessagesViewProps> = ({
     },
     {
       id: '6',
-      name: 'Мария Иванова',
+      name: 'Игорь Сидоров',
       lastMessage: 'Комод еще доступен?',
       timestamp: 'Вт',
       unreadCount: 2,
       isOnline: true,
-      userLanguage: 'SR',
+      userLanguage: undefined, // Тестовый чат без установленного языка
       listing: {
         id: '2',
         title: 'Винтажный комод с зеркалом',
@@ -312,6 +366,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
             } else if (chat.name === 'Дмитрий Козлов') {
               return { ...chat, userLanguage: 'EN' };
             } else if (chat.name === 'Алексей Петров' || chat.name === 'Анна Волкова') {
+              return { ...chat, userLanguage: 'RU' };
+            } else if (chat.name === 'Игорь Сидоров') {
               return { ...chat, userLanguage: 'RU' };
             }
           }
@@ -383,8 +439,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
           title: decodeURIComponent(title),
           price: price || '0',
           currency: (currency as 'EUR' | 'RSD') || 'EUR',
-          city: city || t('favorites.unknown'),
-          category: category || t('favorites.listing'),
+                  city: city || t('messages.unknown'),
+        category: category || t('messages.listing'),
           sellerName: decodeURIComponent(sellerName),
           isCompany: isCompany === 'true',
           imageName: imageName || '',
@@ -718,12 +774,23 @@ const MessagesView: React.FC<MessagesViewProps> = ({
   }, []);
 
   const filteredChats = useMemo(() => {
-    if (!searchQuery.trim()) return chatList;
-    return chatList.filter((chat: Chat) => 
-      chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      chat.listing.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [chatList, searchQuery]);
+    let filtered = chatList;
+    
+    // Фильтр по поиску
+    if (searchQuery.trim()) {
+      filtered = filtered.filter((chat: Chat) => 
+        chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        chat.listing.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    // Фильтр по статусу
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter((chat: Chat) => chat.status === statusFilter);
+    }
+    
+    return filtered;
+  }, [chatList, searchQuery, statusFilter]);
 
   // Получаем уникальные категории из чатов для фильтров
   const chatCategories = useMemo(() => {
@@ -989,16 +1056,55 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       {/* Боковая панель с чатами */}
       <div className={`sidebar ${!showSidebar ? 'hidden' : ''}`}>
         <div className="sidebar-header">
-          <h1 className="sidebar-title">{t('favorites.messages')}</h1>
+          <h1 className="sidebar-title">{t('messages.title')}</h1>
           <div className="search-container">
             <MagnifyingGlassIcon className="search-icon" />
             <input
               type="text"
-              placeholder={t('favorites.searchChats')}
+              placeholder={t('messages.searchChats')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"
             />
+          </div>
+          
+          {/* Фильтры по статусу */}
+          <div className="status-filters">
+            <button 
+              className={`status-filter-button ${statusFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('all')}
+            >
+              <span className="status-dot all"></span>
+              <span>Все</span>
+            </button>
+            <button 
+              className={`status-filter-button ${statusFilter === 'meeting' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('meeting')}
+            >
+              <span className="status-dot meeting"></span>
+              <span>{t('messages.meetingArranged')}</span>
+            </button>
+            <button 
+              className={`status-filter-button ${statusFilter === 'waiting' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('waiting')}
+            >
+              <span className="status-dot waiting"></span>
+              <span>{t('messages.waitingResponse')}</span>
+            </button>
+            <button 
+              className={`status-filter-button ${statusFilter === 'success' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('success')}
+            >
+              <span className="status-dot success"></span>
+              <span>{t('messages.successfulDeal')}</span>
+            </button>
+            <button 
+              className={`status-filter-button ${statusFilter === 'archive' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('archive')}
+            >
+              <span className="status-dot archive"></span>
+              <span>{t('messages.archive')}</span>
+            </button>
           </div>
         </div>
 
@@ -1095,62 +1201,9 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                 <div className="chat-details">
                   <h2 className="chat-name">{selectedChat.name}</h2>
                   <span className="chat-status">
-                    {selectedChat.isOnline ? t('favorites.online') : t('favorites.offline')}
+                    {selectedChat.isOnline ? t('messages.online') : t('messages.offline')}
                   </span>
                 </div>
-              </div>
-              
-              {/* Предупреждение о языке собеседника */}
-              {(() => {
-                const warning = getLanguageWarning(selectedChat);
-                return warning ? (
-                  <div className="language-warning" onClick={handleLanguageWarningClick}>
-                    <div className="language-warning-icon">🌐</div>
-                    <span className="language-warning-text">
-                      {warning.text}
-                    </span>
-                  </div>
-                ) : null;
-              })()}
-              
-              {/* Превью объявления */}
-              <div 
-                className="chat-listing-preview clickable"
-                onClick={handleListingPreviewClick}
-                title={t('favorites.clickToViewListing')}
-              >
-                <div className="listing-preview-image">
-                  {selectedChat.listing.images && selectedChat.listing.images.length > 0 ? (
-                    <img 
-                      src={selectedChat.listing.images[0]?.src || ''} 
-                      alt={selectedChat.listing.images[0]?.alt || selectedChat.listing.title}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                  ) : selectedChat.listing.imageName ? (
-                    <img 
-                      src={`/images/${selectedChat.listing.imageName}.jpg`} 
-                      alt={selectedChat.listing.title}
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                  ) : null}
-                  <div className={`listing-preview-placeholder ${(selectedChat.listing.images && selectedChat.listing.images.length > 0) || selectedChat.listing.imageName ? 'hidden' : ''}`}>
-                    <div className="placeholder-icon">📷</div>
-                  </div>
-                </div>
-                <div className="listing-preview-info">
-                  <h3 className="listing-preview-title">{selectedChat.listing.title}</h3>
-                  <span className="listing-preview-price">
-                    {selectedChat.listing.price} {selectedChat.listing.currency}
-                    {(selectedChat.listing.category === 'work' || selectedChat.listing.category === 'vacancies' || selectedChat.listing.subcategory === 'vacancies' || selectedChat.listing.subcategory === 'rent') && ' / месяц'}
-                  </span>
-                </div>
-                <div className="listing-preview-arrow">→</div>
               </div>
               
               {/* Кнопки действий */}
@@ -1173,7 +1226,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                           <div className="icon-container">
                             <TrashIcon className="menu-item-icon" />
                           </div>
-                          <span className="menu-item-text">{t('favorites.deleteDialog')}</span>
+                          <span className="menu-item-text">{t('messages.deleteDialog')}</span>
                         </div>
                       </button>
                       <button 
@@ -1184,7 +1237,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                           <div className="icon-container">
                             <NoSymbolIcon className="menu-item-icon" />
                           </div>
-                          <span className="menu-item-text">{t('favorites.blockUser')}</span>
+                          <span className="menu-item-text">{t('messages.blockUser')}</span>
                         </div>
                       </button>
                       <button 
@@ -1195,7 +1248,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                           <div className="icon-container">
                             <ExclamationTriangleIcon className="menu-item-icon" />
                           </div>
-                          <span className="menu-item-text">{t('favorites.reportUser')}</span>
+                          <span className="menu-item-text">{t('messages.reportUser')}</span>
                         </div>
                       </button>
                     </div>
@@ -1218,8 +1271,8 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                           <div key={index} className="attachment-image">
                             <img 
                               src={attachment} 
-                              alt={t('favorites.attachment')}
-                              onClick={() => handleImageClick(attachment, t('favorites.attachment'))}
+                              alt={t('messages.attachment')}
+                              onClick={() => handleImageClick(attachment, t('messages.attachment'))}
                               style={{ cursor: 'pointer' }}
                             />
                           </div>
@@ -1260,7 +1313,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                     <div className="attachments-preview">
                       {attachments.map((attachment, index) => (
                         <div key={index} className="attachment-preview">
-                          <img src={attachment} alt={t('favorites.preview')} />
+                          <img src={attachment} alt={t('messages.preview')} />
                           <button 
                             className="remove-attachment"
                             onClick={() => removeAttachment(index)}
@@ -1274,7 +1327,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
                   <textarea
                     value={messageText}
                     onChange={(e) => setMessageText(e.target.value)}
-                    placeholder={t('favorites.enterMessage')}
+                    placeholder={t('messages.enterMessage')}
                     className="message-input"
                     onKeyPress={handleKeyPress}
                     rows={1}
@@ -1309,52 +1362,163 @@ const MessagesView: React.FC<MessagesViewProps> = ({
             </div>
           </>
         ) : (
-          // Пустое состояние
           <div className="empty-chat">
-            <div className="empty-chat-content">
-              <div className="empty-chat-icon">🔍</div>
-              
-              {/* Кнопки категорий в строчку */}
-              {chatCategories.length > 0 && (
-                <div className="category-filters-row">
-                  <p className="category-filters-hint">Выбери категорию, чтобы увидеть сообщения по ней</p>
-                  <div className="category-filters-buttons">
-                    {/* Кнопка "Все сообщения" всегда первая */}
+                      <div className="empty-chat-content">
+            
+            {/* Кнопки категорий в строчку */}
+            {chatCategories.length > 0 && (
+              <div className="category-filters-row">
+                <p className="category-filters-hint">Выбери категорию, чтобы увидеть сообщения по ней</p>
+                <div className="category-filters-buttons">
+                  {/* Кнопка "Все сообщения" всегда первая */}
+                  <button
+                    className={`website-category-button ${selectedCategory === null ? 'active' : ''}`}
+                    onClick={() => handleCategoryClick(null)}
+                  >
+                    <span className="website-category-emoji">💬</span>
+                    <span>Все сообщения</span>
+                  </button>
+                  
+                  {/* Остальные категории */}
+                  {chatCategories.map((category, index) => (
                     <button
-                      className={`website-category-button ${selectedCategory === null ? 'active' : ''}`}
-                      onClick={() => handleCategoryClick(null)}
+                      key={category}
+                      className={`website-category-button ${selectedCategory === category ? 'active' : ''}`}
+                      onClick={() => handleCategoryClick(category)}
                     >
-                      <span className="website-category-emoji">💬</span>
-                      <span>Все сообщения</span>
+                      <span className="website-category-emoji">
+                        {getCategoryIcon(category)}
+                      </span>
+                      <span>{getCategoryName(category)}</span>
                     </button>
-                    
-                    {/* Остальные категории */}
-                    {chatCategories.map((category, index) => (
-                      <button
-                        key={category}
-                        className={`website-category-button ${selectedCategory === category ? 'active' : ''}`}
-                        onClick={() => handleCategoryClick(category)}
-                      >
-                        <span className="website-category-emoji">
-                          {getCategoryIcon(category)}
-                        </span>
-                        <span>{getCategoryName(category)}</span>
-                      </button>
-                    ))}
-                  </div>
+                  ))}
                 </div>
-              )}
-              
-              {/* Если нет категорий, показываем подсказку */}
-              {chatCategories.length === 0 && (
-                <div className="no-categories-hint">
-                  <p>Нет активных диалогов</p>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+            
+            {/* Если нет категорий, показываем подсказку */}
+            {chatCategories.length === 0 && (
+              <div className="no-categories-hint">
+                <p>Нет активных диалогов</p>
+              </div>
+            )}
+          </div>
           </div>
         )}
       </div>
+
+      {/* Правая панель с информацией об объявлении и языке */}
+      {selectedChat && (
+        <div className="chat-info-sidebar">
+          {/* Превью объявления */}
+          <div className="listing-preview-section">
+            <h3 className="section-title">{t('messages.listingInfo')}</h3>
+            <div 
+              className="listing-preview-card clickable"
+              onClick={handleListingPreviewClick}
+                              title={t('messages.clickToViewListing')}
+            >
+              <div className="listing-preview-image-large">
+                {selectedChat.listing.images && selectedChat.listing.images.length > 0 ? (
+                  <img 
+                    src={selectedChat.listing.images[0]?.src || ''} 
+                    alt={selectedChat.listing.images[0]?.alt || selectedChat.listing.title}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : selectedChat.listing.imageName ? (
+                  <img 
+                    src={`/images/${selectedChat.listing.imageName}.jpg`} 
+                    alt={selectedChat.listing.title}
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : null}
+                <div className={`listing-preview-placeholder ${(selectedChat.listing.images && selectedChat.listing.images.length > 0) || selectedChat.listing.imageName ? 'hidden' : ''}`}>
+                  <div className="placeholder-icon">📷</div>
+                </div>
+              </div>
+              <div className="listing-preview-details">
+                <h4 className="listing-preview-title-large">{selectedChat.listing.title}</h4>
+                <div className="listing-preview-price-large">
+                  <span className="price-amount">{selectedChat.listing.price} {selectedChat.listing.currency}</span>
+                  {(selectedChat.listing.category === 'work' || selectedChat.listing.category === 'vacancies' || selectedChat.listing.subcategory === 'vacancies' || selectedChat.listing.subcategory === 'rent') && (
+                    <span className="price-period"> / месяц</span>
+                  )}
+                </div>
+                <div className="listing-preview-category">
+                  {t(`home.${selectedChat.listing.category}`) || selectedChat.listing.category} {selectedChat.listing.subcategory && `• ${t(`home.${selectedChat.listing.subcategory}`) || selectedChat.listing.subcategory}`}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Информация о языке собеседника */}
+          <div className="language-info-section">
+            <h3 className="section-title">{t('messages.interlocutorLanguage')}</h3>
+            <div className="language-info-card clickable" onClick={handleLanguageWarningClick}>
+              <div className="language-flag">
+                {getInterlocutorLanguage(selectedChat) === 'RU' && '🇷🇺'}
+                {getInterlocutorLanguage(selectedChat) === 'EN' && '🇺🇸'}
+                {getInterlocutorLanguage(selectedChat) === 'SR' && '🇷🇸'}
+              </div>
+              <div className="language-details">
+                <span className="language-name">
+                  {getInterlocutorLanguage(selectedChat) === 'RU' && 'Русский'}
+                  {getInterlocutorLanguage(selectedChat) === 'EN' && 'English'}
+                  {getInterlocutorLanguage(selectedChat) === 'SR' && 'Српски'}
+                </span>
+                                  <span className="language-status">
+                    {getInterlocutorLanguage(selectedChat) === currentLanguage ? t('messages.sameLanguage') : t('messages.differentLanguage')}
+                  </span>
+              </div>
+            </div>
+
+            {/* Секция статуса чата */}
+            <div className="chat-status-section">
+              <h3 className="section-title">{t('messages.chatStatus')}</h3>
+              <div className="status-buttons">
+                <button 
+                  className={`status-button ${selectedChat.status === 'meeting' ? 'active' : ''}`}
+                  onClick={() => handleStatusChange(selectedChat.id, 'meeting')}
+                >
+                  <span className="status-dot meeting"></span>
+                  <span>{t('messages.meetingArranged')}</span>
+                </button>
+                
+                <button 
+                  className={`status-button ${selectedChat.status === 'waiting' ? 'active' : ''}`}
+                  onClick={() => handleStatusChange(selectedChat.id, 'waiting')}
+                >
+                  <span className="status-dot waiting"></span>
+                  <span>{t('messages.waitingResponse')}</span>
+                </button>
+                
+                <button 
+                  className={`status-button ${selectedChat.status === 'success' ? 'active' : ''}`}
+                  onClick={() => handleStatusChange(selectedChat.id, 'success')}
+                >
+                  <span className="status-dot success"></span>
+                  <span>{t('messages.successfulDeal')}</span>
+                </button>
+                
+                <button 
+                  className={`status-button ${selectedChat.status === 'archive' ? 'active' : ''}`}
+                  onClick={() => handleStatusChange(selectedChat.id, 'archive')}
+                >
+                  <span className="status-dot archive"></span>
+                  <span>{t('messages.archive')}</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
 
       {/* Кастомные модальные окна */}
       
@@ -1363,7 +1527,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
         <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">{t('favorites.deleteDialog')}</h3>
+              <h3 className="modal-title">{t('messages.deleteDialog')}</h3>
               <button 
                 className="modal-close"
                 onClick={() => setShowDeleteModal(false)}
@@ -1372,7 +1536,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
               </button>
             </div>
             <div className="modal-body">
-              <p className="modal-message">{t('favorites.confirmDeleteDialog')}</p>
+              <p className="modal-message">{t('messages.confirmDeleteDialog')}</p>
             </div>
             <div className="modal-actions">
               <button 
@@ -1564,7 +1728,7 @@ const MessagesView: React.FC<MessagesViewProps> = ({
       <LanguageInfoModal
         isOpen={showLanguageInfoModal}
         onClose={() => setShowLanguageInfoModal(false)}
-        interlocutorLanguage={selectedChat?.userLanguage || 'RU'}
+        interlocutorLanguage={selectedChat ? getInterlocutorLanguage(selectedChat) : 'RU'}
         currentLanguage={currentLanguage}
       />
     </div>

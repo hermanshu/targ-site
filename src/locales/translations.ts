@@ -350,6 +350,52 @@ export interface Translations {
     offline: string;
     messagesUnavailable: string;
     signInToChat: string;
+    searchChats: string;
+    selectChat: string;
+    selectChatDescription: string;
+    clickToViewListing: string;
+    deleteDialog: string;
+    reportUser: string;
+    attachment: string;
+    preview: string;
+    enterMessage: string;
+    confirmDeleteDialog: string;
+    delete: string;
+    block: string;
+    cancel: string;
+    send: string;
+    reportSent: string;
+    dialogDeleted: string;
+    userBlocked: string;
+    blockUser: string;
+    confirmBlockUser: string;
+    selectReportReason: string;
+    reportSpam: string;
+    reportSpamDesc: string;
+    reportInappropriate: string;
+    reportInappropriateDesc: string;
+    reportHarassment: string;
+    reportHarassmentDesc: string;
+    reportFraud: string;
+    reportFraudDesc: string;
+    reportOther: string;
+    reportOtherDesc: string;
+    enterReportDetails: string;
+    listingInfo: string;
+    interlocutorLanguage: string;
+    sameLanguage: string;
+    differentLanguage: string;
+    languageWarning: string;
+    chatStatus: string;
+    meetingArranged: string;
+    waitingResponse: string;
+    successfulDeal: string;
+    archive: string;
+    unknown: string;
+    listing: string;
+    listings: string;
+    notSpecified: string;
+    chatForListing: string;
   };
 
   // Избранное
@@ -410,6 +456,16 @@ export interface Translations {
     confirmDeleteDialog: string;
     delete: string;
     block: string;
+    listingInfo: string;
+    interlocutorLanguage: string;
+    sameLanguage: string;
+    differentLanguage: string;
+    languageWarning: string;
+    chatStatus: string;
+    meetingArranged: string;
+    waitingResponse: string;
+    successfulDeal: string;
+    archive: string;
   };
 
   // Мои объявления
@@ -962,13 +1018,59 @@ const ruTranslations: Translations = {
 
     messages: {
       title: 'Сообщения',
-    noMessages: 'Пока нет сообщений',
-    startChat: 'Начать разговор',
+      noMessages: 'Пока нет сообщений',
+      startChat: 'Начать разговор',
       typeMessage: 'Введите сообщение...',
       online: 'В сети',
-    offline: 'Не в сети',
+      offline: 'Не в сети',
       messagesUnavailable: 'Сообщения недоступны',
-    signInToChat: 'Войдите, чтобы общаться',
+      signInToChat: 'Войдите, чтобы общаться',
+      searchChats: 'Поиск чатов...',
+      selectChat: 'Выберите чат',
+      selectChatDescription: 'Выберите чат из списка слева, чтобы начать общение',
+      clickToViewListing: 'Нажмите, чтобы просмотреть объявление',
+      deleteDialog: 'Удалить диалог',
+      reportUser: 'Пожаловаться на пользователя',
+      attachment: 'Вложение',
+      preview: 'Предварительный просмотр',
+      enterMessage: 'Введите сообщение...',
+      confirmDeleteDialog: 'Ты уверен, что хочешь удалить этот диалог?',
+      delete: 'Удалить',
+      block: 'Заблокировать',
+      cancel: 'Отмена',
+      send: 'Отправить',
+      reportSent: 'Жалоба отправлена',
+      dialogDeleted: 'Диалог удален',
+      userBlocked: 'Пользователь заблокирован',
+      blockUser: 'Заблокировать пользователя',
+      confirmBlockUser: 'Ты уверен, что хочешь заблокировать этого пользователя?',
+      selectReportReason: 'Выберите причину жалобы',
+      reportSpam: 'Спам',
+      reportSpamDesc: 'Нежелательная реклама или рассылка',
+      reportInappropriate: 'Неприемлемый контент',
+      reportInappropriateDesc: 'Оскорбительный или неприличный контент',
+      reportHarassment: 'Домогательства',
+      reportHarassmentDesc: 'Угрозы или преследование',
+      reportFraud: 'Мошенничество',
+      reportFraudDesc: 'Обман или попытка мошенничества',
+      reportOther: 'Другое',
+      reportOtherDesc: 'Другие причины для жалобы',
+      enterReportDetails: 'Опишите подробности жалобы...',
+      listingInfo: 'Информация об объявлении',
+      interlocutorLanguage: 'Язык собеседника',
+      sameLanguage: 'Вы с собеседником говорите на одном языке',
+      differentLanguage: 'Другой язык',
+      languageWarning: 'Предупреждение о языке',
+      chatStatus: 'Статус чата',
+      meetingArranged: 'Договорились о встрече',
+      waitingResponse: 'Жду ответа',
+      successfulDeal: 'Успешная сделка',
+      archive: 'Архив',
+      unknown: 'Неизвестно',
+      listing: 'Объявление',
+      listings: 'Объявления',
+      notSpecified: 'Не указано',
+      chatForListing: 'Чат для объявления',
     },
 
     favorites: {
@@ -1028,6 +1130,16 @@ const ruTranslations: Translations = {
     confirmDeleteDialog: 'Ты уверен, что хочешь удалить этот диалог?',
       delete: 'Удалить',
       block: 'Заблокировать',
+      listingInfo: 'Информация об объявлении',
+      interlocutorLanguage: 'Язык собеседника',
+      sameLanguage: 'Тот же язык',
+      differentLanguage: 'Другой язык',
+      languageWarning: 'Предупреждение о языке',
+      chatStatus: 'Статус чата',
+      meetingArranged: 'Договорились о встрече',
+      waitingResponse: 'Жду ответа',
+      successfulDeal: 'Успешная сделка',
+      archive: 'Архив',
   },
 
         myListings: {
@@ -1274,7 +1386,19 @@ const enTranslations: Translations = {
   home: ruTranslations.home,
   profile: ruTranslations.profile,
   messages: ruTranslations.messages,
-  favorites: ruTranslations.favorites,
+  favorites: {
+    ...ruTranslations.favorites,
+    listingInfo: 'Listing Information',
+    interlocutorLanguage: 'Interlocutor Language',
+    sameLanguage: 'Same language',
+    differentLanguage: 'Different language',
+    languageWarning: 'Language Warning',
+    chatStatus: 'Chat Status',
+    meetingArranged: 'Meeting Arranged',
+    waitingResponse: 'Waiting for Response',
+    successfulDeal: 'Successful Deal',
+    archive: 'Archive',
+  },
   myListings: ruTranslations.myListings,
   addListing: ruTranslations.addListing,
   listingDetail: ruTranslations.listingDetail,
@@ -1311,7 +1435,19 @@ const srTranslations: Translations = {
   home: ruTranslations.home,
   profile: ruTranslations.profile,
   messages: ruTranslations.messages,
-  favorites: ruTranslations.favorites,
+  favorites: {
+    ...ruTranslations.favorites,
+    listingInfo: 'Информације о огласу',
+    interlocutorLanguage: 'Језик саговорника',
+    sameLanguage: 'Исти језик',
+    differentLanguage: 'Различит језик',
+    languageWarning: 'Упозорење о језику',
+    chatStatus: 'Статус ћаскања',
+    meetingArranged: 'Договорен састанак',
+    waitingResponse: 'Чекам одговор',
+    successfulDeal: 'Успешан посао',
+    archive: 'Архива',
+  },
   myListings: ruTranslations.myListings,
   addListing: ruTranslations.addListing,
   listingDetail: ruTranslations.listingDetail,
