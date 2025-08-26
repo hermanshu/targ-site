@@ -40,12 +40,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showWalletModal, setShowWalletModal] = useState(false);
 
-  // Моковые данные для демонстрации
-  const userStats = {
-    listings: 10,
-    sales: 5,
-    responseTime: '10 мин'
-  };
+
 
 
 
@@ -240,20 +235,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
               </div>
             </div>
 
-            {/* Мини-метрики */}
-            <div className="profile-metrics">
-              <span className="metric">
-                {userStats.listings} объявлений
-              </span>
-              <span className="metric-separator">•</span>
-              <span className="metric">
-                {userStats.sales} продаж
-              </span>
-              <span className="metric-separator">•</span>
-              <span className="metric">
-                отвечает за {userStats.responseTime}
-              </span>
-            </div>
+
           </div>
         </div>
 

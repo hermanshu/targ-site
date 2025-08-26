@@ -13,6 +13,12 @@ interface DesktopListingsGridProps {
   isLoading: boolean;
   hasFilters?: boolean;
   pagination?: React.ReactNode;
+  onMoveToFolder?: (listing: Listing, folderId?: string) => void;
+  // Новые пропсы для работы с папками
+  folders?: Array<{ id: string; name: string; color: string }>;
+  currentFolderId?: string;
+  showFolderSelector?: boolean;
+  getCurrentFolderId?: (listing: Listing) => string | undefined;
 }
 
 const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
@@ -24,7 +30,12 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
   onLoadMore,
   isLoading,
   hasFilters = false,
-  pagination
+  pagination,
+  onMoveToFolder,
+  folders = [],
+  currentFolderId,
+  showFolderSelector = false,
+  getCurrentFolderId
 }) => {
   const [containerWidth, setContainerWidth] = useState(0);
   const { t } = useTranslation();
@@ -140,7 +151,13 @@ const DesktopListingsGrid: React.FC<DesktopListingsGridProps> = ({
               onFavoriteToggle={onFavoriteToggle}
               isFavorite={isFavorite(listing.id)}
               onCardClick={onCardClick}
+              onMoveToFolder={onMoveToFolder}
+              folders={folders}
+              currentFolderId={getCurrentFolderId ? getCurrentFolderId(listing) : undefined}
+              showFolderSelector={showFolderSelector}
+              key={`${listing.id}-${getCurrentFolderId ? getCurrentFolderId(listing) : 'no-folder'}`}
             />
+
           </div>
         ))}
       </div>

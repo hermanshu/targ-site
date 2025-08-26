@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { HeartIcon } from '@heroicons/react/24/outline';
+import React, { useState, useEffect, useRef } from 'react';
+import { HeartIcon, FolderIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { 
   HomeIcon, 
@@ -29,15 +29,26 @@ interface ListingCardProps {
   onFavoriteToggle: (listing: Listing) => void;
   isFavorite: boolean;
   onCardClick: (listing: Listing) => void;
+  onMoveToFolder?: (listing: Listing, folderId?: string) => void;
+  // Новые пропсы для работы с папками
+  folders?: Array<{ id: string; name: string; color: string }>;
+  currentFolderId?: string;
+  showFolderSelector?: boolean;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({ 
   listing, 
   onFavoriteToggle, 
   isFavorite, 
-  onCardClick
+  onCardClick,
+  onMoveToFolder,
+  folders = [],
+  currentFolderId,
+  showFolderSelector = false
 }) => {
   const [animateHeart, setAnimateHeart] = useState(false);
+  const [showFolderDropdown, setShowFolderDropdown] = useState(false);
+  const folderSelectorRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
   // Используем хук для правильной сборки изображений
@@ -45,6 +56,31 @@ const ListingCard: React.FC<ListingCardProps> = ({
     images: listing.images, 
     imageName: listing.imageName 
   });
+
+  // Обработка кликов вне выпадающего списка и прокрутки
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (folderSelectorRef.current && !folderSelectorRef.current.contains(event.target as Node)) {
+        setShowFolderDropdown(false);
+      }
+    };
+
+    const handleScroll = () => {
+      setShowFolderDropdown(false);
+    };
+
+    if (showFolderDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('resize', handleScroll);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [showFolderDropdown]);
 
 
 
@@ -55,6 +91,32 @@ const ListingCard: React.FC<ListingCardProps> = ({
     setAnimateHeart(true);
     onFavoriteToggle(listing);
     setTimeout(() => setAnimateHeart(false), 350);
+  };
+
+
+
+  const handleFolderSelect = (folderId: string) => {
+    if (onMoveToFolder) {
+      onMoveToFolder(listing, folderId);
+    }
+    setShowFolderDropdown(false);
+  };
+
+  // Обновляем отображение текущей папки при изменении currentFolderId
+  useEffect(() => {
+    // Принудительно обновляем компонент при изменении currentFolderId
+  }, [currentFolderId]);
+
+  const getCurrentFolderName = () => {
+    if (!currentFolderId || currentFolderId === '') return t('favorites.allFavorites');
+    const folder = folders.find(f => f.id === currentFolderId);
+    return folder?.name || t('favorites.allFavorites');
+  };
+
+  const getCurrentFolderColor = () => {
+    if (!currentFolderId || currentFolderId === '') return '#6b7280';
+    const folder = folders.find(f => f.id === currentFolderId);
+    return folder?.color || '#6b7280';
   };
 
   const getCategoryIcon = (category: string) => {
@@ -85,7 +147,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
   return (
     <div 
-      className="listing-card"
+      className={`listing-card ${showFolderDropdown ? 'has-open-dropdown' : ''}`}
       onClick={() => onCardClick(listing)}
     >
       {/* Фото с бейджем категории */}
@@ -134,19 +196,22 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
 
 
-        {/* Кнопка избранного поверх изображения */}
-        <button 
-          className={`favorite-button ${isFavorite ? 'favorite-active' : ''}`}
-          onClick={handleFavoriteClick}
-        >
-          {isFavorite ? (
-            <HeartIconSolid 
-              className={`heart-icon ${animateHeart ? 'heart-animate' : ''}`}
-            />
-          ) : (
-            <HeartIcon className="heart-icon" />
-          )}
-        </button>
+        {/* Кнопки действий поверх изображения */}
+        <div className="action-buttons">
+          {/* Кнопка избранного */}
+          <button 
+            className={`favorite-button ${isFavorite ? 'favorite-active' : ''}`}
+            onClick={handleFavoriteClick}
+          >
+            {isFavorite ? (
+              <HeartIconSolid 
+                className={`heart-icon ${animateHeart ? 'heart-animate' : ''}`}
+              />
+            ) : (
+              <HeartIcon className="heart-icon" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Плашка с ценой - теперь отдельно под изображением */}
@@ -167,7 +232,95 @@ const ListingCard: React.FC<ListingCardProps> = ({
           <span className="location-text">{listing.city}</span>
         </div>
         
-
+        {/* Выпадающий список папок */}
+        {showFolderSelector && folders.length > 0 && (
+          <div 
+            ref={folderSelectorRef}
+            className="folder-selector-bottom"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <button 
+              className={`folder-selector-button-bottom ${currentFolderId && currentFolderId !== '' ? 'has-active-folder' : ''}`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowFolderDropdown(!showFolderDropdown);
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              title={t('favorites.moveToFolder')}
+            >
+              <div 
+                className="folder-color-indicator"
+                style={{ backgroundColor: getCurrentFolderColor() }}
+              />
+              <span className="folder-selector-text">{getCurrentFolderName()}</span>
+              <ChevronDownIcon className="folder-chevron-icon" />
+            </button>
+            
+            {showFolderDropdown && (
+              <div 
+                className="folder-dropdown-bottom"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <div className="folder-dropdown-list">
+                  <button
+                    className="folder-dropdown-item"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleFolderSelect('');
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
+                  >
+                    <span className="folder-dropdown-text">{t('favorites.allFavorites')}</span>
+                  </button>
+                  
+                                      {folders.map(folder => (
+                      <button
+                        key={folder.id}
+                        className="folder-dropdown-item"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleFolderSelect(folder.id);
+                        }}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                        }}
+                      >
+                      <div 
+                        className="folder-dropdown-color"
+                        style={{ backgroundColor: folder.color }}
+                      />
+                      <span className="folder-dropdown-text">{folder.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

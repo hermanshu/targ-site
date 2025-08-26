@@ -406,6 +406,46 @@ export interface Translations {
     addToFavorites: string;
     removeFromFavorites: string;
     searchFavorites: string;
+    filterByCategory: string;
+    allCategories: string;
+    shareFavorites: string;
+    shareWithFriend: string;
+    shareDescription: string;
+    shareLink: string;
+    copyLink: string;
+    linkCopied: string;
+    shareViaWhatsApp: string;
+    shareViaTelegram: string;
+    shareViaEmail: string;
+          noItemsInCategory: string;
+      clearFilters: string;
+      // Папки
+      folders: string;
+      createFolder: string;
+      folderName: string;
+      folderDescription: string;
+      folderColor: string;
+      addToFolder: string;
+      moveToFolder: string;
+      removeFromFolder: string;
+      deleteFolder: string;
+      renameFolder: string;
+      shareFolder: string;
+      makePublic: string;
+      makePrivate: string;
+      folderSettings: string;
+      folderEmpty: string;
+      folderEmptyDescription: string;
+          selectFolder: string;
+    noFolders: string;
+    createFirstFolder: string;
+    allFavorites: string;
+      folderCreated: string;
+      folderDeleted: string;
+      folderRenamed: string;
+      folderShared: string;
+      confirmDeleteFolder: string;
+      confirmDeleteFolderDescription: string;
     searchChats: string;
     favoritesUnavailable: string;
     signInToAccessFavorites: string;
@@ -1075,11 +1115,51 @@ const ruTranslations: Translations = {
 
     favorites: {
       title: 'Избранное',
-    noFavorites: 'Пока нет избранного',
-    noFavoritesDescription: 'Добавляйте объявления в избранное, нажимая на иконку сердца',
+      noFavorites: 'Пока нет избранного',
+      noFavoritesDescription: 'Добавляйте объявления в избранное, нажимая на иконку сердца',
       addToFavorites: 'Добавить в избранное',
       removeFromFavorites: 'Удалить из избранного',
-    searchFavorites: 'Поиск в избранном...',
+      searchFavorites: 'Поиск в избранном...',
+      filterByCategory: 'Фильтр по категории',
+      allCategories: 'Все категории',
+      shareFavorites: 'Поделиться избранным',
+      shareWithFriend: 'Поделиться с другом',
+      shareDescription: 'Отправь ссылку на своё избранное другу или партнёру',
+      shareLink: 'Ссылка на избранное',
+      copyLink: 'Скопировать ссылку',
+      linkCopied: 'Ссылка скопирована!',
+      shareViaWhatsApp: 'Поделиться через WhatsApp',
+      shareViaTelegram: 'Поделиться через Telegram',
+      shareViaEmail: 'Поделиться по email',
+      noItemsInCategory: 'В этой категории нет избранных объявлений',
+      clearFilters: 'Очистить фильтры',
+      // Папки
+      folders: 'Папки',
+      createFolder: 'Создать папку',
+      folderName: 'Название папки',
+      folderDescription: 'Описание папки',
+      folderColor: 'Цвет папки',
+      addToFolder: 'Добавить в папку',
+      moveToFolder: 'Переместить в папку',
+      removeFromFolder: 'Убрать из папки',
+      deleteFolder: 'Удалить папку',
+      renameFolder: 'Переименовать папку',
+      shareFolder: 'Поделиться папкой',
+      makePublic: 'Сделать публичной',
+      makePrivate: 'Сделать приватной',
+      folderSettings: 'Настройки папки',
+      folderEmpty: 'Папка пуста',
+      folderEmptyDescription: 'Добавь объявления в эту папку',
+      selectFolder: 'Выбрать папку',
+      noFolders: 'Нет папок',
+      createFirstFolder: 'Создай первую папку',
+      allFavorites: 'Все избранное',
+      folderCreated: 'Папка создана',
+      folderDeleted: 'Папка удалена',
+      folderRenamed: 'Папка переименована',
+      folderShared: 'Папка доступна для шаринга',
+      confirmDeleteFolder: 'Удалить папку?',
+      confirmDeleteFolderDescription: 'Все объявления из папки будут перемещены в общее избранное',
     searchChats: 'Поиск чатов...',
       favoritesUnavailable: 'Избранное недоступно',
     signInToAccessFavorites: 'Войдите, чтобы получить доступ к избранному',

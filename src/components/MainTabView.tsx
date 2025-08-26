@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { HomeIcon, PlusIcon, HeartIcon, ChatBubbleLeftRightIcon, UserIcon, GlobeAltIcon } from '@heroicons/react/24/outline';
 import { HomeIcon as HomeIconSolid, PlusIcon as PlusIconSolid, HeartIcon as HeartIconSolid, ChatBubbleLeftRightIcon as ChatIconSolid, UserIcon as UserIconSolid } from '@heroicons/react/24/solid';
 import WebsiteAnnouncementsView from './WebsiteAnnouncementsView';
@@ -12,6 +12,8 @@ import MessagesView from './MessagesView';
 import MyListingsView from './MyListingsView';
 import AddListingView from './AddListingView';
 import FavoritesView from './FavoritesView';
+import SharedFavoritesView from './SharedFavoritesView';
+import SharedFolderView from './SharedFolderView';
 import { ListingPage } from './listing/ListingPage';
 import NotificationsSettingsView from './NotificationsSettingsView';
 import HelpAndSupportView from './HelpAndSupportView';
@@ -157,6 +159,50 @@ const FavoritesViewWrapper = () => {
   }
   
   return <FavoritesView onCardClick={handleCardClick} />;
+};
+
+const SharedFavoritesViewWrapper = () => {
+  const navigate = useNavigate();
+  const { userId } = useParams<{ userId: string }>();
+  
+  const handleCardClick = (listing: Listing) => {
+    // Навигация к детальной странице объявления
+    navigate(`/listing/${listing.id}`);
+  };
+
+  if (!userId) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Ошибка</h2>
+        <p>Не указан ID пользователя</p>
+        <button onClick={() => navigate('/')}>Вернуться на главную</button>
+      </div>
+    );
+  }
+
+  return <SharedFavoritesView userId={userId} onCardClick={handleCardClick} />;
+};
+
+const SharedFolderViewWrapper = () => {
+  const navigate = useNavigate();
+  const { shareId } = useParams<{ shareId: string }>();
+  
+  const handleCardClick = (listing: Listing) => {
+    // Навигация к детальной странице объявления
+    navigate(`/listing/${listing.id}`);
+  };
+
+  if (!shareId) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h2>Ошибка</h2>
+        <p>Не указан ID папки</p>
+        <button onClick={() => navigate('/')}>Вернуться на главную</button>
+      </div>
+    );
+  }
+
+  return <SharedFolderView shareId={shareId} onCardClick={handleCardClick} />;
 };
 
 const MobileMessagesViewWrapper = () => {
@@ -702,6 +748,8 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
           } />
           <Route path="/add" element={<AddListingViewWrapper />} />
           <Route path="/favorites" element={<FavoritesViewWrapper />} />
+          <Route path="/favorites/shared/:userId" element={<SharedFavoritesViewWrapper />} />
+          <Route path="/favorites/folder/:shareId" element={<SharedFolderViewWrapper />} />
           <Route path="/messages" element={
             isMobile ? 
             <MobileMessagesViewWrapper /> : 

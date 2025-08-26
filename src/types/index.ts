@@ -39,6 +39,26 @@ export interface Listing {
   delivery?: 'pickup' | 'delivery';
 }
 
+// Система папок для избранного
+export interface FavoriteFolder {
+  id: string;
+  name: string;
+  description?: string;
+  color?: string; // Цвет папки для визуального различия
+  isPublic: boolean; // Можно ли делиться папкой
+  shareId?: string; // Уникальный ID для шаринга
+  createdAt: string; // ISO строка
+  updatedAt: string; // ISO строка
+  userId: string;
+  listingIds: string[]; // ID объявлений в папке
+}
+
+export interface FavoriteItem {
+  listingId: string;
+  folderId?: string; // null = в общем избранном без папки
+  addedAt: string; // ISO строка
+}
+
 export interface Category {
   id: string;
   name: string;
