@@ -11,6 +11,7 @@ import {
   ShareIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useListingData } from './useListingData';
 import { useIsMobile } from '../../hooks/useIsMobile';
@@ -87,6 +88,19 @@ export const ListingPage: React.FC<ListingPageProps> = ({
 
 
 
+
+  // Функция для рендеринга звезд
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <span key={index}>
+        {index < rating ? (
+          <StarIconSolid className="w-4 h-4 text-yellow-400" />
+        ) : (
+          <StarIcon className="w-4 h-4 text-gray-300" />
+        )}
+      </span>
+    ));
+  };
 
   // Функция для перевода названия категории
   const getTranslatedCategory = (category: string): string => {
@@ -400,8 +414,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                     style={{ cursor: 'pointer' }}
                   >
                     <div className="rating-stars">
-                      {'⭐'.repeat(Math.floor(sellerRating.averageRating))}
-                      {'☆'.repeat(5 - Math.floor(sellerRating.averageRating))}
+                      {renderStars(Math.floor(sellerRating.averageRating))}
                     </div>
                     <span className="rating-text">
                       {sellerRating.averageRating} ({sellerRating.totalReviews} отзывов)

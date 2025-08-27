@@ -9,7 +9,8 @@ import {
   StarIcon,
   LanguageIcon,
   PencilIcon,
-  WalletIcon
+  WalletIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -42,6 +43,11 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [verificationType, setVerificationType] = useState<'email' | 'phone' | null>(null);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationError, setVerificationError] = useState('');
 
 
 
@@ -127,15 +133,86 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
       return;
     }
 
+    // Проверяем, изменились ли email или телефон
+    const emailChanged = editValues.email !== currentUser?.email;
+    const phoneChanged = editValues.phone !== currentUser?.phone;
+
+    if (emailChanged || phoneChanged) {
+      // Показываем модальное окно подтверждения
+      setVerificationType(emailChanged ? 'email' : 'phone');
+      setShowVerificationModal(true);
+      return;
+    }
+
+    // Если ничего не изменилось, сохраняем сразу
+    await updateProfileData(editValues);
+  };
+
+  const updateProfileData = async (data: typeof editValues) => {
     setIsLoading(true);
     try {
-      await updateUserProfile(editValues);
+      await updateUserProfile(data);
       setIsEditing(false);
       setErrors({});
     } catch (error) {
       console.error('Ошибка при обновлении профиля:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const sendVerificationCode = async () => {
+    if (!verificationType) return;
+
+    setIsVerifying(true);
+    setVerificationError('');
+
+    try {
+      // Здесь будет API вызов для отправки кода
+      const target = verificationType === 'email' ? editValues.email : editValues.phone;
+      
+      // Имитация отправки кода
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      console.log(`Код подтверждения отправлен на ${verificationType}: ${target}`);
+      
+    } catch (error) {
+      console.error('Ошибка при отправке кода:', error);
+      setVerificationError('Ошибка при отправке кода. Попробуйте еще раз.');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const verifyCode = async () => {
+    if (!verificationCode.trim()) {
+      setVerificationError('Введите код подтверждения');
+      return;
+    }
+
+    setIsVerifying(true);
+    setVerificationError('');
+
+    try {
+      // Здесь будет API вызов для проверки кода
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Имитация успешной проверки
+      console.log('Код подтвержден:', verificationCode);
+      
+      // Сохраняем изменения
+      await updateProfileData(editValues);
+      
+      // Закрываем модальное окно
+      setShowVerificationModal(false);
+      setVerificationCode('');
+      setVerificationType(null);
+      
+    } catch (error) {
+      console.error('Ошибка при проверке кода:', error);
+      setVerificationError('Неверный код. Попробуйте еще раз.');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -437,6 +514,64 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
         isOpen={showLanguageModal}
         onClose={() => setShowLanguageModal(false)}
       />
+
+      {/* Модальное окно подтверждения */}
+      {showVerificationModal && (
+        <div className="modal-overlay" onClick={() => setShowVerificationModal(false)}>
+          <div className="modal-content verification-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="verification-modal-header">
+              <h3 className="verification-modal-title">
+                Подтверждение {verificationType === 'email' ? 'email' : 'телефона'}
+              </h3>
+              <button 
+                className="modal-close-button"
+                onClick={() => setShowVerificationModal(false)}
+              >
+                <XMarkIcon className="modal-close-icon" />
+              </button>
+            </div>
+            
+            <div className="verification-modal-body">
+              <p className="verification-modal-description">
+                Для изменения {verificationType === 'email' ? 'email' : 'телефона'} необходимо подтверждение.
+                Код подтверждения будет отправлен на {verificationType === 'email' ? editValues.email : editValues.phone}.
+              </p>
+              
+              <div className="verification-code-section">
+                <label className="verification-code-label">Код подтверждения:</label>
+                <input
+                  type="text"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  className="verification-code-input"
+                  placeholder="Введите код"
+                  maxLength={6}
+                />
+                {verificationError && (
+                  <div className="verification-error">{verificationError}</div>
+                )}
+              </div>
+            </div>
+            
+            <div className="verification-modal-actions">
+              <button 
+                className="verification-modal-button primary"
+                onClick={verifyCode}
+                disabled={isVerifying || !verificationCode.trim()}
+              >
+                {isVerifying ? 'Проверка...' : 'Подтвердить'}
+              </button>
+              <button 
+                className="verification-modal-button secondary"
+                onClick={sendVerificationCode}
+                disabled={isVerifying}
+              >
+                {isVerifying ? 'Отправка...' : 'Отправить код'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

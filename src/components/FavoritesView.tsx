@@ -179,6 +179,14 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
           {/* Кнопки действий */}
           <div className="favorites-actions">
             <button 
+              className="manage-folders-button"
+              onClick={() => setShowFolderManager(true)}
+            >
+              <PlusIcon className="manage-icon" />
+              {t('favorites.createFolder')}
+            </button>
+            
+            <button 
               className="folders-button"
               onClick={() => setShowFolders(!showFolders)}
             >
@@ -197,14 +205,6 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
             >
               <FunnelIcon className="filter-icon" />
               Категория
-            </button>
-            
-            <button 
-              className="manage-folders-button"
-              onClick={() => setShowFolderManager(true)}
-            >
-              <PlusIcon className="manage-icon" />
-              {t('favorites.createFolder')}
             </button>
           </div>
 
