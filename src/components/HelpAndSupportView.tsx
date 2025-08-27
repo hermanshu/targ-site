@@ -5,7 +5,12 @@ import {
   EnvelopeIcon,
   DocumentTextIcon,
   ChevronDownIcon,
-  ChevronUpIcon
+  ChevronUpIcon,
+  InformationCircleIcon,
+  GlobeAltIcon,
+  UserGroupIcon,
+  ShieldCheckIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
@@ -22,6 +27,7 @@ const HelpAndSupportView: React.FC = () => {
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [isAboutExpanded, setIsAboutExpanded] = useState(false);
 
   const faqItems: FAQItem[] = [
     {
@@ -54,12 +60,57 @@ const HelpAndSupportView: React.FC = () => {
     setExpandedFAQ(expandedFAQ === index ? null : index);
   };
 
+  const toggleAbout = () => {
+    setIsAboutExpanded(!isAboutExpanded);
+  };
+
   const contactMethods = [
     {
       icon: EnvelopeIcon,
       title: t('help.emailSupport'),
-              subtitle: 'support@targ.store',
-        action: () => window.open('mailto:support@targ.store')
+      subtitle: 'support@targ.store',
+      action: () => window.open('mailto:support@targ.store')
+    }
+  ];
+
+  const aboutFeatures = [
+    {
+      icon: GlobeAltIcon,
+      title: 'Локальная платформа',
+      description: 'Targ - это местная платформа для покупки и продажи товаров в Сербии. Мы соединяем людей в твоём городе.'
+    },
+    {
+      icon: UserGroupIcon,
+      title: 'Сообщество',
+      description: 'Присоединяйся к растущему сообществу покупателей и продавцов. Делись опытом и находи новых друзей.'
+    },
+    {
+      icon: ShieldCheckIcon,
+      title: 'Безопасность',
+      description: 'Мы заботимся о безопасности наших пользователей. Все объявления проходят модерацию.'
+    },
+    {
+      icon: HeartIcon,
+      title: 'Простота использования',
+      description: 'Интуитивно понятный интерфейс позволяет легко создавать объявления и находить нужные товары.'
+    }
+  ];
+
+  const platformFeatures = [
+    {
+      icon: '💬',
+      title: 'Умные диалоги',
+      description: 'Помечай диалоги цветными метками (важные, в работе, завершенные) и легко фильтруй их для быстрого доступа к нужным перепискам.'
+    },
+    {
+      icon: '📊',
+      title: 'Статистика объявлений',
+      description: 'Отслеживай просмотры своих объявлений, количество сообщений и анализируй эффективность продаж.'
+    },
+    {
+      icon: '📁',
+      title: 'Папки избранного',
+      description: 'Создавай тематические папки для избранных объявлений и делись списками с друзьями через удобные ссылки.'
     }
   ];
 
@@ -76,6 +127,121 @@ const HelpAndSupportView: React.FC = () => {
       </div>
 
       <div className="help-content">
+        {/* О нас */}
+        <section className="help-section about-section">
+          <button 
+            className="about-header-button"
+            onClick={toggleAbout}
+          >
+                          <div className="about-header-content">
+                <InformationCircleIcon className="section-icon" />
+                <h2 className="section-title">О нашей платформе</h2>
+              </div>
+            {isAboutExpanded ? (
+              <ChevronUpIcon className="about-chevron" />
+            ) : (
+              <ChevronDownIcon className="about-chevron" />
+            )}
+          </button>
+          
+          {isAboutExpanded && (
+            <div className="about-content">
+              <div className="about-intro">
+                <h3 className="about-subtitle">Добро пожаловать в Targ</h3>
+                <p className="about-description">
+                  Targ - это современная платформа для покупки и продажи товаров в Сербии. 
+                  Мы создали удобное место, где ты можешь найти практически всё, что нужно, 
+                  или продать то, что больше не используешь.
+                </p>
+                <div className="about-note">
+                  <p>
+                    💡 Платформа создана на чистом энтузиазме! Если ты заметил ошибки, баги 
+                    или у тебя есть предложения по функционалу и дизайну - мы всегда рады 
+                    обратной связи. Пиши нам на почту, указанную ниже в разделе "Контакты".
+                  </p>
+                </div>
+              </div>
+
+              <div className="about-features">
+                {aboutFeatures.map((feature, index) => (
+                  <div key={index} className="about-feature">
+                    <div className="about-feature-icon">
+                      <feature.icon />
+                    </div>
+                    <div className="about-feature-content">
+                      <h4 className="about-feature-title">{feature.title}</h4>
+                      <p className="about-feature-description">{feature.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="platform-features">
+                <h4 className="features-title">Ключевые возможности платформы</h4>
+                <div className="features-grid">
+                  {platformFeatures.map((feature, index) => (
+                    <div key={index} className="platform-feature">
+                      <div className="platform-feature-icon">{feature.icon}</div>
+                      <div className="platform-feature-content">
+                        <h5 className="platform-feature-title">{feature.title}</h5>
+                        <p className="platform-feature-description">{feature.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="about-navigation">
+                <h4 className="navigation-title">Что ты можешь найти на Targ</h4>
+                <div className="navigation-grid">
+                  <div className="navigation-item">
+                    <div className="navigation-icon">🏠</div>
+                    <div className="navigation-content">
+                      <h5 className="navigation-item-title">Недвижимость</h5>
+                      <p className="navigation-item-description">Квартиры, дома, офисы для аренды и покупки</p>
+                    </div>
+                  </div>
+                  <div className="navigation-item">
+                    <div className="navigation-icon">🚗</div>
+                    <div className="navigation-content">
+                      <h5 className="navigation-item-title">Транспорт</h5>
+                      <p className="navigation-item-description">Автомобили, мотоциклы, велосипеды</p>
+                    </div>
+                  </div>
+                  <div className="navigation-item">
+                    <div className="navigation-icon">📱</div>
+                    <div className="navigation-content">
+                      <h5 className="navigation-item-title">Электроника</h5>
+                      <p className="navigation-item-description">Телефоны, компьютеры, бытовая техника</p>
+                    </div>
+                  </div>
+                  <div className="navigation-item">
+                    <div className="navigation-icon">👕</div>
+                    <div className="navigation-content">
+                      <h5 className="navigation-item-title">Одежда</h5>
+                      <p className="navigation-item-description">Мужская, женская и детская одежда</p>
+                    </div>
+                  </div>
+                  <div className="navigation-item">
+                    <div className="navigation-icon">🪑</div>
+                    <div className="navigation-content">
+                      <h5 className="navigation-item-title">Мебель</h5>
+                      <p className="navigation-item-description">Мебель для дома и офиса</p>
+                    </div>
+                  </div>
+                  <div className="navigation-item">
+                    <div className="navigation-icon">🌱</div>
+                    <div className="navigation-content">
+                      <h5 className="navigation-item-title">Растения</h5>
+                      <p className="navigation-item-description">Комнатные растения и садовые товары</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+
         {/* Контактная информация */}
         <section className="help-section">
           <h2 className="section-title">{t('help.contactUs')}</h2>

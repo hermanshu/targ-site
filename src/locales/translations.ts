@@ -1365,15 +1365,15 @@ const ruTranslations: Translations = {
     reviews: {
     title: 'Отзывы',
     averageRating: 'Средний рейтинг',
-    averageGivenRating: 'Средний рейтинг оставленных',
+    averageGivenRating: 'Средний рейтинг отправленных',
     totalReviews: 'Всего отзывов',
-    totalGivenReviews: 'Всего оставленных отзывов',
+    totalGivenReviews: 'Всего отправленных отзывов',
     receivedReviews: 'Полученные отзывы',
-    givenReviews: 'Оставленные отзывы',
+    givenReviews: 'Отправленные отзывы',
     noReceivedReviews: 'Пока нет полученных отзывов',
-    noGivenReviews: 'Пока нет оставленных отзывов',
+    noGivenReviews: 'Пока нет отправленных отзывов',
     noReceivedReviewsDescription: 'Когда другие пользователи оставят вам отзыв, он появится здесь',
-    noGivenReviewsDescription: 'Когда ты оставишь отзыв другому пользователю, он появится здесь',
+    noGivenReviewsDescription: 'Когда ты отправишь отзыв другому пользователю, он появится здесь',
   },
 
   sort: {

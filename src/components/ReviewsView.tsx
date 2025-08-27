@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeftIcon,
   StarIcon,
@@ -9,8 +9,12 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../hooks/useTranslation';
+import { useReviews } from '../contexts/ReviewsContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useListings } from '../contexts/ListingsContext';
+import { Review as ReviewType } from '../types';
 
-interface Review {
+interface ReviewDisplay {
   id: string;
   author: {
     name: string;
@@ -26,74 +30,58 @@ interface Review {
 const ReviewsView: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const { reviews } = useReviews();
+  const { listings } = useListings();
   const [activeTab, setActiveTab] = useState<'received' | 'given'>('received');
+  const [receivedReviews, setReceivedReviews] = useState<ReviewDisplay[]>([]);
+  const [givenReviews, setGivenReviews] = useState<ReviewDisplay[]>([]);
 
-  // Моковые данные для демонстрации
-  const receivedReviews: Review[] = [
-    {
-      id: '1',
-      author: {
-        name: 'Алексей Петров',
-        avatar: undefined
-      },
-      rating: 5,
-      comment: 'Отличный продавец! Товар точно соответствует описанию, быстрая доставка. Рекомендую!',
-      date: '2024-01-15',
-      listingTitle: 'iPhone 14 Pro 128GB',
-      listingPrice: '85 000 ₽'
-    },
-    {
-      id: '2',
-      author: {
-        name: 'Мария Сидорова',
-        avatar: undefined
-      },
-      rating: 4,
-      comment: 'Хороший товар, но немного задержалась доставка. В целом довольна покупкой.',
-      date: '2024-01-10',
-      listingTitle: 'MacBook Air M2',
-      listingPrice: '120 000 ₽'
-    },
-    {
-      id: '3',
-      author: {
-        name: 'Дмитрий Козлов',
-        avatar: undefined
-      },
-      rating: 5,
-      comment: 'Супер! Все как на фото, цена отличная. Спасибо за быструю сделку!',
-      date: '2024-01-05',
-      listingTitle: 'Sony WH-1000XM4',
-      listingPrice: '25 000 ₽'
-    }
-  ];
+  // Преобразуем данные из контекста в формат для отображения
+  useEffect(() => {
+    if (!currentUser) return;
 
-  const givenReviews: Review[] = [
-    {
-      id: '4',
-      author: {
-        name: 'Иван Иванов',
-        avatar: undefined
-      },
-      rating: 5,
-      comment: 'Отличный покупатель! Быстрая оплата, приятное общение. Рекомендую!',
-      date: '2024-01-12',
-      listingTitle: 'Samsung Galaxy S23',
-      listingPrice: '65 000 ₽'
-    },
-    {
-      id: '5',
-      author: {
-        name: 'Елена Волкова',
-        avatar: undefined
-      },
-      rating: 4,
-      comment: 'Хороший покупатель, но немного торговался. В итоге договорились.',
-      date: '2024-01-08',
-      listingTitle: 'iPad Air 5',
-      listingPrice: '45 000 ₽'
-    }
-  ];
+    // Получаем отзывы, полученные пользователем (где он продавец)
+    const received = reviews
+      .filter(review => review.sellerId === currentUser.id)
+      .map(review => {
+        const listing = listings.find(l => l.id === review.listingId);
+        return {
+          id: review.id,
+          author: {
+            name: review.reviewerName,
+            avatar: undefined // Можно добавить аватар рецензента в будущем
+          },
+          rating: review.rating,
+          comment: review.comment,
+          date: review.createdAt,
+          listingTitle: listing?.title || 'Объявление удалено',
+          listingPrice: listing ? `${listing.price} ${listing.currency}` : 'Цена не указана'
+        };
+      });
+
+    // Получаем отзывы, данные пользователем (где он рецензент)
+    const given = reviews
+      .filter(review => review.reviewerId === currentUser.id)
+      .map(review => {
+        const listing = listings.find(l => l.id === review.listingId);
+        return {
+          id: review.id,
+          author: {
+            name: listing?.sellerName || 'Продавец',
+            avatar: undefined
+          },
+          rating: review.rating,
+          comment: review.comment,
+          date: review.createdAt,
+          listingTitle: listing?.title || 'Объявление удалено',
+          listingPrice: listing ? `${listing.price} ${listing.currency}` : 'Цена не указана'
+        };
+      });
+
+    setReceivedReviews(received);
+    setGivenReviews(given);
+  }, [reviews, listings, currentUser]);
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, index) => (
@@ -116,7 +104,7 @@ const ReviewsView: React.FC = () => {
     });
   };
 
-  const getAverageRating = (reviews: Review[]) => {
+  const getAverageRating = (reviews: ReviewDisplay[]) => {
     if (reviews.length === 0) return '0.0';
     const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
     return (sum / reviews.length).toFixed(1);
@@ -232,8 +220,6 @@ const ReviewsView: React.FC = () => {
             </div>
           )}
         </div>
-
-
       </div>
     </div>
   );

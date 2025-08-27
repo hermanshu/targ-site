@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   ArrowLeftIcon,
@@ -9,7 +9,8 @@ import {
   TrashIcon,
   CalendarIcon,
   MapPinIcon,
-  HeartIcon
+  HeartIcon,
+  ChartBarIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../contexts/AuthContext';
 import { useListings } from '../contexts/ListingsContext';
@@ -24,7 +25,47 @@ const MyListingsView: React.FC = () => {
   const { getUserListings, updateListing, deleteListing, incrementViews } = useListings();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  
+  // Получаем объявления текущего пользователя
+  const userListings = getUserListings(currentUser?.id || '');
+
+  // Функция для подсчета реальной аналитики
+  const calculateAnalytics = () => {
+    // Подсчитываем общее количество просмотров по всем объявлениям пользователя
+    const totalViews = userListings.reduce((sum, listing) => sum + (listing.views || 0), 0);
+    
+    // Подсчитываем количество диалогов (чатов) по объявлениям пользователя
+    // Загружаем чаты из localStorage
+    let totalMessages = 0;
+    try {
+      const savedChats = localStorage.getItem('targ-chats');
+      if (savedChats) {
+        const chats = JSON.parse(savedChats);
+        // Считаем чаты, где listing.id соответствует объявлениям пользователя
+        totalMessages = chats.filter((chat: any) => 
+          userListings.some(listing => listing.id === chat.listing?.id)
+        ).length;
+      }
+    } catch (e) {
+      console.error('Ошибка при загрузке чатов для аналитики:', e);
+    }
+    
+    return {
+      totalViews,
+      totalMessages
+    };
+  };
+
+  const analytics = calculateAnalytics();
+  
   const [activeTab, setActiveTab] = useState<'active' | 'archived' | 'draft'>('active');
+  
+  // Фильтруем объявления по активному табу
+  const filteredListings = useMemo(() => 
+    userListings.filter(listing => listing.status === activeTab), 
+    [userListings, activeTab]
+  );
+  
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [editingListing, setEditingListing] = useState<Listing | null>(null);
   const [saleConfirmationModal, setSaleConfirmationModal] = useState<{
@@ -65,10 +106,6 @@ const MyListingsView: React.FC = () => {
     
     return categoryMapping[category] || category;
   };
-
-  // Получаем объявления текущего пользователя
-  const userListings = getUserListings(currentUser?.id || '');
-  const filteredListings = userListings.filter(listing => listing.status === activeTab);
 
   const handleEdit = (listingId: string) => {
     const listing = userListings.find(l => l.id === listingId);
@@ -456,6 +493,19 @@ const MyListingsView: React.FC = () => {
             ))}
           </div>
         )}
+        
+        {/* Аналитика */}
+        <div className="my-listings-analytics">
+          <div className="analytics-content">
+            <div className="analytics-card">
+              <ChartBarIcon className="analytics-icon" />
+              <div className="analytics-text">
+                <p className="analytics-title">Всего просмотров твоих объявлений: {analytics.totalViews}</p>
+                <p className="analytics-subtitle">Активных диалогов: {analytics.totalMessages}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Модальное окно подтверждения продажи */}

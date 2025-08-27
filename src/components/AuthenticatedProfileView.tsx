@@ -9,12 +9,13 @@ import {
   StarIcon,
   LanguageIcon,
   PencilIcon,
-  WalletIcon,
-  ChartBarIcon
+  WalletIcon
 } from '@heroicons/react/24/outline';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTranslation } from '../hooks/useTranslation';
+import { useLanguage } from '../contexts/LanguageContext';
+import LanguageSelectorModal from './LanguageSelectorModal';
 
 interface AuthenticatedProfileViewProps {
   onLogout: () => void;
@@ -25,6 +26,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
 }) => {
   const { t } = useTranslation();
   const { currentUser, updateUserProfile } = useAuth();
+  const { currentLanguage, setLanguage } = useLanguage();
   const navigate = useNavigate();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(currentUser?.avatar || null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,15 +41,13 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showWalletModal, setShowWalletModal] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
 
 
 
 
 
-  const analytics = {
-    weeklyViews: 120,
-    weeklyMessages: 8
-  };
+
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -340,7 +340,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
 
             <button 
               className="menu-item"
-              onClick={() => alert(t('profile.goToLanguage'))}
+              onClick={() => setShowLanguageModal(true)}
             >
               <div className="menu-item-content">
                 <LanguageIcon className="menu-item-icon" />
@@ -368,19 +368,7 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
           </div>
         </div>
 
-        {/* Аналитика */}
-        <div className="profile-section full-width">
-          <h3 className="section-title">Аналитика</h3>
-          <div className="analytics-content">
-            <div className="analytics-card">
-              <ChartBarIcon className="analytics-icon" />
-              <div className="analytics-text">
-                <p className="analytics-title">За неделю твои объявления посмотрели {analytics.weeklyViews} раз</p>
-                <p className="analytics-subtitle">Написали {analytics.weeklyMessages} человек</p>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
 
       </div>
@@ -443,6 +431,12 @@ const AuthenticatedProfileView: React.FC<AuthenticatedProfileViewProps> = ({
           </div>
         </div>
       )}
+
+      {/* Модальное окно выбора языка */}
+      <LanguageSelectorModal
+        isOpen={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
+      />
     </div>
   );
 };
