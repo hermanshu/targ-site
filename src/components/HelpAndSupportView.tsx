@@ -100,7 +100,7 @@ const HelpAndSupportView: React.FC = () => {
     {
       icon: '💬',
       title: 'Умные диалоги',
-      description: 'Помечай диалоги цветными метками (важные, в работе, завершенные) и легко фильтруй их для быстрого доступа к нужным перепискам.'
+      description: 'Помечай диалоги статусами: "Договорились о встрече", "Жду ответа", "Успешная сделка", "Архив" и легко фильтруй их для быстрого доступа к нужным перепискам.'
     },
     {
       icon: '📊',
@@ -191,53 +191,7 @@ const HelpAndSupportView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="about-navigation">
-                <h4 className="navigation-title">Что ты можешь найти на Targ</h4>
-                <div className="navigation-grid">
-                  <div className="navigation-item">
-                    <div className="navigation-icon">🏠</div>
-                    <div className="navigation-content">
-                      <h5 className="navigation-item-title">Недвижимость</h5>
-                      <p className="navigation-item-description">Квартиры, дома, офисы для аренды и покупки</p>
-                    </div>
-                  </div>
-                  <div className="navigation-item">
-                    <div className="navigation-icon">🚗</div>
-                    <div className="navigation-content">
-                      <h5 className="navigation-item-title">Транспорт</h5>
-                      <p className="navigation-item-description">Автомобили, мотоциклы, велосипеды</p>
-                    </div>
-                  </div>
-                  <div className="navigation-item">
-                    <div className="navigation-icon">📱</div>
-                    <div className="navigation-content">
-                      <h5 className="navigation-item-title">Электроника</h5>
-                      <p className="navigation-item-description">Телефоны, компьютеры, бытовая техника</p>
-                    </div>
-                  </div>
-                  <div className="navigation-item">
-                    <div className="navigation-icon">👕</div>
-                    <div className="navigation-content">
-                      <h5 className="navigation-item-title">Одежда</h5>
-                      <p className="navigation-item-description">Мужская, женская и детская одежда</p>
-                    </div>
-                  </div>
-                  <div className="navigation-item">
-                    <div className="navigation-icon">🪑</div>
-                    <div className="navigation-content">
-                      <h5 className="navigation-item-title">Мебель</h5>
-                      <p className="navigation-item-description">Мебель для дома и офиса</p>
-                    </div>
-                  </div>
-                  <div className="navigation-item">
-                    <div className="navigation-icon">🌱</div>
-                    <div className="navigation-content">
-                      <h5 className="navigation-item-title">Растения</h5>
-                      <p className="navigation-item-description">Комнатные растения и садовые товары</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
             </div>
           )}
         </section>

@@ -11231,6 +11231,93 @@ body:has(.help-modal-overlay) .detail-header {
   line-height: 1.4;
 }
 
+/* Модальное окно успешного создания объявления */
+.success-modal-content {
+  max-width: 500px;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.success-modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 24px;
+  text-align: center;
+}
+
+.success-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.success-modal-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.success-modal-body {
+  padding: 0 24px 24px;
+  text-align: center;
+}
+
+.success-modal-description {
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.success-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 24px 24px;
+}
+
+.success-modal-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.success-modal-button.primary {
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.success-modal-button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
+}
+
+.success-modal-button.secondary {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  color: #6b7280;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.success-modal-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #374151;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 
 
 /* Адаптивность для мобильных устройств */
@@ -11260,6 +11347,23 @@ body:has(.help-modal-overlay) .detail-header {
   
   .analytics-card {
     padding: 20px;
+  }
+  
+  .success-modal-content {
+    width: 95%;
+    margin: 20px;
+  }
+  
+  .success-modal-header {
+    padding: 24px 20px 20px;
+  }
+  
+  .success-modal-body {
+    padding: 0 20px 20px;
+  }
+  
+  .success-modal-actions {
+    padding: 0 20px 20px;
   }
   
   .listings-stats {
@@ -17600,62 +17704,7 @@ body .form-section select.characteristic-select:focus {
   margin: 0;
 }
 
-.about-navigation {
-  margin-top: 32px;
-}
 
-.navigation-title {
-  font-size: 20px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 24px 0;
-  text-align: center;
-}
-
-.navigation-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.navigation-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.navigation-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.navigation-icon {
-  font-size: 32px;
-  flex-shrink: 0;
-}
-
-.navigation-content {
-  flex: 1;
-}
-
-.navigation-item-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #111827;
-  margin: 0 0 4px 0;
-}
-
-.navigation-item-description {
-  font-size: 14px;
-  color: #6b7280;
-  margin: 0;
-}
 
 /* Адаптивность для страницы помощи */
 @media (max-width: 768px) {
@@ -17672,10 +17721,6 @@ body .form-section select.characteristic-select:focus {
   }
   
   .features-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .navigation-grid {
     grid-template-columns: 1fr;
   }
   

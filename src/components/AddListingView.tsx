@@ -138,6 +138,7 @@ const AddListingView: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories = [
@@ -508,10 +509,8 @@ const AddListingView: React.FC = () => {
       // Имитация задержки
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      alert(t('listings.listingCreatedSuccess'));
-      
-      // Перенаправляем на "Мои объявления"
-      navigate('/my-listings');
+      // Показываем модальное окно успеха
+      setShowSuccessModal(true);
       
     } catch (error) {
       console.error('Ошибка при создании объявления:', error);
@@ -834,6 +833,60 @@ const AddListingView: React.FC = () => {
           </button>
         </div>
       </form>
+
+      {/* Модальное окно успешного создания объявления */}
+      {showSuccessModal && (
+        <div className="modal-overlay" onClick={() => setShowSuccessModal(false)}>
+          <div className="modal-content success-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="success-modal-header">
+              <div className="success-icon">✅</div>
+              <h3 className="success-modal-title">{t('listings.listingCreatedSuccess')}</h3>
+            </div>
+            
+            <div className="success-modal-body">
+              <p className="success-modal-description">
+                Твое объявление успешно опубликовано и теперь доступно для просмотра другими пользователями.
+              </p>
+            </div>
+            
+            <div className="success-modal-actions">
+              <button 
+                className="success-modal-button primary"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  navigate('/my-listings');
+                }}
+              >
+                Перейти к моим объявлениям
+              </button>
+              <button 
+                className="success-modal-button secondary"
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  // Сброс формы
+                  setFormData({
+                    title: '',
+                    description: '',
+                    price: '',
+                    currency: 'EUR',
+                    category: '',
+                    subcategory: '',
+                    location: '',
+                    contactMethod: 'chat',
+                    delivery: 'pickup',
+                    images: [],
+                    characteristics: {}
+                  });
+                  setImagePreviewUrls([]);
+                  setErrors({});
+                }}
+              >
+                Создать еще одно объявление
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
