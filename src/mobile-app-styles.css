@@ -109,7 +109,7 @@
 
   /* Общие стили для мобильных сообщений */
   .mobile-messages-container {
-    background: #f9fafb !important;
+    background: transparent !important;
   }
 
   .mobile-chats-list {
@@ -611,11 +611,18 @@
   }
 
   .mobile-chat-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     display: flex !important;
     align-items: center !important;
     padding: 12px 16px !important;
+    padding-top: calc(12px + env(safe-area-inset-top, 0px)) !important;
     border-bottom: 1px solid #e5e7eb !important;
     background: white !important;
+    z-index: 50 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
   }
 
   .mobile-back-button {
@@ -677,6 +684,8 @@
     flex: 1 !important;
     overflow-y: auto !important;
     padding: 16px !important;
+    padding-top: calc(80px + env(safe-area-inset-top, 0px)) !important; /* Отступ для заголовка */
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 20px)) !important; /* Отступ для зоны ввода */
     background: #f8fafc !important;
   }
 
@@ -782,9 +791,15 @@
 
   /* Поле ввода */
   .mobile-message-input {
+    position: fixed !important;
+    bottom: calc(80px + env(safe-area-inset-bottom, 20px)) !important;
+    left: 0 !important;
+    right: 0 !important;
     padding: 16px !important;
     background: white !important;
     border-top: 1px solid #e5e7eb !important;
+    z-index: 50 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
   }
 
   .mobile-attachments-preview {
@@ -1694,6 +1709,82 @@
     font-weight: 800 !important;
     color: rgba(15, 23, 42, 0.95) !important;
     text-shadow: 0 1px 3px rgba(255, 255, 255, 0.6) !important;
+  }
+
+  /* Стили для мобильного селектора папок в избранном */
+  .mobile-folder-selector {
+    margin-top: 12px !important;
+    width: 100% !important;
+  }
+
+  /* Дополнительное пространство внизу для страницы избранного */
+  .favorites-container .mobile-listings {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px)) !important;
+    background: transparent !important;
+  }
+
+  /* Дополнительное пространство внизу для страницы сообщений */
+  .mobile-messages-container .mobile-chats-content {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px)) !important;
+  }
+
+  .mobile-folder-selector-button {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    background: rgba(249, 250, 251, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(229, 231, 235, 0.6) !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    color: #374151 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .mobile-folder-selector-button:hover {
+    background: rgba(243, 244, 246, 0.9) !important;
+    border-color: rgba(209, 213, 219, 0.8) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .mobile-folder-selector-button.has-active-folder {
+    background: rgba(239, 246, 255, 0.9) !important;
+    border-color: rgba(59, 130, 246, 0.6) !important;
+    color: #1e40af !important;
+  }
+
+  .mobile-folder-color-indicator {
+    width: 14px !important;
+    height: 14px !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .mobile-folder-selector-text {
+    flex: 1 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+  }
+
+  .mobile-folder-chevron-icon {
+    width: 14px !important;
+    height: 14px !important;
+    color: #6b7280 !important;
+    flex-shrink: 0 !important;
+    transition: transform 0.2s ease !important;
+  }
+
+  .mobile-folder-selector-button:hover .mobile-folder-chevron-icon {
+    transform: translateY(1px) !important;
   }
 
   /* Скрываем десктопные элементы на мобильных */

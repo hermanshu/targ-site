@@ -11,8 +11,11 @@ import {
   FolderIcon,
   PlusIcon,
   ChevronDownIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  HomeIcon,
+  HeartIcon
 } from '@heroicons/react/24/outline';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 interface FavoritesViewProps {
   onCardClick: (listing: Listing) => void;
@@ -151,6 +154,7 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
     color: folder.color || '#3b82f6'
   }));
 
+  const isMobile = useIsMobile();
 
 
   if (favorites.length === 0) {
@@ -183,7 +187,7 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
               onClick={() => setShowFolderManager(true)}
             >
               <PlusIcon className="manage-icon" />
-              {t('favorites.createFolder')}
+              Создать
             </button>
             
             <button 
@@ -191,7 +195,7 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
               onClick={() => setShowFolders(!showFolders)}
             >
               <FolderIcon className="folders-icon" />
-              {selectedFolder ? getCurrentFolderName() : t('favorites.folders')}
+              {selectedFolder ? getCurrentFolderName().substring(0, 8) : 'Папки'}
               {showFolders ? (
                 <ChevronDownIcon className="chevron-icon" />
               ) : (
@@ -204,7 +208,7 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
               onClick={() => setShowFilters(!showFilters)}
             >
               <FunnelIcon className="filter-icon" />
-              Категория
+              Фильтр
             </button>
           </div>
 
@@ -314,23 +318,118 @@ const FavoritesView: React.FC<FavoritesViewProps> = ({ onCardClick }) => {
         </div>
       </div>
       
-      {/* Сетка объявлений */}
-      {filteredFavorites.length > 0 ? (
-        <DesktopListingsGrid
-          listings={filteredFavorites}
-          onFavoriteToggle={handleFavoriteToggle}
-          isFavorite={isFavorite}
-          onCardClick={onCardClick}
-          hasMore={false}
-          onLoadMore={() => {}}
-          isLoading={false}
-          hasFilters={false}
-          onMoveToFolder={handleMoveToFolder}
-          folders={foldersForCards}
-          showFolderSelector={true}
-          getCurrentFolderId={getListingFolderInfo}
-        />
-      ) : (
+              {/* Сетка объявлений */}
+        {filteredFavorites.length > 0 ? (
+          isMobile ? (
+            <div className="mobile-listings">
+              <div className="mobile-listings-grid">
+                {filteredFavorites.map((listing) => (
+                  <div 
+                    key={listing.id} 
+                    className="mobile-listing-card"
+                    onClick={() => onCardClick(listing)}
+                  >
+                    <div className="mobile-listing-image">
+                      {listing.images && listing.images.length > 0 ? (
+                        <img 
+                          src={listing.images[0]?.src || ''} 
+                          alt={listing.images[0]?.alt || listing.title}
+                          className="mobile-listing-img"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : listing.imageName ? (
+                        <img 
+                          src={`/images/${listing.imageName}.jpg`} 
+                          alt={listing.title}
+                          className="mobile-listing-img"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="mobile-listing-placeholder">
+                          <HomeIcon className="placeholder-icon" />
+                        </div>
+                      )}
+
+                      <button 
+                        className="mobile-favorite-button-top"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFavoriteToggle(listing);
+                        }}
+                      >
+                        <HeartIcon className={`favorite-icon ${isFavorite(listing.id) ? 'active' : ''}`} />
+                      </button>
+                    </div>
+                    <div className="price-bar">
+                      <div className="price-text">{listing.price} {listing.currency}</div>
+                    </div>
+                    <div className="mobile-listing-content">
+                      <h3 className="mobile-listing-title">{listing.title}</h3>
+                      <div className="mobile-listing-footer">
+                        <div className="mobile-listing-location">
+                          <span className="location-icon">📍</span>
+                          {listing.city}
+                        </div>
+                      </div>
+                      
+                      {/* Выпадающий список папок для мобильной версии */}
+                      {foldersForCards.length > 0 && (
+                        <div className="mobile-folder-selector">
+                          <button 
+                            className={`mobile-folder-selector-button ${getListingFolderInfo(listing) && getListingFolderInfo(listing) !== '' ? 'has-active-folder' : ''}`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleMoveToFolder(listing);
+                            }}
+                            title="Переместить в папку"
+                          >
+                            <div 
+                              className="mobile-folder-color-indicator"
+                              style={{ 
+                                backgroundColor: getListingFolderInfo(listing) ? 
+                                  foldersForCards.find(f => f.id === getListingFolderInfo(listing))?.color || '#6b7280' : 
+                                  '#6b7280' 
+                              }}
+                            />
+                            <span className="mobile-folder-selector-text">
+                              {getListingFolderInfo(listing) ? 
+                                foldersForCards.find(f => f.id === getListingFolderInfo(listing))?.name || 'Все избранное' : 
+                                'Все избранное'
+                              }
+                            </span>
+                            <ChevronDownIcon className="mobile-folder-chevron-icon" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Дополнительное пространство внизу для панели навигации */}
+              <div style={{ height: '100px', width: '100%' }}></div>
+            </div>
+          ) : (
+            <DesktopListingsGrid
+              listings={filteredFavorites}
+              onFavoriteToggle={handleFavoriteToggle}
+              isFavorite={isFavorite}
+              onCardClick={onCardClick}
+              hasMore={false}
+              onLoadMore={() => {}}
+              isLoading={false}
+              hasFilters={false}
+              onMoveToFolder={handleMoveToFolder}
+              folders={foldersForCards}
+              showFolderSelector={true}
+              getCurrentFolderId={getListingFolderInfo}
+            />
+          )
+        ) : (
         <div className="no-items-in-category">
           <div className="empty-icon">🔍</div>
           <h3>{t('favorites.noItemsInCategory')}</h3>

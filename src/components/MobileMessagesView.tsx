@@ -508,6 +508,8 @@ const MobileMessagesView: React.FC<MobileMessagesViewProps> = ({
                 </div>
               ))
             )}
+            {/* Дополнительное пространство внизу для панели навигации */}
+            <div style={{ height: '100px', width: '100%' }}></div>
           </div>
         </div>
       ) : (

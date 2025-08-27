@@ -34,7 +34,7 @@
     overflow-y: auto;
     padding: 16px;
     box-sizing: border-box;
-    background: #f9fafb;
+    background: transparent;
   }
 
   /* Сетка объявлений */
@@ -990,7 +990,7 @@
     padding: 20px !important;
     padding-top: 20px !important; /* Уменьшаем с 60px до 20px - поднимаем в 3 раза */
     text-align: center !important;
-    background: #f9fafb !important;
+    background: transparent !important;
   }
 
   .favorites-empty .empty-icon,
@@ -1025,7 +1025,7 @@
   /* Мобильный контейнер сообщений */
   .mobile-messages-container {
     min-height: calc(100vh - 80px) !important;
-    background: #f9fafb !important;
+    background: transparent !important;
   }
 
   /* Мобильное пустое состояние для сообщений */
@@ -1038,7 +1038,7 @@
     padding: 20px !important;
     padding-top: 20px !important; /* Уменьшаем с 60px до 20px - поднимаем в 3 раза */
     text-align: center !important;
-    background: #f9fafb !important;
+    background: transparent !important;
   }
 
   .mobile-empty-state .empty-icon {
@@ -1197,6 +1197,183 @@
     justify-content: center !important;
     box-shadow: 0 4px 12px rgba(0, 230, 204, 0.3) !important;
     transition: all 0.3s ease !important;
+  }
+
+  /* Мобильные стили для страницы избранного */
+  .favorites-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .favorites-header {
+    padding: 12px 16px !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    background: white !important;
+  }
+
+  .favorites-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 4px !important;
+  }
+
+  .favorites-count {
+    font-size: 0.875rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .favorites-actions {
+    margin-top: 8px !important;
+    gap: 8px !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .filter-button,
+  .folders-button,
+  .manage-folders-button {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    min-height: 36px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    max-width: 120px !important;
+    gap: 4px !important;
+  }
+
+  .filter-button .filter-icon,
+  .folders-button .folders-icon,
+  .manage-folders-button .manage-icon {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .folders-button .chevron-icon {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .favorites-hint {
+    margin-top: 8px !important;
+    font-size: 12px !important;
+  }
+
+  /* Принудительно используем мобильную сетку для избранного */
+  .favorites-container .desktop-listings-grid {
+    display: none !important;
+  }
+
+  .favorites-container .mobile-listings {
+    display: block !important;
+    height: calc(100vh - 200px) !important;
+    padding: 16px !important;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px)) !important; /* Отступ для панели навигации + safe area */
+    background: transparent !important;
+  }
+
+  .favorites-container .mobile-listings-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Дополнительное пространство внизу для страницы сообщений */
+  .mobile-messages-container .mobile-chats-content {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 20px)) !important;
+  }
+
+  /* Закрепленная зона ввода сообщений */
+  .mobile-message-input {
+    position: fixed !important;
+    bottom: calc(80px + env(safe-area-inset-bottom, 20px)) !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Отступ для области сообщений */
+  .mobile-messages-area {
+    padding-top: calc(80px + env(safe-area-inset-top, 0px)) !important; /* Отступ для заголовка */
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 20px)) !important; /* Отступ для зоны ввода */
+  }
+
+  /* Закрепленный заголовок чата */
+  .mobile-chat-header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  /* Стили для мобильного селектора папок */
+  .mobile-folder-selector {
+    margin-top: 8px !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .mobile-folder-selector-button {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 6px 8px !important;
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    font-size: 11px !important;
+    color: #374151 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  .mobile-folder-selector-button:hover {
+    background: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+  }
+
+  .mobile-folder-selector-button.has-active-folder {
+    background: #eff6ff !important;
+    border-color: #3b82f6 !important;
+    color: #1e40af !important;
+  }
+
+  .mobile-folder-color-indicator {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+    display: block !important;
+  }
+
+  .mobile-folder-selector-text {
+    flex: 1 !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    font-weight: 500 !important;
+    display: block !important;
+  }
+
+  .mobile-folder-chevron-icon {
+    width: 12px !important;
+    height: 12px !important;
+    color: #6b7280 !important;
+    flex-shrink: 0 !important;
+    display: block !important;
   }
 
   .add-listing-icon:hover {
