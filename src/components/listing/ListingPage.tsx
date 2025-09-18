@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  ArrowLeftIcon, 
-  MapPinIcon,
-  CalendarIcon,
+import {
+  ArrowLeftIcon,
+  ShareIcon,
   BuildingOfficeIcon,
   UserIcon,
+  MapPinIcon,
+  CalendarIcon,
   EyeIcon,
   ChatBubbleLeftRightIcon,
   StarIcon,
-  ShareIcon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
@@ -20,9 +20,6 @@ import { useListingImages } from '../../hooks/useListingImages';
 import { useAuth } from '../../contexts/AuthContext';
 import { useReviews } from '../../contexts/ReviewsContext';
 import { useDialogs } from '../../contexts/DialogsContext';
-import { SeoMeta } from './SeoMeta';
-import { Gallery } from './Hero/Gallery';
-import { ActionBar } from './Hero/ActionBar';
 import ReviewModal from '../ReviewModal';
 import SellerReviewsModal from '../SellerReviewsModal';
 import ReviewRestrictionModal from '../ReviewRestrictionModal';
@@ -61,10 +58,11 @@ export const ListingPage: React.FC<ListingPageProps> = ({
   const [showReviewRestrictionModal, setShowReviewRestrictionModal] = useState(false);
   const [selectedReportType, setSelectedReportType] = useState('');
   const [reportReason, setReportReason] = useState('');
-  
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+
   // Используем ID из пропсов или из URL параметров
   const id = listingId || params.id || '';
-  
   const { listing, loading, error } = useListingData(id);
 
   // Используем хук для правильной сборки изображений
@@ -72,6 +70,9 @@ export const ListingPage: React.FC<ListingPageProps> = ({
     images: listing?.images,          // новая схема (если есть)
     imageName: listing?.imageName     // fallback по MULTI_IMAGE_CONFIG
   });
+
+  // Получаем изображения
+  const images = galleryImages;
 
   // Получаем рейтинг продавца
   const [sellerRating, setSellerRating] = useState(
@@ -84,10 +85,6 @@ export const ListingPage: React.FC<ListingPageProps> = ({
       setSellerRating(getSellerRating(listing.userId));
     }
   }, [getSellerRating, listing?.userId]);
-
-
-
-
 
   // Функция для рендеринга звезд
   const renderStars = (rating: number) => {
@@ -320,6 +317,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
     setShowReviewModal(false);
   };
 
+  // Новый layout
   if (loading) {
     return (
       <div className="listing-loading">
@@ -328,7 +326,6 @@ export const ListingPage: React.FC<ListingPageProps> = ({
       </div>
     );
   }
-
   if (error || !listing) {
     return (
       <div className="listing-error">
@@ -342,180 +339,157 @@ export const ListingPage: React.FC<ListingPageProps> = ({
     );
   }
 
+  const openFullscreen = (idx: number) => {
+    setCurrentIndex(idx);
+    setFullscreen(true);
+  };
+  const closeFullscreen = () => setFullscreen(false);
+  const nextImage = () => setCurrentIndex((i) => (i + 1) % images.length);
+  const prevImage = () => setCurrentIndex((i) => (i - 1 + images.length) % images.length);
+
+  const isMobileView = isMobile;
   return (
-    <>
-      <SeoMeta listing={listing} />
-      
-      <div className={`listing-detail-container ${isMobile ? 'mobile' : 'desktop'}`}>
-        {/* Верхняя панель с кнопками */}
-        <div className="detail-header">
-          <button 
-            className="back-button" 
-            onClick={handleBack}
-            aria-label="Назад к списку объявлений"
-          >
-            <ArrowLeftIcon className="back-icon" />
-          </button>
-          <ActionBar
-            id={listing.id}
-            isFav={isFavorite}
-            onFavoriteToggle={handleFavoriteToggle}
-            onShareClick={handleShareClick}
-          />
-        </div>
-
-        {/* Основной контент */}
-        <div className="detail-main-content">
-          {/* Левая колонка с изображением */}
-          <div className="detail-image-section">
-            <Gallery images={galleryImages} />
-          </div>
-
-          {/* Основная информация в одном контейнере */}
-          <div className="detail-main-info">
-            {/* Заголовок и цена */}
-            <div className="detail-title-section">
-              <h1 className="detail-title">{listing.title}</h1>
-              <div className="detail-price">
-                <span className="price-amount">{listing.price}</span>
-                <span className="price-currency">{listing.currency}</span>
-                {(listing.category === 'work' || listing.category === 'vacancies' || listing.subcategory === 'vacancies' || listing.subcategory === 'rent') && (
-                  <span className="price-period"> / месяц</span>
-                )}
-              </div>
-            </div>
-
-            {/* Информация о продавце */}
-            <div className="seller-info">
-              <div className="seller-avatar">
-                {listing.isCompany ? (
-                  <BuildingOfficeIcon className="seller-icon" />
-                ) : (
-                  <UserIcon className="seller-icon" />
-                )}
-              </div>
-              <div className="seller-details">
-                <div 
-                  className="seller-name clickable"
-                  onClick={() => onNavigateToSellerProfile?.(listing.userId, listing.sellerName, listing.isCompany)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {listing.sellerName}
-                </div>
-                <div className="seller-type">
-                  {listing.isCompany ? 'Компания' : 'Частное лицо'}
-                </div>
-                
-                {/* Рейтинг продавца */}
-                {sellerRating.totalReviews > 0 && (
-                  <div 
-                    className="seller-rating-info clickable"
-                    onClick={handleSellerRatingClick}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="rating-stars">
-                      {renderStars(Math.floor(sellerRating.averageRating))}
-                    </div>
-                    <span className="rating-text">
-                      {sellerRating.averageRating} ({sellerRating.totalReviews} отзывов)
-                    </span>
+    <div className="relative min-h-screen bg-gradient-to-br from-[#f5f6fa] via-[#e9eaf3] to-[#f0f4ff] font-sans overflow-hidden">
+      {/* Glassmorphism background decorations */}
+      <div aria-hidden="true" className="pointer-events-none select-none absolute inset-0 z-0">
+        <div className="absolute left-[-80px] top-24 w-72 h-72 rounded-full bg-indigo-200/30 blur-2xl" />
+        <div className="absolute right-[-60px] top-1/2 w-60 h-60 rounded-full bg-pink-200/30 blur-2xl" />
+        <div className="absolute left-1/2 bottom-[-100px] w-96 h-96 rounded-full bg-blue-100/30 blur-2xl" style={{transform: 'translateX(-50%)'}} />
+      </div>
+      {/* Spacer for nav bar */}
+      <div className="h-16 md:h-20 z-10 relative" />
+      {/* Top bar (ниже панели навигации) */}
+      <div className="listing-detail-toolbar flex items-center justify-between mb-8 max-w-5xl mx-auto w-full z-20 sticky top-0 bg-white/60 backdrop-blur-md border-b border-gray-200 shadow-lg rounded-2xl h-20" style={{marginTop: '-1.5rem'}}>
+        <button onClick={handleBack} className="back-button flex items-center gap-2 text-gray-700 hover:text-indigo-600 font-semibold py-2 px-5 rounded-full bg-white/80 backdrop-blur-md shadow-md transition-all text-base">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 mr-1"><ArrowLeftIcon className="w-5 h-5" /></span>
+          <span>Назад</span>
+        </button>
+        <button onClick={handleShareClick} className="back-button flex items-center gap-2 text-gray-700 hover:text-indigo-600 font-semibold py-2 px-5 rounded-full bg-white/80 backdrop-blur-md shadow-md transition-all text-base">
+          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 mr-1"><ShareIcon className="w-5 h-5" /></span>
+          <span>Поделиться</span>
+        </button>
+      </div>
+      {/* Main content */}
+      <div className="listing-detail-main max-w-5xl mx-auto flex flex-col md:flex-row gap-6 pb-10 px-4 z-10 relative mb-8">
+        {/* Photo left, sticky */}
+        <div className="md:w-[420px] w-full flex justify-center md:justify-start">
+          <div className="sticky top-32 w-full max-w-[420px] aspect-square bg-white/40 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col items-center border border-white/30">
+            {images.length > 0 ? (
+              <>
+                <img
+                  src={images[currentIndex].src}
+                  alt={listing.title}
+                  className="object-cover w-full h-full cursor-pointer transition-transform duration-200 hover:scale-105"
+                  onClick={() => openFullscreen(currentIndex)}
+                />
+                {images.length > 1 && (
+                  <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs rounded-full px-3 py-1">
+                    {currentIndex + 1} / {images.length}
                   </div>
                 )}
-              </div>
-              <div className="seller-actions">
-                <button 
-                  className="contact-button"
-                  onClick={handleContactClick}
-                >
-                  <ChatBubbleLeftRightIcon className="contact-icon" />
-                  <span className="contact-text">
-                    {listing.contactMethod === 'chat' ? 'Написать' : 'Связаться'}
-                  </span>
-                </button>
-                
-                {/* Кнопка оставить отзыв */}
-                <button 
-                  className="review-button"
-                  onClick={handleReviewClick}
-                >
-                  <StarIcon className="review-icon" />
-                  <span className="review-text">Отзыв</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Мета-информация */}
-            <div className="detail-meta">
-              <div className="meta-item">
-                <MapPinIcon className="meta-icon" />
-                <span>{listing.city}</span>
-              </div>
-              <div className="meta-item">
-                <CalendarIcon className="meta-icon" />
-                <span>Опубликовано {new Date(listing.createdAt).toLocaleDateString('ru-RU')}</span>
-              </div>
-              {listing.views !== undefined && (
-                <div className="meta-item">
-                  <EyeIcon className="meta-icon" />
-                  <span>{listing.views} просмотров</span>
-                </div>
-              )}
-            </div>
-
-            {/* Категория и доставка на отдельной строке */}
-            <div className="detail-category-delivery">
-              {/* Категория */}
-              <div className="category-delivery-item">
-                <span className="category-label">Категория:</span>
-                <span className="category-value">{getTranslatedCategory(listing.category)}</span>
-              </div>
-
-              {/* Способ доставки - не показываем для категорий "Работа", "Вакансии" и "Недвижимость" */}
-              {listing.delivery && listing.category !== 'work' && listing.category !== 'vacancies' && listing.category !== 'realEstate' && (
-                <div className="category-delivery-item">
-                  <span className="delivery-label">Доставка:</span>
-                  <span className="delivery-value">
-                    {listing.delivery === 'pickup' ? 'Самовывоз' : 'Доставка продавцом'}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Характеристики и описание в одном контейнере */}
-          <div className="detail-info-section">
-            {/* Левый столбец - описание */}
-            <div className="detail-description">
-              <h3 className="description-title">Описание</h3>
-              <p className="description-text">
-                {listing.description || `Прекрасный винтажный комод с зеркалом в отличном состоянии. Изготовлен из качественного дерева, имеет классический дизайн, который подойдет к любому интерьеру. 
-
-Комод имеет 3 просторных ящика для хранения вещей, верхняя часть с зеркалом идеально подходит для косметики и украшений. Все механизмы работают исправно, поверхность в хорошем состоянии.
-
-Размеры: 120x45x85 см. Подходит для спальни, прихожей или гостиной. Товар можно забрать в удобное время или договориться о доставке.`}
-              </p>
-            </div>
-
-            {/* Правый столбец - характеристики */}
-            {listing.characteristics && Object.keys(listing.characteristics).length > 0 && (
-              <div className="detail-characteristics">
-                <h3 className="characteristics-title">Характеристики</h3>
-                <div className="characteristics-list">
-                  {Object.entries(listing.characteristics).map(([key, value]) => (
-                    <div key={key} className="characteristic-item">
-                      <span className="characteristic-label">{getTranslatedCharacteristic(key)}:</span>
-                      <span className="characteristic-value">{String(value)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              </>
+            ) : (
+              <div className="flex items-center justify-center w-full h-full text-gray-400 text-4xl">📷</div>
             )}
           </div>
         </div>
-
-
+        {/* Info right */}
+        <div className="flex-1 flex flex-col gap-6">
+          <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 flex flex-col gap-4 min-h-[420px] h-full justify-between">
+            <h1 className="text-3xl font-extrabold text-gray-900 break-words mb-2 leading-tight">{listing.title}</h1>
+            <div className="text-2xl font-bold text-indigo-600 mb-2">{listing.price} {listing.currency}</div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigateToSellerProfile?.(listing.userId, listing.sellerName, listing.isCompany)}>
+                {listing.isCompany ? <BuildingOfficeIcon className="w-6 h-6 text-blue-500" /> : <UserIcon className="w-6 h-6 text-gray-500" />}
+                <span className="font-semibold text-gray-800 hover:underline">{listing.sellerName}</span>
+              </div>
+              {sellerRating.totalReviews > 0 && (
+                <div className="flex items-center gap-1 cursor-pointer" onClick={handleSellerRatingClick}>
+                  <div className="flex gap-0.5">
+                    {renderStars(Math.floor(sellerRating.averageRating))}
+                  </div>
+                  <span className="text-sm text-gray-600">
+                    {sellerRating.averageRating} ({sellerRating.totalReviews} отзывов)
+                  </span>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
+              <div className="flex items-center gap-1"><MapPinIcon className="w-4 h-4" />{listing.city}</div>
+              <div className="flex items-center gap-1"><CalendarIcon className="w-4 h-4" />Опубликовано {new Date(listing.createdAt).toLocaleDateString('ru-RU')}</div>
+              {listing.views !== undefined && <div className="flex items-center gap-1"><EyeIcon className="w-4 h-4" />{listing.views} просмотров</div>}
+              <button
+                className={`flex items-center gap-2 px-3 py-1 rounded-full font-semibold transition-all duration-200 border backdrop-blur-md bg-white/40 hover:bg-white/60 border-white/30 shadow-none text-indigo-700 ${isFavorite ? 'ring-2 ring-yellow-300' : ''}`}
+                onClick={handleFavoriteToggle}
+                type="button"
+                aria-pressed={isFavorite}
+              >
+                <StarIcon className={`w-5 h-5 ${isFavorite ? 'text-yellow-400' : 'text-indigo-400'}`} />
+                <span className="text-sm font-medium">{isFavorite ? 'В избранном' : 'В избранное'}</span>
+              </button>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+              <button 
+                className="flex-1 bg-indigo-600/90 text-white font-semibold rounded-xl px-4 py-2 shadow-lg hover:bg-indigo-700/90 transition-all duration-200 flex items-center justify-center gap-2 text-base backdrop-blur-md"
+                onClick={handleContactClick}
+              >
+                <ChatBubbleLeftRightIcon className="w-5 h-5" />
+                <span>Связаться</span>
+              </button>
+              <button className="flex-1 bg-white/70 text-indigo-700 font-semibold rounded-xl px-4 py-2 shadow-lg hover:bg-indigo-50 transition-all duration-200 flex items-center justify-center gap-2 text-base backdrop-blur-md border border-indigo-100" onClick={handleReviewClick}>
+                <StarIcon className="w-5 h-5" />
+                <span>Оставить отзыв</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-
+      {/* Description & characteristics */}
+      <div className="max-w-5xl mx-auto mt-0 px-4 flex flex-col md:flex-row gap-6 z-10 relative">
+        <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 flex-1 min-w-[260px]">
+          <h3 className="text-lg font-bold mb-2 text-gray-900">Описание</h3>
+          <p className="whitespace-pre-line text-gray-800 bg-white/30 rounded-lg p-4 shadow-inner min-h-[80px]">
+            {listing.description || 'Описание отсутствует'}
+          </p>
+        </div>
+        {listing.characteristics && Object.keys(listing.characteristics).length > 0 && (
+          <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 flex-1 min-w-[260px]">
+            <h3 className="text-lg font-bold mb-2 text-gray-900">Характеристики</h3>
+            <div className="grid grid-cols-1 gap-2 bg-white/30 rounded-lg p-4 shadow-inner">
+              {Object.entries(listing.characteristics).map(([key, value]) => (
+                <div key={key} className="flex justify-between text-gray-700">
+                  <span className="font-medium">{getTranslatedCharacteristic(key)}:</span>
+                  <span>{String(value)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+      {/* Fullscreen image modal */}
+      {fullscreen && (
+        <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center" onClick={closeFullscreen}>
+          <div className="relative w-full max-w-2xl aspect-square flex items-center justify-center">
+            <img src={images[currentIndex].src} alt={listing.title} className="object-contain w-full h-full" />
+            {images.length > 1 && (
+              <>
+                <button className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30" onClick={e => { e.stopPropagation(); prevImage(); }}>
+                  <ArrowLeftIcon className="w-6 h-6 text-gray-700" />
+                </button>
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30" onClick={e => { e.stopPropagation(); nextImage(); }}>
+                  <ShareIcon className="w-6 h-6 text-gray-700" />
+                </button>
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs rounded-full px-3 py-1 z-30">
+                  {currentIndex + 1} / {images.length}
+                </div>
+              </>
+            )}
+            <button className="absolute top-2 right-2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30" onClick={e => { e.stopPropagation(); closeFullscreen(); }}>
+              <XMarkIcon className="w-6 h-6 text-gray-700" />
+            </button>
+          </div>
+        </div>
+      )}
       {/* Модальное окно для отзыва */}
       <ReviewModal
         isOpen={showReviewModal}
@@ -599,7 +573,6 @@ export const ListingPage: React.FC<ListingPageProps> = ({
             </div>
             <div className="modal-body">
               <p className="modal-message">Выберите причину жалобы:</p>
-              
               <div className="report-reasons-grid">
                 <button 
                   className={`report-reason-button ${selectedReportType === 'spam' ? 'selected' : ''}`}
@@ -611,7 +584,6 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                     <span className="report-reason-description">Нежелательная реклама</span>
                   </div>
                 </button>
-                
                 <button 
                   className={`report-reason-button ${selectedReportType === 'inappropriate' ? 'selected' : ''}`}
                   onClick={() => handleReportTypeSelect('inappropriate')}
@@ -622,7 +594,6 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                     <span className="report-reason-description">Оскорбительный материал</span>
                   </div>
                 </button>
-                
                 <button 
                   className={`report-reason-button ${selectedReportType === 'fraud' ? 'selected' : ''}`}
                   onClick={() => handleReportTypeSelect('fraud')}
@@ -634,7 +605,6 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                   </div>
                 </button>
               </div>
-
               {selectedReportType && (
                 <div className="report-reason-input">
                   <div className="report-reason-label">
@@ -642,70 +612,40 @@ export const ListingPage: React.FC<ListingPageProps> = ({
                   </div>
                   <textarea
                     id="reportReason"
-                    value={reportReason}
-                    onChange={(e) => setReportReason(e.target.value)}
-                    placeholder="Опишите проблему подробнее..."
                     className="report-reason-textarea"
+                    value={reportReason}
+                    onChange={e => setReportReason(e.target.value)}
                     rows={3}
+                    placeholder="Опишите подробнее причину жалобы"
                   />
+                  <button
+                    className="report-submit-button bg-indigo-600 text-white rounded-lg px-4 py-2 mt-4 hover:bg-indigo-700 transition-all"
+                    onClick={handleReportSubmit}
+                  >
+                    Отправить жалобу
+                  </button>
                 </div>
               )}
-
-              <div className="modal-actions">
-                <button 
-                  className="modal-button cancel"
-                  onClick={handleCloseReportModal}
-                >
-                  Отмена
-                </button>
-                <button 
-                  className="modal-button submit"
-                  onClick={handleReportSubmit}
-                  disabled={!selectedReportType || !reportReason.trim()}
-                >
-                  Отправить жалобу
-                </button>
-              </div>
             </div>
           </div>
         </div>
       )}
-
-      {/* Модальное окно благодарности за жалобу */}
+      {/* Спасибо за жалобу */}
       {showThankYouModal && (
         <div className="modal-overlay" onClick={handleCloseThankYouModal}>
-          <div className="modal-content thank-you-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">Спасибо за обращение!</h3>
-              <button 
-                className="modal-close"
-                onClick={handleCloseThankYouModal}
-              >
+              <h3 className="modal-title">Спасибо!</h3>
+              <button className="modal-close" onClick={handleCloseThankYouModal}>
                 <XMarkIcon className="close-icon" />
               </button>
             </div>
             <div className="modal-body">
-              <div className="thank-you-content">
-                <div className="thank-you-icon">✅</div>
-                <p className="thank-you-message">
-                  Ваша жалоба успешно отправлена. Мы рассмотрим её в ближайшее время и примем необходимые меры.
-                </p>
-                <p className="thank-you-note">
-                  Спасибо, что помогаете сделать нашу платформу лучше!
-                </p>
-              </div>
-              <div className="modal-actions">
-                <button 
-                  className="modal-button submit"
-                  onClick={handleCloseThankYouModal}
-                >
-                  Понятно
-                </button>
-              </div>
+              <p className="modal-message">Ваша жалоба отправлена на модерацию.</p>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
-}; 
+};

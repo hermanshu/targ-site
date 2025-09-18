@@ -142,8 +142,8 @@ const AddListingView: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const categories = [
-    { value: 'electronics', label: t('home.electronics'), emoji: '📱' },
-    { value: 'home', label: t('home.homeAndGarden'), emoji: '🏠' },
+    { value: 'electronics', label: t('home.electronics'), emoji: '📱', hasSubcategories: true },
+    { value: 'home', label: t('home.homeAndGarden'), emoji: '🏠', hasSubcategories: true },
     { value: 'fashion', label: t('home.fashion'), emoji: '👕' },
     { value: 'services', label: t('home.services'), emoji: '🔧' },
     { value: 'work', label: t('home.work'), emoji: '💼' },
@@ -178,6 +178,20 @@ const AddListingView: React.FC = () => {
     'real-estate': [
       { value: 'rent', label: t('home.rent'), emoji: '🏠' },
       { value: 'sale', label: t('home.sale'), emoji: '🏢' }
+    ],
+    electronics: [
+      { value: 'smartphones', label: 'Смартфоны / планшеты', emoji: '📱' },
+      { value: 'computers', label: 'Ноутбуки / ПК', emoji: '💻' },
+      { value: 'audio', label: 'Аудио / аксессуары', emoji: '🎧' },
+      { value: 'tv', label: 'ТВ / мониторы', emoji: '📺' },
+      { value: 'gaming', label: 'Консоли / игры', emoji: '🕹' },
+      { value: 'other-electronics', label: 'Другая электроника', emoji: '📦' }
+    ],
+    home: [
+      { value: 'home-goods', label: 'Товары для дома', emoji: '🧹' },
+      { value: 'tools', label: 'Инструменты', emoji: '⚒' },
+      { value: 'garden', label: 'Садовая техника и инвентарь', emoji: '🌿' },
+      { value: 'other-home', label: 'Что-то другое', emoji: '📦' }
     ]
   };
 
@@ -191,15 +205,182 @@ const AddListingView: React.FC = () => {
 
   // Характеристики для каждой категории и подкатегории
   const categoryCharacteristics: Record<string, CharacteristicField[]> = {
+    // Общие характеристики для всей электроники
     electronics: [
       { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
       { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
-      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionFair')] },
-      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyExpired')] },
-      { key: 'year', label: t('listings.characteristicYear'), type: 'number' }
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' }
     ],
+
+    // Смартфоны / планшеты
+    smartphones: [
+      // Общие характеристики
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' },
+      
+      // Специфичные для смартфонов
+      { key: 'os', label: t('listings.characteristicOS'), type: 'select', options: [t('listings.osIOS'), t('listings.osAndroid'), t('listings.osHarmonyOS')] },
+      { key: 'screenDiagonal', label: t('listings.characteristicScreenDiagonal'), type: 'text' },
+      { key: 'memory', label: t('listings.characteristicMemory'), type: 'text' },
+      { key: 'ram', label: t('listings.characteristicRAM'), type: 'text' },
+      { key: 'sim', label: t('listings.characteristicSIM'), type: 'select', options: [t('listings.simNano'), t('listings.simESIM'), t('listings.simDual')] },
+      { key: 'network', label: t('listings.characteristicNetwork'), type: 'select', options: [t('listings.network4G'), t('listings.network5G')] },
+      { key: 'camera', label: t('listings.characteristicCamera'), type: 'text' },
+      { key: 'cameraModules', label: t('listings.characteristicCameraModules'), type: 'text' },
+      { key: 'battery', label: t('listings.characteristicBattery'), type: 'text' },
+      { key: 'screenCondition', label: t('listings.characteristicScreenCondition'), type: 'select', options: [t('listings.screenConditionPerfect'), t('listings.screenConditionScratches'), t('listings.screenConditionChips')] }
+    ],
+
+    // Ноутбуки / ПК
+    computers: [
+      // Общие характеристики
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' },
+      
+      // Специфичные для компьютеров
+      { key: 'processor', label: t('listings.characteristicProcessor'), type: 'text' },
+      { key: 'ram', label: t('listings.characteristicRAM'), type: 'text' },
+      { key: 'storage', label: t('listings.characteristicStorage'), type: 'select', options: [t('listings.storageHDD'), t('listings.storageSSD')] },
+      { key: 'graphics', label: t('listings.characteristicGraphics'), type: 'select', options: [t('listings.graphicsIntegrated'), t('listings.graphicsDiscrete')] },
+      { key: 'screenDiagonal', label: t('listings.characteristicScreenDiagonal'), type: 'text' },
+      { key: 'os', label: t('listings.characteristicOS'), type: 'select', options: [t('listings.osWindows'), t('listings.osMacOS'), t('listings.osLinux'), t('listings.osNone')] },
+      { key: 'batteryLife', label: t('listings.characteristicBatteryLife'), type: 'text' }
+    ],
+
+    // Аудио / аксессуары
+    audio: [
+      // Общие характеристики
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' },
+      
+      // Специфичные для аудио
+      { key: 'deviceType', label: t('listings.characteristicDeviceType'), type: 'text' },
+      { key: 'connection', label: t('listings.characteristicConnection'), type: 'select', options: [t('listings.connectionWired'), t('listings.connectionBluetooth'), t('listings.connectionWiFi')] },
+      { key: 'compatibility', label: t('listings.characteristicCompatibility'), type: 'select', options: [t('listings.compatibilityIOS'), t('listings.compatibilityAndroid'), t('listings.compatibilityUniversal')] },
+      { key: 'batteryHealth', label: t('listings.characteristicBatteryHealth'), type: 'text' }
+    ],
+
+    // ТВ / мониторы
+    tv: [
+      // Общие характеристики
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' },
+      
+      // Специфичные для ТВ/мониторов
+      { key: 'screenDiagonal', label: t('listings.characteristicScreenDiagonal'), type: 'text' },
+      { key: 'resolution', label: t('listings.characteristicResolution'), type: 'select', options: [t('listings.resolutionHD'), t('listings.resolutionFullHD'), t('listings.resolution4K'), t('listings.resolution8K')] },
+      { key: 'smartTV', label: t('listings.characteristicSmartTV'), type: 'select', options: [t('listings.smartTVYes'), t('listings.smartTVNo')] },
+      { key: 'matrix', label: t('listings.characteristicMatrix'), type: 'select', options: [t('listings.matrixOLED'), t('listings.matrixQLED'), t('listings.matrixIPS'), t('listings.matrixVA')] },
+      { key: 'ports', label: t('listings.characteristicPorts'), type: 'text' }
+    ],
+
+    // Консоли / игры
+    gaming: [
+      // Общие характеристики
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' },
+      
+      // Специфичные для игр
+      { key: 'consoleType', label: t('listings.characteristicConsoleType'), type: 'select', options: [t('listings.consolePlayStation'), t('listings.consoleXbox'), t('listings.consoleNintendo'), t('listings.consolePortable')] },
+      { key: 'memory', label: t('listings.characteristicMemory'), type: 'text' },
+      { key: 'games', label: t('listings.characteristicGames'), type: 'text' },
+      { key: 'controllers', label: t('listings.characteristicControllers'), type: 'text' }
+    ],
+
+    // Другая электроника
+    'other-electronics': [
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'model', label: t('listings.characteristicModel'), type: 'text' },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'warranty', label: t('listings.characteristicWarranty'), type: 'select', options: [t('listings.warrantyYes'), t('listings.warrantyNo'), t('listings.warrantyPeriod')] },
+      { key: 'year', label: t('listings.characteristicYear'), type: 'text' },
+      { key: 'color', label: t('listings.characteristicColor'), type: 'text' },
+      { key: 'completeness', label: t('listings.characteristicCompleteness'), type: 'text' }
+    ],
+    // Общие характеристики для дома и сада
     home: [
-      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionFair')] },
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
+      { key: 'dimensions', label: t('listings.characteristicDimensions'), type: 'text' },
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' }
+    ],
+
+
+
+    // Товары для дома
+    'home-goods': [
+      // Общие характеристики
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      
+      // Специфичные для товаров для дома
+      { key: 'homeType', label: t('listings.characteristicHomeType'), type: 'text' },
+      { key: 'power', label: t('listings.characteristicPower'), type: 'text' },
+      { key: 'volume', label: t('listings.characteristicVolume'), type: 'text' }
+    ],
+
+    // Инструменты
+    tools: [
+      // Общие характеристики
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      
+      // Специфичные для инструментов
+      { key: 'toolType', label: t('listings.characteristicToolType'), type: 'text' },
+      { key: 'powerSource', label: t('listings.characteristicPowerSource'), type: 'text' },
+      { key: 'power', label: t('listings.characteristicPower'), type: 'text' },
+      { key: 'batteryCapacity', label: t('listings.characteristicBatteryCapacity'), type: 'text' }
+    ],
+
+    // Садовая техника и инвентарь
+    garden: [
+      // Общие характеристики
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
+      { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      
+      // Специфичные для садовой техники
+      { key: 'gardenType', label: t('listings.characteristicGardenType'), type: 'text' },
+      { key: 'fuel', label: t('listings.characteristicFuel'), type: 'text' },
+      { key: 'enginePower', label: t('listings.characteristicEnginePower'), type: 'text' },
+      { key: 'workingWidth', label: t('listings.characteristicWorkingWidth'), type: 'text' },
+      { key: 'workingDepth', label: t('listings.characteristicWorkingDepth'), type: 'text' }
+    ],
+
+    // Что-то другое (общие характеристики)
+    'other-home': [
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
       { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
       { key: 'dimensions', label: t('listings.characteristicDimensions'), type: 'text' },
       { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' }
@@ -223,6 +404,23 @@ const AddListingView: React.FC = () => {
       { key: 'height', label: t('listings.characteristicHeight'), type: 'text' },
       { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionExcellent'), t('listings.conditionGood'), t('listings.conditionFair')] }
     ],
+    
+    // Общие характеристики для недвижимости (когда выбрана только категория без подкатегории)
+    'real-estate': [
+      { key: 'propertyType', label: t('listings.characteristicPropertyType'), type: 'select', options: [t('listings.propertyTypeApartment'), t('listings.propertyTypeHouse'), t('listings.propertyTypeRoom'), t('listings.propertyTypeCommercial'), t('listings.propertyTypeLand')] },
+      { key: 'areaTotal', label: t('listings.characteristicAreaTotal'), type: 'number' },
+      { key: 'areaLiving', label: t('listings.characteristicAreaLiving'), type: 'number' },
+      { key: 'rooms', label: t('listings.characteristicRooms'), type: 'number' },
+      { key: 'floor', label: t('listings.characteristicFloor'), type: 'number' },
+      { key: 'floorsTotal', label: t('listings.characteristicFloorsTotal'), type: 'number' },
+      { key: 'layout', label: t('listings.characteristicLayout'), type: 'select', options: [t('listings.layoutStudio'), t('listings.layoutSeparate'), t('listings.layoutOpen')] },
+      { key: 'renovation', label: t('listings.characteristicRenovation'), type: 'select', options: [t('listings.renovationNone'), t('listings.renovationRough'), t('listings.renovationCosmetic'), t('listings.renovationDesign')] },
+      { key: 'furniture', label: t('listings.characteristicFurniture'), type: 'select', options: [t('listings.furnitureYes'), t('listings.furnitureNo')] },
+      { key: 'balcony', label: t('listings.characteristicBalcony'), type: 'select', options: [t('listings.balconyYes'), t('listings.balconyNo')] },
+      { key: 'parking', label: t('listings.characteristicParking'), type: 'select', options: [t('listings.parkingYes'), t('listings.parkingNo'), t('listings.parkingGarage'), t('listings.parkingYard'), t('listings.parkingUnderground')] },
+      { key: 'heating', label: t('listings.characteristicHeating'), type: 'select', options: [t('listings.heatingCentral'), t('listings.heatingAutonomous'), t('listings.heatingElectric'), t('listings.heatingNone')] },
+      { key: 'utilities', label: t('listings.characteristicUtilities'), type: 'select', options: [t('listings.utilitiesIncluded'), t('listings.utilitiesSeparate')] }
+    ],
     // Подкатегории для работы
     vacancies: [
       { key: 'position', label: t('listings.characteristicPosition'), type: 'text' },
@@ -237,20 +435,61 @@ const AddListingView: React.FC = () => {
       { key: 'education', label: t('listings.characteristicEducation'), type: 'text' },
       { key: 'skills', label: t('listings.characteristicSkills'), type: 'text' }
     ],
-    // Подкатегории для недвижимости
+    // Подкатегории для недвижимости - Аренда
     rent: [
-      { key: 'propertyType', label: t('listings.characteristicPropertyType'), type: 'select', options: [t('listings.propertyTypeApartment'), t('listings.propertyTypeHouse'), t('listings.propertyTypeCommercial'), t('listings.propertyTypeLand')] },
+      // Общие характеристики недвижимости
+      { key: 'propertyType', label: t('listings.characteristicPropertyType'), type: 'select', options: [t('listings.propertyTypeApartment'), t('listings.propertyTypeHouse'), t('listings.propertyTypeRoom'), t('listings.propertyTypeCommercial'), t('listings.propertyTypeLand')] },
+      { key: 'areaTotal', label: t('listings.characteristicAreaTotal'), type: 'number' },
+      { key: 'areaLiving', label: t('listings.characteristicAreaLiving'), type: 'number' },
       { key: 'rooms', label: t('listings.characteristicRooms'), type: 'number' },
-      { key: 'area', label: t('listings.characteristicArea'), type: 'number' },
       { key: 'floor', label: t('listings.characteristicFloor'), type: 'number' },
-      { key: 'rentPeriod', label: t('listings.characteristicRentPeriod'), type: 'text' }
+      { key: 'floorsTotal', label: t('listings.characteristicFloorsTotal'), type: 'number' },
+      { key: 'layout', label: t('listings.characteristicLayout'), type: 'select', options: [t('listings.layoutStudio'), t('listings.layoutSeparate'), t('listings.layoutOpen')] },
+      { key: 'renovation', label: t('listings.characteristicRenovation'), type: 'select', options: [t('listings.renovationNone'), t('listings.renovationRough'), t('listings.renovationCosmetic'), t('listings.renovationDesign')] },
+      { key: 'furniture', label: t('listings.characteristicFurniture'), type: 'select', options: [t('listings.furnitureYes'), t('listings.furnitureNo')] },
+      { key: 'balcony', label: t('listings.characteristicBalcony'), type: 'select', options: [t('listings.balconyYes'), t('listings.balconyNo')] },
+      { key: 'parking', label: t('listings.characteristicParking'), type: 'select', options: [t('listings.parkingYes'), t('listings.parkingNo'), t('listings.parkingGarage'), t('listings.parkingYard'), t('listings.parkingUnderground')] },
+      { key: 'heating', label: t('listings.characteristicHeating'), type: 'select', options: [t('listings.heatingCentral'), t('listings.heatingAutonomous'), t('listings.heatingElectric'), t('listings.heatingNone')] },
+      { key: 'utilities', label: t('listings.characteristicUtilities'), type: 'select', options: [t('listings.utilitiesIncluded'), t('listings.utilitiesSeparate')] },
+      
+      // Характеристики для аренды
+      { key: 'rentPeriod', label: t('listings.characteristicRentPeriod'), type: 'select', options: [t('listings.rentPeriodDaily'), t('listings.rentPeriodMonthly'), t('listings.rentPeriodLongTerm')] },
+      { key: 'deposit', label: t('listings.characteristicDeposit'), type: 'select', options: [t('listings.depositYes'), t('listings.depositNo'), t('listings.depositMonth'), t('listings.depositHalf'), t('listings.depositCustom')] },
+      { key: 'minRentPeriod', label: t('listings.characteristicMinRentPeriod'), type: 'text' },
+      { key: 'payment', label: t('listings.characteristicPayment'), type: 'select', options: [t('listings.paymentAdvance'), t('listings.paymentMonthly'), t('listings.paymentContract')] },
+      { key: 'pets', label: t('listings.characteristicPets'), type: 'select', options: [t('listings.petsYes'), t('listings.petsNo')] },
+      { key: 'children', label: t('listings.characteristicChildren'), type: 'select', options: [t('listings.childrenYes'), t('listings.childrenNo')] },
+      { key: 'smoking', label: t('listings.characteristicSmoking'), type: 'select', options: [t('listings.smokingYes'), t('listings.smokingNo')] },
+      { key: 'internet', label: t('listings.characteristicInternet'), type: 'select', options: [t('listings.internetYes'), t('listings.internetNo'), t('listings.internetWiFi'), t('listings.internetCable')] },
+      { key: 'neighbors', label: t('listings.characteristicNeighbors'), type: 'select', options: [t('listings.neighborsSeparate'), t('listings.neighborsCommunal')] }
     ],
+    
+    // Подкатегории для недвижимости - Продажа
     sale: [
-      { key: 'propertyType', label: t('listings.characteristicPropertyType'), type: 'select', options: [t('listings.propertyTypeApartment'), t('listings.propertyTypeHouse'), t('listings.propertyTypeCommercial'), t('listings.propertyTypeLand')] },
+      // Общие характеристики недвижимости
+      { key: 'propertyType', label: t('listings.characteristicPropertyType'), type: 'select', options: [t('listings.propertyTypeApartment'), t('listings.propertyTypeHouse'), t('listings.propertyTypeRoom'), t('listings.propertyTypeCommercial'), t('listings.propertyTypeLand')] },
+      { key: 'areaTotal', label: t('listings.characteristicAreaTotal'), type: 'number' },
+      { key: 'areaLiving', label: t('listings.characteristicAreaLiving'), type: 'number' },
       { key: 'rooms', label: t('listings.characteristicRooms'), type: 'number' },
-      { key: 'area', label: t('listings.characteristicArea'), type: 'number' },
       { key: 'floor', label: t('listings.characteristicFloor'), type: 'number' },
-      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionExcellent'), t('listings.conditionGood'), t('listings.conditionNeedsRepair')] }
+      { key: 'floorsTotal', label: t('listings.characteristicFloorsTotal'), type: 'number' },
+      { key: 'layout', label: t('listings.characteristicLayout'), type: 'select', options: [t('listings.layoutStudio'), t('listings.layoutSeparate'), t('listings.layoutOpen')] },
+      { key: 'renovation', label: t('listings.characteristicRenovation'), type: 'select', options: [t('listings.renovationNone'), t('listings.renovationRough'), t('listings.renovationCosmetic'), t('listings.renovationDesign')] },
+      { key: 'furniture', label: t('listings.characteristicFurniture'), type: 'select', options: [t('listings.furnitureYes'), t('listings.furnitureNo')] },
+      { key: 'balcony', label: t('listings.characteristicBalcony'), type: 'select', options: [t('listings.balconyYes'), t('listings.balconyNo')] },
+      { key: 'parking', label: t('listings.characteristicParking'), type: 'select', options: [t('listings.parkingYes'), t('listings.parkingNo'), t('listings.parkingGarage'), t('listings.parkingYard'), t('listings.parkingUnderground')] },
+      { key: 'heating', label: t('listings.characteristicHeating'), type: 'select', options: [t('listings.heatingCentral'), t('listings.heatingAutonomous'), t('listings.heatingElectric'), t('listings.heatingNone')] },
+      { key: 'utilities', label: t('listings.characteristicUtilities'), type: 'select', options: [t('listings.utilitiesIncluded'), t('listings.utilitiesSeparate')] },
+      
+      // Характеристики для продажи
+      { key: 'ownership', label: t('listings.characteristicOwnership'), type: 'select', options: [t('listings.ownershipPrivate'), t('listings.ownershipShared'), t('listings.ownershipMunicipal')] },
+      { key: 'documents', label: t('listings.characteristicDocuments'), type: 'select', options: [t('listings.documentsOwnership'), t('listings.documentsMortgage'), t('listings.documentsPowerOfAttorney')] },
+      { key: 'mortgage', label: t('listings.characteristicMortgage'), type: 'select', options: [t('listings.mortgageYes'), t('listings.mortgageNo')] },
+      { key: 'encumbrances', label: t('listings.characteristicEncumbrances'), type: 'select', options: [t('listings.encumbrancesYes'), t('listings.encumbrancesNo')] },
+      { key: 'constructionYear', label: t('listings.characteristicConstructionYear'), type: 'number' },
+      { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
+      { key: 'landPurpose', label: t('listings.characteristicLandPurpose'), type: 'select', options: [t('listings.landPurposeIZHS'), t('listings.landPurposeSNT'), t('listings.landPurposeCommercial')] },
+      { key: 'replanning', label: t('listings.characteristicReplanning'), type: 'select', options: [t('listings.replanningYes'), t('listings.replanningNo')] }
     ],
     // Подкатегории для других категорий
     transport: [
@@ -281,10 +520,15 @@ const AddListingView: React.FC = () => {
       { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' }
     ],
     furniture: [
+      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionAfterRepair')] },
       { key: 'material', label: t('listings.characteristicMaterial'), type: 'text' },
       { key: 'dimensions', label: t('listings.characteristicDimensions'), type: 'text' },
-      { key: 'condition', label: t('listings.characteristicCondition'), type: 'select', options: [t('listings.conditionNew'), t('listings.conditionLikeNew'), t('listings.conditionGood'), t('listings.conditionFair')] },
-      { key: 'style', label: t('listings.characteristicStyle'), type: 'text' }
+      { key: 'brand', label: t('listings.characteristicBrand'), type: 'text' },
+      { key: 'style', label: t('listings.characteristicStyle'), type: 'text' },
+      
+      // Специфичные для мебели
+      { key: 'furnitureType', label: t('listings.characteristicFurnitureType'), type: 'text' },
+      { key: 'finish', label: t('listings.characteristicFinish'), type: 'text' }
     ],
     hobby: [
       { key: 'hobbyType', label: t('listings.characteristicHobbyType'), type: 'text' },
@@ -714,36 +958,181 @@ const AddListingView: React.FC = () => {
               <DocumentTextIcon className="label-icon" />
               {t('listings.characteristics')}
             </label>
-            <div className="characteristics-grid">
-              {(formData.subcategory && categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics] 
-                ? categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics]
-                : categoryCharacteristics[formData.category as keyof typeof categoryCharacteristics]
-              ).map(char => (
-                <div key={char.key} className="characteristic-field">
-                  <label className="characteristic-label">{char.label}</label>
-                  {char.type === 'select' ? (
-                    <select
-                      value={formData.characteristics[char.key] || ''}
-                      onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
-                      className="characteristic-select"
-                    >
-                      <option value="">{t('listings.selectCharacteristic')} {char.label.toLowerCase()}</option>
-                      {char.options?.map((option: string) => (
-                        <option key={option} value={option}>{option}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      type={char.type}
-                      value={formData.characteristics[char.key] || ''}
-                      onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
-                      placeholder={`${t('listings.enterCharacteristic')} ${char.label.toLowerCase()}`}
-                      className="characteristic-input"
-                    />
-                  )}
+            
+            {/* Группировка характеристик для недвижимости */}
+            {(formData.category === 'real-estate' || formData.subcategory === 'rent' || formData.subcategory === 'sale') ? (
+              <div className="characteristics-grouped">
+                {/* Основные характеристики */}
+                <div className="characteristics-group">
+                  <h4 className="characteristics-group-title">🏠 Основные характеристики</h4>
+                  <div className="characteristics-grid">
+                    {(formData.subcategory && categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics] 
+                      ? categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics]
+                      : categoryCharacteristics[formData.category as keyof typeof categoryCharacteristics]
+                    ).filter(char => ['propertyType', 'areaTotal', 'areaLiving', 'rooms', 'floor', 'floorsTotal', 'layout', 'renovation'].includes(char.key)).map(char => (
+                      <div key={char.key} className="characteristic-field">
+                        <label className="characteristic-label">{char.label}</label>
+                        {char.type === 'select' ? (
+                          <select
+                            value={formData.characteristics[char.key] || ''}
+                            onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                            className="characteristic-select"
+                          >
+                            <option value="">{t('listings.selectCharacteristic')} {char.label.toLowerCase()}</option>
+                            {char.options?.map((option: string) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type={char.type}
+                            value={formData.characteristics[char.key] || ''}
+                            onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                            placeholder={`${t('listings.enterCharacteristic')} ${char.label.toLowerCase()}`}
+                            className="characteristic-input"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Комфорт и удобства */}
+                <div className="characteristics-group">
+                  <h4 className="characteristics-group-title">✨ Комфорт и удобства</h4>
+                  <div className="characteristics-grid">
+                    {(formData.subcategory && categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics] 
+                      ? categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics]
+                      : categoryCharacteristics[formData.category as keyof typeof categoryCharacteristics]
+                    ).filter(char => ['furniture', 'balcony', 'parking', 'heating', 'utilities'].includes(char.key)).map(char => (
+                      <div key={char.key} className="characteristic-field">
+                        <label className="characteristic-label">{char.label}</label>
+                        {char.type === 'select' ? (
+                          <select
+                            value={formData.characteristics[char.key] || ''}
+                            onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                            className="characteristic-select"
+                          >
+                            <option value="">{t('listings.selectCharacteristic')} {char.label.toLowerCase()}</option>
+                            {char.options?.map((option: string) => (
+                              <option key={option} value={option}>{option}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            type={char.type}
+                            value={formData.characteristics[char.key] || ''}
+                            onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                            placeholder={`${t('listings.enterCharacteristic')} ${char.label.toLowerCase()}`}
+                            className="characteristic-input"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Специфичные характеристики для аренды */}
+                {formData.subcategory === 'rent' && (
+                  <div className="characteristics-group">
+                    <h4 className="characteristics-group-title">🔑 Условия аренды</h4>
+                    <div className="characteristics-grid">
+                      {categoryCharacteristics.rent.filter(char => ['rentPeriod', 'deposit', 'minRentPeriod', 'payment', 'pets', 'children', 'smoking', 'internet', 'neighbors'].includes(char.key)).map(char => (
+                        <div key={char.key} className="characteristic-field">
+                          <label className="characteristic-label">{char.label}</label>
+                          {char.type === 'select' ? (
+                            <select
+                              value={formData.characteristics[char.key] || ''}
+                              onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                              className="characteristic-select"
+                            >
+                              <option value="">{t('listings.selectCharacteristic')} {char.label.toLowerCase()}</option>
+                              {char.options?.map((option: string) => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={char.type}
+                              value={formData.characteristics[char.key] || ''}
+                              onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                              placeholder={`${t('listings.enterCharacteristic')} ${char.label.toLowerCase()}`}
+                              className="characteristic-input"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Специфичные характеристики для продажи */}
+                {formData.subcategory === 'sale' && (
+                  <div className="characteristics-group">
+                    <h4 className="characteristics-group-title">💰 Юридические и финансовые параметры</h4>
+                    <div className="characteristics-grid">
+                      {categoryCharacteristics.sale.filter(char => ['ownership', 'documents', 'mortgage', 'encumbrances', 'constructionYear', 'material', 'landPurpose', 'replanning'].includes(char.key)).map(char => (
+                        <div key={char.key} className="characteristic-field">
+                          <label className="characteristic-label">{char.label}</label>
+                          {char.type === 'select' ? (
+                            <select
+                              value={formData.characteristics[char.key] || ''}
+                              onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                              className="characteristic-select"
+                            >
+                              <option value="">{t('listings.selectCharacteristic')} {char.label.toLowerCase()}</option>
+                              {char.options?.map((option: string) => (
+                                <option key={option} value={option}>{option}</option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              type={char.type}
+                              value={formData.characteristics[char.key] || ''}
+                              onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                              placeholder={`${t('listings.enterCharacteristic')} ${char.label.toLowerCase()}`}
+                              className="characteristic-input"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Обычное отображение для других категорий */
+              <div className="characteristics-grid">
+                {(formData.subcategory && categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics] 
+                  ? categoryCharacteristics[formData.subcategory as keyof typeof categoryCharacteristics]
+                  : categoryCharacteristics[formData.category as keyof typeof categoryCharacteristics]
+                ).map(char => (
+                  <div key={char.key} className="characteristic-field">
+                    <label className="characteristic-label">{char.label}</label>
+                    {char.type === 'select' ? (
+                      <select
+                        value={formData.characteristics[char.key] || ''}
+                        onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                        className="characteristic-select"
+                      >
+                        <option value="">{t('listings.selectCharacteristic')} {char.label.toLowerCase()}</option>
+                        {char.options?.map((option: string) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={char.type}
+                        value={formData.characteristics[char.key] || ''}
+                        onChange={(e) => handleCharacteristicChange(char.key, e.target.value)}
+                        placeholder={`${t('listings.enterCharacteristic')} ${char.label.toLowerCase()}`}
+                        className="characteristic-input"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         ) : null}
 
@@ -753,17 +1142,37 @@ const AddListingView: React.FC = () => {
             <MapPinIcon className="label-icon" />
             {t('listings.location')} *
           </label>
-                      <CustomSelect
-              value={formData.location}
-              onChange={(value) => handleInputChange('location', value)}
-              options={[{ value: '', label: t('listings.selectCity') }, ...cities.map(city => ({ value: city, label: city }))]}
-              placeholder={t('listings.selectCity')}
-              error={!!errors.location}
-            />
+          <CustomSelect
+            value={formData.location}
+            onChange={(value) => handleInputChange('location', value)}
+            options={[{ value: '', label: t('listings.selectCity') }, ...cities.map(city => ({ value: city, label: city }))]}
+            placeholder={t('listings.selectCity')}
+            error={!!errors.location}
+          />
           {errors.location && (
             <div className="error-message">{errors.location}</div>
           )}
         </div>
+
+        {/* Дополнительное поле для адреса недвижимости */}
+        {(formData.category === 'real-estate' || formData.subcategory === 'rent' || formData.subcategory === 'sale') && (
+          <div className="form-section">
+            <label className="form-label">
+              <MapPinIcon className="label-icon" />
+              Точный адрес недвижимости
+            </label>
+            <input
+              type="text"
+              value={formData.characteristics.address || ''}
+              onChange={(e) => handleCharacteristicChange('address', e.target.value)}
+              placeholder="Улица, дом, квартира, район"
+              className="form-input"
+            />
+            <small className="form-hint">
+              Укажите точный адрес для удобства потенциальных клиентов
+            </small>
+          </div>
+        )}
 
         {/* Способ связи */}
         <div className="form-section">
@@ -891,4 +1300,92 @@ const AddListingView: React.FC = () => {
   );
 };
 
-export default AddListingView; 
+export default AddListingView;
+
+// Добавляем стили для группировки характеристик
+const styles = `
+  .characteristics-grouped {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .characteristics-group {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    background-color: #f9fafb;
+  }
+
+  .characteristics-group-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #3b82f6;
+  }
+
+  .characteristics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .characteristic-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .characteristic-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .characteristic-input,
+  .characteristic-select {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background-color: white;
+    transition: border-color 0.2s;
+  }
+
+  .characteristic-input:focus,
+  .characteristic-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .characteristic-input::placeholder {
+    color: #9ca3af;
+  }
+
+  .form-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .characteristics-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .characteristics-group {
+      padding: 1rem;
+    }
+  }
+`;
+
+// Вставляем стили в head
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = styles;
+  document.head.appendChild(styleElement);
+} 

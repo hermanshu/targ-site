@@ -204,9 +204,47 @@ export interface Translations {
     characteristicModel: string;
     characteristicCondition: string;
     characteristicWarranty: string;
+    characteristicWarrantyPeriod: string;
     characteristicYear: string;
+    characteristicCompleteness: string;
+    characteristicOS: string;
+    characteristicScreenDiagonal: string;
+    characteristicMemory: string;
+    characteristicRAM: string;
+    characteristicSIM: string;
+    characteristicNetwork: string;
+    characteristicCamera: string;
+    characteristicCameraModules: string;
+    characteristicBattery: string;
+    characteristicScreenCondition: string;
+    characteristicProcessor: string;
+    characteristicStorage: string;
+    characteristicGraphics: string;
+    characteristicBatteryLife: string;
+    characteristicDeviceType: string;
+    characteristicConnection: string;
+    characteristicCompatibility: string;
+    characteristicBatteryHealth: string;
+    characteristicResolution: string;
+    characteristicSmartTV: string;
+    characteristicMatrix: string;
+    characteristicPorts: string;
+    characteristicConsoleType: string;
+    characteristicGames: string;
+    characteristicControllers: string;
     characteristicMaterial: string;
     characteristicDimensions: string;
+    characteristicHomeType: string;
+    characteristicPower: string;
+    characteristicVolume: string;
+    characteristicToolType: string;
+    characteristicPowerSource: string;
+    characteristicBatteryCapacity: string;
+    characteristicGardenType: string;
+    characteristicFuel: string;
+    characteristicEnginePower: string;
+    characteristicWorkingWidth: string;
+    characteristicWorkingDepth: string;
     characteristicSize: string;
     characteristicColor: string;
     characteristicServiceType: string;
@@ -250,8 +288,35 @@ export interface Translations {
     characteristicPropertyType: string;
     characteristicRooms: string;
     characteristicArea: string;
+    characteristicAreaTotal: string;
+    characteristicAreaLiving: string;
+
     characteristicFloor: string;
+    characteristicFloorsTotal: string;
+    characteristicLayout: string;
+    characteristicRenovation: string;
+    characteristicFurniture: string;
+    characteristicBalcony: string;
+    characteristicParking: string;
+    characteristicHeating: string;
+    characteristicUtilities: string;
+
     characteristicRentPeriod: string;
+    characteristicDeposit: string;
+    characteristicMinRentPeriod: string;
+    characteristicPayment: string;
+    characteristicPets: string;
+    characteristicChildren: string;
+    characteristicSmoking: string;
+    characteristicInternet: string;
+    characteristicNeighbors: string;
+    characteristicOwnership: string;
+    characteristicDocuments: string;
+    characteristicMortgage: string;
+    characteristicEncumbrances: string;
+    characteristicConstructionYear: string;
+    characteristicLandPurpose: string;
+    characteristicReplanning: string;
     characteristicMileage: string;
     characteristicFuelType: string;
     characteristicTransmission: string;
@@ -263,10 +328,148 @@ export interface Translations {
     characteristicHobbyType: string;
     conditionExcellent: string;
     conditionNeedsRepair: string;
+    conditionAfterRepair: string;
+    warrantyPeriod: string;
+    completenessBox: string;
+    completenessCharger: string;
+    completenessHeadphones: string;
+    completenessManual: string;
+    osIOS: string;
+    osAndroid: string;
+    osHarmonyOS: string;
+    osWindows: string;
+    osMacOS: string;
+    osLinux: string;
+    osNone: string;
+    simNano: string;
+    simESIM: string;
+    simDual: string;
+    network4G: string;
+    network5G: string;
+    screenConditionPerfect: string;
+    screenConditionScratches: string;
+    screenConditionChips: string;
+    storageHDD: string;
+    storageSSD: string;
+    graphicsIntegrated: string;
+    graphicsDiscrete: string;
+    connectionWired: string;
+    connectionBluetooth: string;
+    connectionWiFi: string;
+    compatibilityIOS: string;
+    compatibilityAndroid: string;
+    compatibilityUniversal: string;
+    resolutionHD: string;
+    resolutionFullHD: string;
+    resolution4K: string;
+    resolution8K: string;
+    smartTVYes: string;
+    smartTVNo: string;
+    matrixOLED: string;
+    matrixQLED: string;
+    matrixIPS: string;
+    matrixVA: string;
+    consolePlayStation: string;
+    consoleXbox: string;
+    consoleNintendo: string;
+    consolePortable: string;
+
+    materialWood: string;
+    materialMetal: string;
+    materialPlastic: string;
+    materialMDF: string;
+    materialGlass: string;
+    homeAppliances: string;
+    homeTextile: string;
+    homeLighting: string;
+    homeDecor: string;
+    homeKitchenware: string;
+    toolHand: string;
+    toolElectric: string;
+    toolPneumatic: string;
+    powerSourceMains: string;
+    powerSourceBattery: string;
+    powerSourceGasoline: string;
+    gardenLawnMower: string;
+    gardenTrimmer: string;
+    gardenCultivator: string;
+    gardenPump: string;
+    gardenGenerator: string;
+    gardenSprinkler: string;
+    fuelElectric: string;
+    fuelBattery: string;
+    fuelGasoline: string;
+    fuelDiesel: string;
     propertyTypeApartment: string;
     propertyTypeHouse: string;
+    propertyTypeRoom: string;
     propertyTypeCommercial: string;
     propertyTypeLand: string;
+    layoutStudio: string;
+    layoutSeparate: string;
+    layoutOpen: string;
+    renovationNone: string;
+    renovationRough: string;
+    renovationCosmetic: string;
+    renovationDesign: string;
+    furnitureYes: string;
+    furnitureNo: string;
+    balconyYes: string;
+    balconyNo: string;
+    parkingYes: string;
+    parkingNo: string;
+    parkingGarage: string;
+    parkingYard: string;
+    parkingUnderground: string;
+    heatingCentral: string;
+    heatingAutonomous: string;
+    heatingElectric: string;
+    heatingNone: string;
+    utilitiesIncluded: string;
+    utilitiesSeparate: string;
+    additionalElevator: string;
+    additionalSecurity: string;
+    additionalCCTV: string;
+    additionalYard: string;
+    additionalPlayground: string;
+    rentPeriodDaily: string;
+    rentPeriodMonthly: string;
+    rentPeriodLongTerm: string;
+    depositYes: string;
+    depositNo: string;
+    depositMonth: string;
+    depositHalf: string;
+    depositCustom: string;
+    paymentAdvance: string;
+    paymentMonthly: string;
+    paymentContract: string;
+    petsYes: string;
+    petsNo: string;
+    childrenYes: string;
+    childrenNo: string;
+    smokingYes: string;
+    smokingNo: string;
+    internetYes: string;
+    internetNo: string;
+    internetWiFi: string;
+    internetCable: string;
+    neighborsSeparate: string;
+    neighborsCommunal: string;
+    ownershipPrivate: string;
+    ownershipShared: string;
+    ownershipMunicipal: string;
+    documentsOwnership: string;
+    documentsMortgage: string;
+    documentsPowerOfAttorney: string;
+    mortgageYes: string;
+    mortgageNo: string;
+    encumbrancesYes: string;
+    encumbrancesNo: string;
+    landPurposeIZHS: string;
+    landPurposeSNT: string;
+    landPurposeCommercial: string;
+    replanningYes: string;
+    replanningNo: string;
     fuelTypePetrol: string;
     fuelTypeDiesel: string;
     fuelTypeElectric: string;
@@ -918,12 +1121,50 @@ const ruTranslations: Translations = {
     pickup: 'Самовывоз',
     sellerDelivery: 'Продавец доставит',
       // Характеристики товаров
-      characteristicBrand: 'Бренд',
-      characteristicModel: 'Модель',
-      characteristicCondition: 'Состояние',
-      characteristicWarranty: 'Гарантия',
+          characteristicBrand: 'Бренд',
+    characteristicModel: 'Модель',
+    characteristicCondition: 'Состояние',
+    characteristicWarranty: 'Гарантия',
+    characteristicWarrantyPeriod: 'Срок гарантии',
     characteristicYear: 'Год',
-      characteristicMaterial: 'Материал',
+    characteristicCompleteness: 'Комплектация',
+    characteristicOS: 'Операционная система',
+    characteristicScreenDiagonal: 'Диагональ экрана',
+    characteristicMemory: 'Встроенная память',
+    characteristicRAM: 'Оперативная память (RAM)',
+    characteristicSIM: 'Поддержка SIM',
+    characteristicNetwork: 'Сеть',
+    characteristicCamera: 'Камера',
+    characteristicCameraModules: 'Количество модулей камеры',
+    characteristicBattery: 'Батарея',
+    characteristicScreenCondition: 'Состояние экрана',
+    characteristicProcessor: 'Процессор',
+    characteristicStorage: 'Накопитель',
+    characteristicGraphics: 'Видеокарта',
+    characteristicBatteryLife: 'Время работы от батареи',
+    characteristicDeviceType: 'Тип устройства',
+    characteristicConnection: 'Подключение',
+    characteristicCompatibility: 'Совместимость',
+    characteristicBatteryHealth: 'Состояние батареи',
+    characteristicResolution: 'Разрешение',
+    characteristicSmartTV: 'Smart TV',
+    characteristicMatrix: 'Матрица',
+    characteristicPorts: 'Порты',
+    characteristicConsoleType: 'Тип консоли',
+    characteristicGames: 'Игры в комплекте',
+        characteristicControllers: 'Геймпады в комплекте',
+    characteristicMaterial: 'Материал',
+    characteristicHomeType: 'Тип товара',
+    characteristicPower: 'Мощность',
+    characteristicVolume: 'Объём',
+    characteristicToolType: 'Тип инструмента',
+    characteristicPowerSource: 'Питание',
+    characteristicBatteryCapacity: 'Ёмкость аккумулятора',
+    characteristicGardenType: 'Тип садовой техники',
+    characteristicFuel: 'Топливо / питание',
+    characteristicEnginePower: 'Мощность / объём двигателя',
+    characteristicWorkingWidth: 'Ширина обработки',
+    characteristicWorkingDepth: 'Глубина обработки',
       characteristicDimensions: 'Размеры',
       characteristicSize: 'Размер',
       characteristicColor: 'Цвет',
@@ -965,11 +1206,38 @@ const ruTranslations: Translations = {
       characteristicSalary: 'Зарплата',
       characteristicEducation: 'Образование',
       characteristicSkills: 'Навыки',
-      characteristicPropertyType: 'Тип недвижимости',
-      characteristicRooms: 'Количество комнат',
+          characteristicPropertyType: 'Тип недвижимости',
+    characteristicRooms: 'Количество комнат',
     characteristicArea: 'Площадь',
-      characteristicFloor: 'Этаж',
+    characteristicAreaTotal: 'Общая площадь (м²)',
+    characteristicAreaLiving: 'Жилая площадь (м²)',
+
+    characteristicFloor: 'Этаж',
+    characteristicFloorsTotal: 'Всего этажей',
+    characteristicLayout: 'Планировка',
+    characteristicRenovation: 'Состояние ремонта',
+    characteristicFurniture: 'Мебель и техника',
+    characteristicBalcony: 'Балкон/лоджия/терраса',
+    characteristicParking: 'Парковка',
+    characteristicHeating: 'Отопление',
+    characteristicUtilities: 'Коммунальные услуги',
+
     characteristicRentPeriod: 'Период аренды',
+    characteristicDeposit: 'Залог (депозит)',
+    characteristicMinRentPeriod: 'Минимальный срок аренды',
+    characteristicPayment: 'Оплата',
+    characteristicPets: 'Можно с животными',
+    characteristicChildren: 'Можно с детьми',
+    characteristicSmoking: 'Разрешено курить',
+    characteristicInternet: 'Интернет',
+    characteristicNeighbors: 'Соседи/тип жилья',
+    characteristicOwnership: 'Форма собственности',
+    characteristicDocuments: 'Правоустанавливающие документы',
+    characteristicMortgage: 'Ипотека возможна',
+    characteristicEncumbrances: 'Обременения',
+    characteristicConstructionYear: 'Год постройки',
+    characteristicLandPurpose: 'Назначение участка',
+    characteristicReplanning: 'Возможность перепланировки',
     characteristicMileage: 'Пробег',
       characteristicFuelType: 'Тип топлива',
     characteristicTransmission: 'Трансмиссия',
@@ -981,10 +1249,148 @@ const ruTranslations: Translations = {
       characteristicHobbyType: 'Тип хобби',
     conditionExcellent: 'Отличное',
     conditionNeedsRepair: 'Требует ремонта',
+    conditionAfterRepair: 'После ремонта',
+    warrantyPeriod: 'Указать срок',
+    completenessBox: 'Коробка',
+    completenessCharger: 'Зарядка',
+    completenessHeadphones: 'Наушники',
+    completenessManual: 'Инструкция',
+    osIOS: 'iOS',
+    osAndroid: 'Android',
+    osHarmonyOS: 'HarmonyOS',
+    osWindows: 'Windows',
+    osMacOS: 'macOS',
+    osLinux: 'Linux',
+    osNone: 'Без ОС',
+    simNano: 'nanoSIM',
+    simESIM: 'eSIM',
+    simDual: 'Dual SIM',
+    network4G: '4G',
+    network5G: '5G',
+    screenConditionPerfect: 'Идеальное',
+    screenConditionScratches: 'Царапины',
+    screenConditionChips: 'Сколы',
+    storageHDD: 'HDD',
+    storageSSD: 'SSD',
+    graphicsIntegrated: 'Встроенная',
+    graphicsDiscrete: 'Дискретная',
+    connectionWired: 'Проводное',
+    connectionBluetooth: 'Bluetooth',
+    connectionWiFi: 'Wi-Fi',
+    compatibilityIOS: 'iOS',
+    compatibilityAndroid: 'Android',
+    compatibilityUniversal: 'Универсальные',
+    resolutionHD: 'HD',
+    resolutionFullHD: 'FullHD',
+    resolution4K: '4K',
+    resolution8K: '8K',
+    smartTVYes: 'Есть',
+    smartTVNo: 'Нет',
+    matrixOLED: 'OLED',
+    matrixQLED: 'QLED',
+    matrixIPS: 'IPS',
+    matrixVA: 'VA',
+    consolePlayStation: 'PlayStation',
+    consoleXbox: 'Xbox',
+    consoleNintendo: 'Nintendo',
+    consolePortable: 'Портативная',
+
+    materialWood: 'Дерево',
+    materialMetal: 'Металл',
+    materialPlastic: 'Пластик',
+    materialMDF: 'МДФ',
+    materialGlass: 'Стекло',
+    homeAppliances: 'Бытовая техника',
+    homeTextile: 'Текстиль',
+    homeLighting: 'Освещение',
+    homeDecor: 'Декор',
+    homeKitchenware: 'Посуда',
+    toolHand: 'Ручной',
+    toolElectric: 'Электроинструмент',
+    toolPneumatic: 'Пневматический',
+    powerSourceMains: 'Сетевой',
+    powerSourceBattery: 'Аккумулятор',
+    powerSourceGasoline: 'Бензиновый',
+    gardenLawnMower: 'Газонокосилка',
+    gardenTrimmer: 'Триммер',
+    gardenCultivator: 'Мотоблок',
+    gardenPump: 'Насос',
+    gardenGenerator: 'Генератор',
+    gardenSprinkler: 'Дождеватель',
+    fuelElectric: 'Электрический',
+    fuelBattery: 'Аккумуляторный',
+    fuelGasoline: 'Бензиновый',
+    fuelDiesel: 'Дизельный',
     propertyTypeApartment: 'Квартира',
     propertyTypeHouse: 'Дом',
+    propertyTypeRoom: 'Комната',
     propertyTypeCommercial: 'Коммерческая недвижимость',
     propertyTypeLand: 'Земельный участок',
+    layoutStudio: 'Студия',
+    layoutSeparate: 'Раздельные комнаты',
+    layoutOpen: 'Открытая планировка',
+    renovationNone: 'Без отделки',
+    renovationRough: 'Черновая отделка',
+    renovationCosmetic: 'Косметический ремонт',
+    renovationDesign: 'Дизайнерский ремонт',
+    furnitureYes: 'Есть',
+    furnitureNo: 'Нет',
+    balconyYes: 'Есть',
+    balconyNo: 'Нет',
+    parkingYes: 'Есть',
+    parkingNo: 'Нет',
+    parkingGarage: 'Гараж',
+    parkingYard: 'Двор',
+    parkingUnderground: 'Подземная',
+    heatingCentral: 'Центральное',
+    heatingAutonomous: 'Автономное',
+    heatingElectric: 'Электрическое',
+    heatingNone: 'Нет',
+    utilitiesIncluded: 'Включены',
+    utilitiesSeparate: 'Оплачиваются отдельно',
+    additionalElevator: 'Лифт',
+    additionalSecurity: 'Охрана',
+    additionalCCTV: 'Видеонаблюдение',
+    additionalYard: 'Двор',
+    additionalPlayground: 'Детская площадка',
+    rentPeriodDaily: 'Посуточно',
+    rentPeriodMonthly: 'На месяц',
+    rentPeriodLongTerm: 'Долгосрочно',
+    depositYes: 'Да',
+    depositNo: 'Нет',
+    depositMonth: 'В размере месяца',
+    depositHalf: '50% от стоимости',
+    depositCustom: 'Указать свой вариант',
+    paymentAdvance: 'Предоплата',
+    paymentMonthly: 'Ежемесячно',
+    paymentContract: 'По договору',
+    petsYes: 'Да',
+    petsNo: 'Нет',
+    childrenYes: 'Да',
+    childrenNo: 'Нет',
+    smokingYes: 'Да',
+    smokingNo: 'Нет',
+    internetYes: 'Есть',
+    internetNo: 'Нет',
+    internetWiFi: 'Wi-Fi',
+    internetCable: 'Кабель',
+    neighborsSeparate: 'Отдельная квартира',
+    neighborsCommunal: 'Коммуналка',
+    ownershipPrivate: 'Частная',
+    ownershipShared: 'Долевая',
+    ownershipMunicipal: 'Муниципальная',
+    documentsOwnership: 'В собственности',
+    documentsMortgage: 'Ипотека',
+    documentsPowerOfAttorney: 'Доверенность',
+    mortgageYes: 'Да',
+    mortgageNo: 'Нет',
+    encumbrancesYes: 'Да',
+    encumbrancesNo: 'Нет',
+    landPurposeIZHS: 'ИЖС',
+    landPurposeSNT: 'СНТ',
+    landPurposeCommercial: 'Коммерческое',
+    replanningYes: 'Да',
+    replanningNo: 'Нет',
     fuelTypePetrol: 'Бензин',
     fuelTypeDiesel: 'Дизель',
     fuelTypeElectric: 'Электро',

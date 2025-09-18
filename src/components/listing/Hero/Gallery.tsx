@@ -95,100 +95,85 @@ export const Gallery: React.FC<GalleryProps> = React.memo(({ images }) => {
   }
 
   return (
-    <>
-      <div 
-        className="detail-image-container" 
-        onClick={handleImageClick}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+    <div className="w-full flex flex-col items-center">
+      {/* Основное фото */}
+      <div className="relative w-full aspect-square max-w-xs bg-gray-100 rounded-lg overflow-hidden shadow-md flex items-center justify-center mx-auto z-20">
+        {images.length > 0 ? (
           <img 
             src={images[currentIndex].src}
-            alt={images[currentIndex].alt || 'Изображение товара'}
-            className="detail-image"
-            style={{ aspectRatio: '4/3' }}
-            loading={currentIndex < 2 ? 'eager' : 'lazy'}
-            decoding={currentIndex < 2 ? 'sync' : 'async'}
-            onError={(e) => {
-              console.error('Error loading image:', images[currentIndex].src);
-              e.currentTarget.style.display = 'none';
-              e.currentTarget.nextElementSibling?.classList.remove('hidden');
-            }}
-            onLoad={() => {
-      
-            }}
+            alt={images[currentIndex].alt || 'Фото'}
+            className="object-contain w-full h-full cursor-pointer transition-transform duration-200 hover:scale-105 mx-auto"
+            onClick={handleImageClick}
           />
-          
-          <div className="image-overlay" onClick={handleImageClick} />
-          
-          {images.length > 1 && (
-            <>
-              <button 
-                className="photo-nav-button prev" 
-                onClick={(e) => {
-                  e.stopPropagation();
-            
-                  prevImage();
-                }}
-              >
-                <ChevronLeftIcon className="photo-nav-icon" />
-              </button>
-              
-              <button 
-                className="photo-nav-button next" 
-                onClick={(e) => {
-                  e.stopPropagation();
-            
-                  nextImage();
-                }}
-              >
-                <ChevronRightIcon className="photo-nav-icon" />
-              </button>
-              
-              <div className="photo-indicator">
-                <span className="photo-counter">
-                  {currentIndex + 1} / {images.length}
-                </span>
-              </div>
-            </>
-          )}
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-400 text-4xl bg-gray-50">
+            <div>📷</div>
+            <span className="text-base mt-2">Нет фото</span>
+          </div>
+        )}
+        {/* Стрелки навигации */}
+        {images.length > 1 && (
+          <>
+            <button 
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30"
+              onClick={(e) => { e.stopPropagation(); prevImage(); }}
+            >
+              <ChevronLeftIcon className="w-6 h-6 text-gray-700" />
+            </button>
+            <button 
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30"
+              onClick={(e) => { e.stopPropagation(); nextImage(); }}
+            >
+              <ChevronRightIcon className="w-6 h-6 text-gray-700" />
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs rounded-full px-3 py-1 z-30">
+              {currentIndex + 1} / {images.length}
+            </div>
+          </>
+        )}
+      </div>
+      {/* Миниатюры */}
+      {images.length > 1 && (
+        <div className="flex gap-2 mt-2">
+          {images.map((img, idx) => (
+            <img
+              key={idx}
+              src={img.src}
+              alt={img.alt || 'thumb'}
+              className={`w-14 h-14 object-cover rounded-md border-2 cursor-pointer transition-all duration-150 ${idx === currentIndex ? 'border-indigo-500' : 'border-transparent'} hover:border-indigo-400`}
+              onClick={() => setCurrentIndex(idx)}
+            />
+          ))}
         </div>
-
+      )}
       {/* Полноэкранный просмотр */}
       {showFullscreen && (
-        <div 
-          className="fullscreen-image-overlay" 
-          onClick={handleCloseFullscreen}
-          onKeyDown={handleKeyDown}
-          tabIndex={0}
-        >
-          <div className="fullscreen-image-container" onClick={(e) => e.stopPropagation()}>
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50" onClick={handleCloseFullscreen}>
+          <div className="relative max-w-3xl w-full h-full flex items-center justify-center" onClick={e => e.stopPropagation()}>
             <img 
               src={images[currentIndex].src}
-              alt={images[currentIndex].alt || 'Изображение товара'}
-              className="fullscreen-image"
+              alt={images[currentIndex].alt || 'Фото'}
+              className="max-h-[90vh] max-w-full object-contain mx-auto"
             />
-            
-            <button className="fullscreen-nav-button prev" onClick={prevImage}>
-              <ChevronLeftIcon className="fullscreen-nav-icon" />
+            <button className="absolute top-4 right-4 bg-white/80 rounded-full p-2" onClick={handleCloseFullscreen}>
+              <XMarkIcon className="w-7 h-7 text-gray-700" />
             </button>
-            <button className="fullscreen-nav-button next" onClick={nextImage}>
-              <ChevronRightIcon className="fullscreen-nav-icon" />
-            </button>
-            
-            <button className="fullscreen-close-button" onClick={handleCloseFullscreen}>
-              <XMarkIcon className="fullscreen-close-icon" />
-            </button>
-            
-            <div className="fullscreen-indicator">
-              <span className="fullscreen-counter">
-                {currentIndex + 1} / {images.length}
-              </span>
-            </div>
+            {images.length > 1 && (
+              <>
+                <button className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2" onClick={prevImage}>
+                  <ChevronLeftIcon className="w-7 h-7 text-gray-700" />
+                </button>
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2" onClick={nextImage}>
+                  <ChevronRightIcon className="w-7 h-7 text-gray-700" />
+                </button>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-xs rounded-full px-4 py-2">
+                  {currentIndex + 1} / {images.length}
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
-    </>
+    </div>
   );
-}); 
+});
