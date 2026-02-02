@@ -5,6 +5,7 @@
 @tailwind components;
 /* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind utilities;
+/* stylelint-disable at-rule-no-unknown */
 
 /* Классы для определения устройства */
 .device-mobile,
@@ -4220,13 +4221,13 @@ body:has(.help-modal-overlay) .detail-header {
 
 /* Навигационная панель для десктопа */
 .website-navigation-panel {
-  display: none;
-  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  background: rgba(255, 255, 255, 0.60);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 0 0 20px 20px;
-  padding: 16px 0;
-  position: fixed; /* Изменяем на fixed */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0 0 16px 16px;
+  padding: 12px 24px;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -4265,15 +4266,15 @@ body:has(.help-modal-overlay) .detail-header {
 .website-nav-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
+  gap: 6px;
+  padding: 8px 12px;
   background: transparent;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: rgba(107, 114, 128, 0.8);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
   position: relative;
@@ -4286,18 +4287,18 @@ body:has(.help-modal-overlay) .detail-header {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  border-radius: 10px;
   z-index: -1;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
 .website-nav-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(167, 139, 250, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(79, 70, 229, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .website-nav-item:hover::before {
@@ -4305,13 +4306,13 @@ body:has(.help-modal-overlay) .detail-header {
 }
 
 .website-nav-item.active {
-  background: rgba(255, 255, 255, 0.2);
-  color: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: 
-    0 4px 16px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
 }
 
 .website-nav-item.active::before {
@@ -4320,9 +4321,9 @@ body:has(.help-modal-overlay) .detail-header {
 }
 
 .website-nav-icon {
-  width: 20px;
-  height: 20px;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .website-unread-badge {
@@ -5219,6 +5220,7 @@ body:has(.help-modal-overlay) .detail-header {
   margin: 0 0 4px 0 !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
@@ -5910,6 +5912,7 @@ body:has(.help-modal-overlay) .detail-header {
   margin: 0 !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -15983,6 +15986,7 @@ body:has(.help-modal-overlay) .detail-header {
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

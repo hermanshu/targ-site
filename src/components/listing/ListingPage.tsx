@@ -356,16 +356,14 @@ export const ListingPage: React.FC<ListingPageProps> = ({
         <div className="absolute right-[-60px] top-1/2 w-60 h-60 rounded-full bg-pink-200/30 blur-2xl" />
         <div className="absolute left-1/2 bottom-[-100px] w-96 h-96 rounded-full bg-blue-100/30 blur-2xl" style={{transform: 'translateX(-50%)'}} />
       </div>
-      {/* Spacer for nav bar */}
-      <div className="h-16 md:h-20 z-10 relative" />
       {/* Top bar (ниже панели навигации) */}
-      <div className="listing-detail-toolbar flex items-center justify-between mb-8 max-w-5xl mx-auto w-full z-20 sticky top-0 bg-white/60 backdrop-blur-md border-b border-gray-200 shadow-lg rounded-2xl h-20" style={{marginTop: '-1.5rem'}}>
-        <button onClick={handleBack} className="back-button flex items-center gap-2 text-gray-700 hover:text-indigo-600 font-semibold py-2 px-5 rounded-full bg-white/80 backdrop-blur-md shadow-md transition-all text-base">
-          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 mr-1"><ArrowLeftIcon className="w-5 h-5" /></span>
+      <div className="listing-detail-toolbar flex items-center justify-between mt-16 mb-4 max-w-5xl mx-auto w-full z-20 bg-white/60 backdrop-blur-lg border border-white/20 shadow-md rounded-lg px-4 h-12">
+        <button onClick={handleBack} className="back-button flex items-center gap-1.5 text-gray-700 hover:text-indigo-600 font-semibold py-0.5 px-2 rounded-lg bg-transparent hover:bg-white/30 transition-all text-xs">
+          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-indigo-100"><ArrowLeftIcon className="w-3 h-3" /></span>
           <span>Назад</span>
         </button>
-        <button onClick={handleShareClick} className="back-button flex items-center gap-2 text-gray-700 hover:text-indigo-600 font-semibold py-2 px-5 rounded-full bg-white/80 backdrop-blur-md shadow-md transition-all text-base">
-          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 mr-1"><ShareIcon className="w-5 h-5" /></span>
+        <button onClick={handleShareClick} className="back-button flex items-center gap-1.5 text-gray-700 hover:text-indigo-600 font-semibold py-0.5 px-2 rounded-lg bg-transparent hover:bg-white/30 transition-all text-xs">
+          <span className="flex items-center justify-center w-4 h-4 rounded-full bg-indigo-100"><ShareIcon className="w-3 h-3" /></span>
           <span>Поделиться</span>
         </button>
       </div>
@@ -373,7 +371,7 @@ export const ListingPage: React.FC<ListingPageProps> = ({
       <div className="listing-detail-main max-w-5xl mx-auto flex flex-col md:flex-row gap-6 pb-10 px-4 z-10 relative mb-8">
         {/* Photo left, sticky */}
         <div className="md:w-[420px] w-full flex justify-center md:justify-start">
-          <div className="sticky top-32 w-full max-w-[420px] aspect-square bg-white/40 backdrop-blur-lg rounded-3xl shadow-2xl overflow-hidden flex flex-col items-center border border-white/30">
+          <div className="sticky top-32 w-full max-w-[420px] aspect-square bg-white/40 backdrop-blur-lg rounded-2xl shadow-lg overflow-hidden flex flex-col items-center border border-white/30">
             {images.length > 0 ? (
               <>
                 <img
@@ -394,68 +392,70 @@ export const ListingPage: React.FC<ListingPageProps> = ({
           </div>
         </div>
         {/* Info right */}
-        <div className="flex-1 flex flex-col gap-6">
-          <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 flex flex-col gap-4 min-h-[420px] h-full justify-between">
-            <h1 className="text-3xl font-extrabold text-gray-900 break-words mb-2 leading-tight">{listing.title}</h1>
-            <div className="text-2xl font-bold text-indigo-600 mb-2">{listing.price} {listing.currency}</div>
-            <div className="flex items-center gap-3 mb-2">
+        <div className="flex-1 flex flex-col gap-4">
+          <div className="bg-white/60 backdrop-blur-lg rounded-lg shadow-md border border-white/20 p-6 flex flex-col gap-3 h-full justify-between">
+            <h1 className="text-2xl font-extrabold text-gray-900 break-words leading-tight">{listing.title}</h1>
+            <div className="text-xl font-bold text-indigo-600">{listing.price} {listing.currency}</div>
+            <div className="flex items-center gap-2 text-sm">
               <div className="flex items-center gap-2 cursor-pointer" onClick={() => onNavigateToSellerProfile?.(listing.userId, listing.sellerName, listing.isCompany)}>
-                {listing.isCompany ? <BuildingOfficeIcon className="w-6 h-6 text-blue-500" /> : <UserIcon className="w-6 h-6 text-gray-500" />}
+                {listing.isCompany ? <BuildingOfficeIcon className="w-5 h-5 text-blue-500" /> : <UserIcon className="w-5 h-5 text-gray-500" />}
                 <span className="font-semibold text-gray-800 hover:underline">{listing.sellerName}</span>
               </div>
               {sellerRating.totalReviews > 0 && (
-                <div className="flex items-center gap-1 cursor-pointer" onClick={handleSellerRatingClick}>
+                <div className="flex items-center gap-1 cursor-pointer text-xs" onClick={handleSellerRatingClick}>
                   <div className="flex gap-0.5">
                     {renderStars(Math.floor(sellerRating.averageRating))}
                   </div>
-                  <span className="text-sm text-gray-600">
-                    {sellerRating.averageRating} ({sellerRating.totalReviews} отзывов)
+                  <span className="text-gray-600">
+                    {sellerRating.averageRating} ({sellerRating.totalReviews})
+
                   </span>
                 </div>
               )}
             </div>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-2">
-              <div className="flex items-center gap-1"><MapPinIcon className="w-4 h-4" />{listing.city}</div>
-              <div className="flex items-center gap-1"><CalendarIcon className="w-4 h-4" />Опубликовано {new Date(listing.createdAt).toLocaleDateString('ru-RU')}</div>
-              {listing.views !== undefined && <div className="flex items-center gap-1"><EyeIcon className="w-4 h-4" />{listing.views} просмотров</div>}
+            <div className="flex flex-wrap gap-2 text-xs text-gray-600 mb-2">
+              <div className="flex items-center gap-1"><MapPinIcon className="w-3 h-3" />{listing.city}</div>
+              <div className="flex items-center gap-1"><CalendarIcon className="w-3 h-3" />Опубликовано {new Date(listing.createdAt).toLocaleDateString('ru-RU')}</div>
+              {listing.views !== undefined && <div className="flex items-center gap-1"><EyeIcon className="w-3 h-3" />{listing.views} просмотров</div>}
               <button
-                className={`flex items-center gap-2 px-3 py-1 rounded-full font-semibold transition-all duration-200 border backdrop-blur-md bg-white/40 hover:bg-white/60 border-white/30 shadow-none text-indigo-700 ${isFavorite ? 'ring-2 ring-yellow-300' : ''}`}
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg font-semibold transition-all duration-200 border bg-white/40 hover:bg-white/60 border-white/30 text-indigo-700 text-xs ${isFavorite ? 'ring-2 ring-yellow-300' : ''}`}
                 onClick={handleFavoriteToggle}
                 type="button"
                 aria-pressed={isFavorite}
               >
-                <StarIcon className={`w-5 h-5 ${isFavorite ? 'text-yellow-400' : 'text-indigo-400'}`} />
-                <span className="text-sm font-medium">{isFavorite ? 'В избранном' : 'В избранное'}</span>
+                <StarIcon className={`w-4 h-4 ${isFavorite ? 'text-yellow-400' : 'text-indigo-400'}`} />
+                <span className="font-medium">{isFavorite ? 'В избранном' : 'В избранное'}</span>
               </button>
             </div>
-            <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+            <div className="flex flex-col sm:flex-row gap-2 mt-auto">
               <button 
-                className="flex-1 bg-indigo-600/90 text-white font-semibold rounded-xl px-4 py-2 shadow-lg hover:bg-indigo-700/90 transition-all duration-200 flex items-center justify-center gap-2 text-base backdrop-blur-md"
+                className="flex-1 bg-indigo-600 text-white font-semibold rounded-lg px-3 py-2 shadow-md hover:bg-indigo-700 transition-all duration-200 flex items-center justify-center gap-2 text-sm"
                 onClick={handleContactClick}
               >
-                <ChatBubbleLeftRightIcon className="w-5 h-5" />
+                <ChatBubbleLeftRightIcon className="w-4 h-4" />
                 <span>Связаться</span>
               </button>
-              <button className="flex-1 bg-white/70 text-indigo-700 font-semibold rounded-xl px-4 py-2 shadow-lg hover:bg-indigo-50 transition-all duration-200 flex items-center justify-center gap-2 text-base backdrop-blur-md border border-indigo-100" onClick={handleReviewClick}>
-                <StarIcon className="w-5 h-5" />
-                <span>Оставить отзыв</span>
+              <button className="flex-1 bg-white/60 text-indigo-700 font-semibold rounded-lg px-3 py-2 shadow-md hover:bg-white/80 transition-all duration-200 flex items-center justify-center gap-2 text-sm border border-indigo-100" onClick={handleReviewClick}>
+                <StarIcon className="w-4 h-4" />
+                <span>Отзыв</span>
               </button>
             </div>
           </div>
         </div>
       </div>
       {/* Description & characteristics */}
-      <div className="max-w-5xl mx-auto mt-0 px-4 flex flex-col md:flex-row gap-6 z-10 relative">
-        <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 flex-1 min-w-[260px]">
-          <h3 className="text-lg font-bold mb-2 text-gray-900">Описание</h3>
-          <p className="whitespace-pre-line text-gray-800 bg-white/30 rounded-lg p-4 shadow-inner min-h-[80px]">
+      {/* Description & characteristics */}
+      <div className="max-w-5xl mx-auto mt-4 px-4 flex flex-col md:flex-row gap-4 z-10 relative mb-6">
+        <div className="bg-white/60 backdrop-blur-lg rounded-lg shadow-md border border-white/20 p-5 flex-1 min-w-[260px]">
+          <h3 className="text-base font-bold mb-2 text-gray-900">Описание</h3>
+          <p className="whitespace-pre-line text-sm text-gray-800 bg-white/30 rounded p-3 shadow-inner min-h-[60px]">
             {listing.description || 'Описание отсутствует'}
           </p>
         </div>
         {listing.characteristics && Object.keys(listing.characteristics).length > 0 && (
-          <div className="bg-white/60 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/30 p-8 flex-1 min-w-[260px]">
-            <h3 className="text-lg font-bold mb-2 text-gray-900">Характеристики</h3>
-            <div className="grid grid-cols-1 gap-2 bg-white/30 rounded-lg p-4 shadow-inner">
+          <div className="bg-white/60 backdrop-blur-lg rounded-lg shadow-md border border-white/20 p-5 flex-1 min-w-[260px]">
+            <h3 className="text-base font-bold mb-2 text-gray-900">Характеристики</h3>
+            <div className="grid grid-cols-1 gap-1 bg-white/30 rounded p-3 shadow-inner text-xs">
               {Object.entries(listing.characteristics).map(([key, value]) => (
                 <div key={key} className="flex justify-between text-gray-700">
                   <span className="font-medium">{getTranslatedCharacteristic(key)}:</span>
@@ -468,24 +468,24 @@ export const ListingPage: React.FC<ListingPageProps> = ({
       </div>
       {/* Fullscreen image modal */}
       {fullscreen && (
-        <div className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center" onClick={closeFullscreen}>
-          <div className="relative w-full max-w-2xl aspect-square flex items-center justify-center">
-            <img src={images[currentIndex].src} alt={listing.title} className="object-contain w-full h-full" />
+        <div className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex flex-col items-center justify-center" onClick={closeFullscreen}>
+          <div className="relative w-full max-w-3xl aspect-square flex items-center justify-center p-4">
+            <img src={images[currentIndex].src} alt={listing.title} className="object-contain w-full h-full max-h-[90vh]" />
             {images.length > 1 && (
               <>
-                <button className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30" onClick={e => { e.stopPropagation(); prevImage(); }}>
-                  <ArrowLeftIcon className="w-6 h-6 text-gray-700" />
+                <button className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-3 shadow hover:bg-white z-50 transition-all" onClick={e => { e.stopPropagation(); prevImage(); }}>
+                  <ArrowLeftIcon className="w-6 h-6 text-gray-800" />
                 </button>
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30" onClick={e => { e.stopPropagation(); nextImage(); }}>
-                  <ShareIcon className="w-6 h-6 text-gray-700" />
+                <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-3 shadow hover:bg-white z-50 transition-all" onClick={e => { e.stopPropagation(); nextImage(); }}>
+                  <ShareIcon className="w-6 h-6 text-gray-800" />
                 </button>
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs rounded-full px-3 py-1 z-30">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white text-sm rounded-full px-4 py-2 z-50">
                   {currentIndex + 1} / {images.length}
                 </div>
               </>
             )}
-            <button className="absolute top-2 right-2 bg-white/80 rounded-full p-2 shadow hover:bg-white z-30" onClick={e => { e.stopPropagation(); closeFullscreen(); }}>
-              <XMarkIcon className="w-6 h-6 text-gray-700" />
+            <button className="absolute top-4 right-4 bg-white/80 rounded-full p-3 shadow hover:bg-white z-50 transition-all" onClick={e => { e.stopPropagation(); closeFullscreen(); }}>
+              <XMarkIcon className="w-6 h-6 text-gray-800" />
             </button>
           </div>
         </div>
