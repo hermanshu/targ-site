@@ -2904,25 +2904,103 @@ body:has(.help-modal-overlay) .detail-header {
   height: 60px;
 }
 
-.profile-avatar {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+/* --- Выпадающее меню профиля в верхней панели --- */
+.profile-dropdown-trigger {
+  background: none;
+  border: none;
+  color: #4b5563;
+  font-weight: 500;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  height: 40px;
+  min-width: 170px;
+  border-radius: 12px;
+  box-shadow: none;
+  transition: background 0.16s, color 0.16s;
+  margin-bottom: 2px;
+}
+.profile-dropdown-trigger:hover,
+.profile-dropdown-trigger:focus {
+  background: #ede9fe;
+  color: #4f46e5;
+}
+.profile-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 38px; /* чуть ниже центра аватарки */
+  min-width: 170px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  padding: 8px 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: none;
+  margin-top: 0;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  pointer-events: none;
+  transition: opacity 0.22s cubic-bezier(.4,0,.2,1), transform 0.22s cubic-bezier(.4,0,.2,1);
+}
+.profile-dropdown-menu.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.profile-dropdown-menu button {
+  background: none;
+  border: none;
+  padding: 10px 18px;
+  margin: 2px 8px;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #4b5563;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+  outline: none;
+}
+.profile-dropdown-menu button:hover,
+.profile-dropdown-menu button:focus {
+  background: #ede9fe;
+  color: #4f46e5;
+  box-shadow: 0 2px 8px rgba(139,92,246,0.10);
+}
+
+.profile-avatar,
+.profile-avatar-fallback {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
+  /* остальные стили без изменений */
+}
+.profile-avatar {
+  object-fit: cover;
+  border: 1.5px solid #ede9fe;
+  box-shadow: 0 1px 4px rgba(139,92,246,0.08);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.profile-avatar:hover {
+  box-shadow: 0 2px 8px rgba(139,92,246,0.18);
+}
+
+.profile-avatar-fallback {
+  background: #ede9fe;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 32px rgba(167, 139, 250, 0.3);
+  border: 1.5px solid #ede9fe;
+  box-shadow: 0 1px 4px rgba(139,92,246,0.08);
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  margin: 0 auto 8px;
+  transition: box-shadow 0.2s;
 }
-
-.profile-avatar:hover {
-  transform: scale(1.05);
-  box-shadow: 0 12px 40px rgba(167, 139, 250, 0.4);
+.profile-avatar-fallback:hover {
+  box-shadow: 0 2px 8px rgba(139,92,246,0.18);
 }
 
 .profile-avatar-icon {
@@ -4300,14 +4378,21 @@ body:has(.help-modal-overlay) .detail-header {
 }
 
 .website-nav-container {
-  max-width: calc(100vw - 48px);
-  margin: 0 auto;
-  padding: 0 24px;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
-  gap: 8px;
-  position: relative;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 16px;
+  min-height: 48px;
+  height: 56px;
+  gap: 0;
+}
+
+.website-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
 }
 
 .website-nav-center {
@@ -4327,18 +4412,27 @@ body:has(.help-modal-overlay) .detail-header {
 .website-nav-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: transparent;
+  justify-content: center;
+  background: none;
   border: none;
-  border-radius: 10px;
+  padding: 0 14px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 22px;
+  font-size: 17px;
+  color: #6366f1;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: rgba(107, 114, 128, 0.8);
-  font-size: 13px;
-  font-weight: 500;
-  white-space: nowrap;
-  position: relative;
+  transition: background 0.15s, color 0.15s;
+}
+.website-nav-item .website-nav-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.website-nav-item.active,
+.website-nav-item:hover {
+  background: #ede9fe;
+  color: #4f46e5;
 }
 
 .website-nav-item::before {
@@ -4414,17 +4508,25 @@ body:has(.help-modal-overlay) .detail-header {
 }
 
 .website-nav-logo {
+  height: 44px;
+  width: 44px;
+  margin-right: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 20px;
-  background: transparent;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  height: 48px;
-  flex-shrink: 0;
-  align-self: center;
+}
+.website-nav-logo img {
+  height: 44px;
+  width: 44px;
+  object-fit: contain;
+}
+
+.website-nav-divider {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, #ede9fe 0%, #c7d2fe 100%);
+  margin: 0 8px;
+  border-radius: 2px;
 }
 
 .website-nav-logo-img {
@@ -4489,6 +4591,24 @@ body:has(.help-modal-overlay) .detail-header {
   height: 48px;
   flex-shrink: 0;
   position: relative;
+}
+
+/* --- Иконка-глобус для языка --- */
+.website-language-button.globe-only {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 50%;
+  color: #a78bfa;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: 4px;
+}
+.website-language-button.globe-only span {
+  display: none;
 }
 
 .website-language-button::before {
@@ -5059,6 +5179,31 @@ body:has(.help-modal-overlay) .detail-header {
 .my-listings-add-icon {
   width: 18px;
   height: 18px;
+}
+
+/* --- Современная кнопка "Добавить объявление" для верхней панели --- */
+.add-listing-primary {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 15px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(90deg, #8b5cf6 0%, #a78bfa 100%);
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 2px 8px rgba(139,92,246,0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.add-listing-primary:hover {
+  background: linear-gradient(90deg, #7c3aed 0%, #a78bfa 100%);
+  box-shadow: 0 4px 16px rgba(139,92,246,0.18);
+}
+.add-listing-primary .add-icon {
+  font-size: 17px;
+  margin-right: 2px;
 }
 
 /* Стили для статистики */

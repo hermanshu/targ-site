@@ -28,6 +28,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useTranslation } from '../hooks/useTranslation';
 import { useDeviceType } from '../hooks/useDeviceType';
 import { Listing } from '../types';
+import defaultAvatar from '../assets/default-avatar.png';
+import LanguageSelectorModal from './LanguageSelectorModal';
 
 // Временные компоненты для демонстрации
 const SellerProfileViewWrapper = () => {
@@ -539,6 +541,9 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showSortSheet, setShowSortSheet] = useState(false);
   const [selectedSort, setSelectedSort] = useState('newest');
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const profileMenuRef = React.useRef<HTMLDivElement>(null);
 
   // Функция для подсчета непрочитанных сообщений
   const calculateUnreadMessages = useCallback(() => {
@@ -628,6 +633,18 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
     setShowWelcomeModal(true);
   }, []);
 
+  // Закрытие выпадающего меню профиля при клике вне меню
+  useEffect(() => {
+    if (!showProfileMenu) return;
+    const handleClick = (e: MouseEvent) => {
+      if (profileMenuRef.current && !profileMenuRef.current.contains(e.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showProfileMenu]);
+
   return (
     <div className="main-container">
       {/* Приветственное модальное окно для всех устройств */}
@@ -635,36 +652,25 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
         isVisible={showWelcomeModal} 
         onClose={handleCloseWelcomeModal} 
       />
-      
-      {/* Навигационная панель для десктопа */}
+      {/* Новая верхняя панель навигации */}
       <div className="website-navigation-panel">
         <div className="website-nav-container">
-          {/* Логотип */}
-          <div className="website-nav-logo">
-            <img 
-              src="/images/logo.png" 
-              alt="TARG Logo" 
-              className="website-nav-logo-img"
-              onError={(e) => {
-                console.error('Ошибка загрузки логотипа:', e);
-                e.currentTarget.style.display = 'none';
-              }}
-            />
-          </div>
-          
-          {/* Центральная группа кнопок навигации */}
-          <div className="website-nav-center">
+          {/* Левая группа: логотип и навигация */}
+          <div className="website-nav-group nav-left">
+            <div className="website-nav-logo" onClick={() => navigate('/')}> 
+              <img src="/images/logo.png" alt="TARG Logo" style={{height: '56px', width: '56px', objectFit: 'contain'}} />
+            </div>
             <button 
-              className={`website-nav-item ${location.pathname === '/' ? 'active' : ''}`}
+              className={`website-nav-item${location.pathname === '/' ? ' active' : ''}`}
               onClick={() => navigate('/')}
+              title={t('navigation.home')}
             >
               <HomeIcon className="website-nav-icon" />
-              <span className="website-nav-text">{t('navigation.home')}</span>
             </button>
-            
             <button 
-              className={`website-nav-item ${location.pathname === '/messages' ? 'active' : ''}`}
+              className={`website-nav-item${location.pathname === '/messages' ? ' active' : ''}`}
               onClick={() => navigate('/messages')}
+              title={t('navigation.messages')}
             >
               <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
                 <ChatBubbleLeftRightIcon className="website-nav-icon" />
@@ -674,68 +680,53 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
                   </div>
                 )}
               </div>
-              <span className="website-nav-text">{t('navigation.messages')}</span>
             </button>
-            
             <button 
-              className={`website-nav-item ${location.pathname === '/favorites' ? 'active' : ''}`}
+              className={`website-nav-item${location.pathname === '/favorites' ? ' active' : ''}`}
               onClick={() => navigate('/favorites')}
+              title={t('navigation.favorites')}
             >
               <HeartIcon className="website-nav-icon" />
-              <span className="website-nav-text">{t('navigation.favorites')}</span>
             </button>
-            
+          </div>
+          {/* Визуальный разделитель */}
+          <div className="website-nav-divider" />
+          {/* Правая группа: действия */}
+          <div className="website-nav-group nav-right">
             {isAuthenticated && (
               <button 
-                className={`website-nav-item ${location.pathname === '/add' ? 'active' : ''}`}
+                className="add-listing-primary"
                 onClick={() => navigate('/add')}
+                title={t('navigation.addListing')}
               >
-                <svg className="website-nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                <span className="website-nav-text">{t('navigation.addListing')}</span>
+                <PlusIcon className="add-icon" />
+                <span>Добавить</span>
               </button>
             )}
-            
-            <button 
-              className={`website-nav-item ${location.pathname === '/profile' ? 'active' : ''}`}
-              onClick={() => navigate('/profile')}
-            >
-              <UserIcon className="website-nav-icon" />
-              <span className="website-nav-text">{t('navigation.profile')}</span>
-            </button>
-            
-
-          </div>
-          
-          {/* Кнопка переключения языка */}
-          <div className="website-language-selector">
-            <button 
-              className="website-language-button"
-              onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-            >
-              <GlobeAltIcon className="website-language-icon" />
-              <span className="website-language-text">{currentLanguageOption?.flag}</span>
-            </button>
-            
-            {showLanguageMenu && (
-              <div className="website-language-dropdown">
-                {languages.map((language) => (
-                  <button
-                    key={language.code}
-                    className={`website-language-option ${currentLanguage === language.code ? 'active' : ''}`}
-                    onClick={() => handleLanguageSelect(language.code)}
-                  >
-                    <span className="website-language-flag">{language.flag}</span>
-                    <span className="website-language-name">{language.name}</span>
-                  </button>
-                ))}
+            {/* Аватар профиля с дропдауном */}
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+              <button
+                className="profile-dropdown-trigger"
+                style={{gap: 8}}
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+              >
+                <UserIcon style={{ width: 20, height: 20 }} />
+                <span>Профиль</span>
+              </button>
+              <div
+                ref={profileMenuRef}
+                className={`profile-dropdown-menu${showProfileMenu ? ' open' : ''}`}
+              >
+                <button onClick={() => { setShowProfileMenu(false); navigate('/profile'); }}>Профиль</button>
+                <button onClick={() => { setShowProfileMenu(false); navigate('/my-listings'); }}>Мои объявления</button>
+                <button onClick={() => { setShowProfileMenu(false); navigate('/notifications-settings'); }}>Настройки</button>
+                <button onClick={() => { setShowProfileMenu(false); setShowLanguageModal(true); }}>Сменить язык</button>
+                <button onClick={() => { setShowProfileMenu(false); onLogout(); }}>Выйти</button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
-      
       <div className={`content-area ${shouldShowProfileBackground ? 'profile-background' : ''}`}>
         <Routes>
           <Route path="/" element={
@@ -780,8 +771,13 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
         selectedSort={selectedSort}
         onSortSelect={setSelectedSort}
       />
+      {/* Модальное окно выбора языка */}
+      <LanguageSelectorModal
+        isOpen={showLanguageModal}
+        onClose={() => setShowLanguageModal(false)}
+      />
     </div>
   );
 };
 
-export default MainTabView; 
+export default MainTabView;
