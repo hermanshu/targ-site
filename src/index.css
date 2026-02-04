@@ -1,3 +1,119 @@
+/* Кружок для иконки профиля в модалке авторизации */
+.auth-profile-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  margin-top: 0;
+  box-shadow: 0 2px 12px rgba(139,92,246,0.10);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.auth-profile-icon-circle .modal-title-icon {
+  width: 28px;
+  height: 28px;
+  color: #fff;
+  transition: width 0.2s, height 0.2s;
+}
+
+.auth-modal-header-centered {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  position: relative;
+  margin-top: 12px;
+}
+.auth-modal-title-centered {
+  justify-content: center !important;
+  align-items: center !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  width: 100%;
+}
+.auth-modal-content .modal-title {
+  margin: 0 !important;
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  width: 100%;
+  text-align: center !important;
+}
+.auth-form-centered {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  margin-top: 0;
+}
+.auth-btn-centered {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+  margin-top: 12px !important;
+}
+.auth-modal-footer-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.eye-inside-input {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #a3a3a3;
+  z-index: 2;
+}
+.eye-inside-input .eye-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Центрирование заголовка и иконки в модалке */
+.auth-modal-content .modal-header {
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+  position: relative;
+}
+.auth-modal-content .modal-title-section {
+  justify-content: center !important;
+  align-items: center !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.auth-modal-content .modal-title {
+  margin: 0 !important;
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+}
+.auth-modal-content .modal-close {
+  position: absolute !important;
+  top: 18px !important;
+  right: 18px !important;
+}
+
 /* Tailwind CSS директивы */
 /* stylelint-disable-next-line at-rule-no-unknown */
 @tailwind base;

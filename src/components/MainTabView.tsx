@@ -30,6 +30,7 @@ import { useDeviceType } from '../hooks/useDeviceType';
 import { Listing } from '../types';
 import defaultAvatar from '../assets/default-avatar.png';
 import LanguageSelectorModal from './LanguageSelectorModal';
+import AuthModal from './AuthModal';
 
 // Временные компоненты для демонстрации
 const SellerProfileViewWrapper = () => {
@@ -71,37 +72,27 @@ const SellerProfileViewWrapper = () => {
   );
 };
 
-const AddListingViewWrapper = () => {
+interface AuthModalProps {
+  showAuthModal: boolean;
+  setShowAuthModal: (show: boolean) => void;
+}
+
+const AddListingViewWrapper: React.FC<AuthModalProps> = ({ showAuthModal, setShowAuthModal }) => {
   const { currentUser } = useAuth();
-  const { t } = useTranslation();
-  
   if (!currentUser) {
-    return (
-      <AuthRequiredView 
-        title={t('profile.addListingUnavailable')}
-        description={t('profile.signInToAddListings')}
-      />
-    );
+    return null;
   }
-  
   return <AddListingView />;
 };
 
-const FavoritesViewWrapper = () => {
+const FavoritesViewWrapper: React.FC<AuthModalProps> = ({ showAuthModal, setShowAuthModal }) => {
   const { currentUser } = useAuth();
-  const { t } = useTranslation();
   const { isFavorite, removeFromFavorites } = useFavorites();
   const { incrementViews } = useListings();
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const navigate = useNavigate();
-  
   if (!currentUser) {
-    return (
-      <AuthRequiredView 
-        title={t('favorites.favoritesUnavailable')}
-        description={t('favorites.signInToAccessFavorites')}
-      />
-    );
+    return null;
   }
 
   const handleCardClick = (listing: Listing) => {
@@ -119,19 +110,8 @@ const FavoritesViewWrapper = () => {
     removeFromFavorites(listing.id);
   };
 
-  const handleNavigateToMessages = (listing: Listing) => {
-    // В избранном просто показываем уведомление
-    window.alert(t('favorites.goToMessagesForContact'));
-  };
-
   const handleNavigateToProfile = (mode?: 'signin' | 'signup') => {
-    if (mode === 'signup') {
-      navigate('/profile?mode=signup');
-    } else if (mode === 'signin') {
-      navigate('/profile?mode=signin');
-    } else {
-      navigate('/profile');
-    }
+    navigate('/profile');
   };
 
   const handleNavigateToSellerProfile = (sellerId: string, sellerName: string, isCompany: boolean) => {
@@ -153,7 +133,6 @@ const FavoritesViewWrapper = () => {
         onBack={handleBackToList}
         onFavoriteToggle={handleFavoriteToggle}
         isFavorite={isFavorite(selectedListing.id)}
-        onNavigateToMessages={handleNavigateToMessages}
         onNavigateToProfile={handleNavigateToProfile}
         onNavigateToSellerProfile={handleNavigateToSellerProfile}
       />
@@ -232,18 +211,11 @@ const MobileMessagesViewWrapper = () => {
   );
 };
 
-const MessagesViewWrapper = () => {
+const MessagesViewWrapper: React.FC<AuthModalProps> = ({ showAuthModal, setShowAuthModal }) => {
   const { currentUser } = useAuth();
-  const { t } = useTranslation();
   const navigate = useNavigate();
-  
   if (!currentUser) {
-    return (
-      <AuthRequiredView 
-        title={t('messages.messagesUnavailable')}
-        description={t('messages.signInToChat')}
-      />
-    );
+    return null;
   }
 
   const handleNavigateToMessages = (listing: Listing) => {
@@ -270,11 +242,12 @@ const MessagesViewWrapper = () => {
 
 
 
-const TabBar = () => {
+const TabBar: React.FC<{ showAuthModal: boolean; setShowAuthModal: (show: boolean) => void }> = ({ showAuthModal, setShowAuthModal }) => {
   const location = useLocation();
   const { currentUser } = useAuth();
   const { t } = useTranslation();
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const navigate = useNavigate();
 
   const tabs = useMemo(() => {
     const baseTabs = [
@@ -283,12 +256,9 @@ const TabBar = () => {
       { name: t('navigation.favorites'), href: '/favorites', icon: HeartIcon, activeIcon: HeartIconSolid },
       { name: t('navigation.profile'), href: '/profile', icon: UserIcon, activeIcon: UserIconSolid },
     ];
-
-    // Добавляем вкладку "Добавить" только для авторизованных пользователей
     if (currentUser) {
       baseTabs.splice(2, 0, { name: t('navigation.addListing'), href: '/add', icon: PlusIcon, activeIcon: PlusIconSolid });
     }
-
     return baseTabs;
   }, [currentUser, t]);
 
@@ -430,6 +400,22 @@ const TabBar = () => {
       {tabs.map((tab, index) => {
         const isActive = location.pathname === tab.href;
         const Icon = isActive ? tab.activeIcon : tab.icon;
+        // Для сообщений и избранного: если неавторизован, открывать модалку
+        if ((tab.href === '/messages' || tab.href === '/favorites') && !currentUser) {
+          return (
+            <button
+              key={tab.name}
+              className={`tab-item`}
+              style={{ opacity: 1, cursor: 'pointer' }}
+              onClick={() => setShowAuthModal(true)}
+            >
+              <div style={{ position: 'relative' }}>
+                <Icon style={{ width: '20px', height: '20px' }} />
+              </div>
+              <span style={{ marginTop: '4px' }}>{tab.name}</span>
+            </button>
+          );
+        }
         
         // Если это кнопка "Главная" и мы уже на главной странице, добавляем функцию прокрутки
         if (tab.href === '/' && location.pathname === '/') {
@@ -543,6 +529,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   const [selectedSort, setSelectedSort] = useState('newest');
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const profileMenuRef = React.useRef<HTMLDivElement>(null);
 
   // Функция для подсчета непрочитанных сообщений
@@ -596,7 +583,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
   }, [isAuthenticated, calculateUnreadMessages]);
 
   // Определяем, нужно ли добавить фон профиля
-  const shouldShowProfileBackground = !isAuthenticated && (location.pathname === '/profile' || location.pathname === '/messages' || location.pathname === '/favorites');
+  const shouldShowProfileBackground = !isAuthenticated && (location.pathname === '/profile' || location.pathname === '/messages' || location.pathname === '/favorites') && !showAuthModal;
   
   const currentLanguageOption = languages.find(lang => lang.code === currentLanguage);
 
@@ -644,6 +631,43 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
     document.addEventListener('mousedown', handleClick);
     return () => document.removeEventListener('mousedown', handleClick);
   }, [showProfileMenu]);
+
+  // Получаем children для текущего маршрута
+  // (Вариант: если children === null, не добавлять profile-background)
+  //
+  // Для этого оборачиваем Routes в переменную
+  const routes = (
+    <Routes>
+      <Route path="/" element={
+        isMobile ? <MobileHomeView /> : <WebsiteAnnouncementsView 
+          showSortSheet={showSortSheet}
+          setShowSortSheet={setShowSortSheet}
+          selectedSort={selectedSort}
+          setSelectedSort={setSelectedSort}
+          showAuthModal={showAuthModal}
+          setShowAuthModal={setShowAuthModal}
+        />
+      } />
+      <Route path="/add" element={<AddListingViewWrapper showAuthModal={showAuthModal} setShowAuthModal={setShowAuthModal} />} />
+      <Route path="/favorites" element={<FavoritesViewWrapper showAuthModal={showAuthModal} setShowAuthModal={setShowAuthModal} />} />
+      <Route path="/favorites/shared/:userId" element={<SharedFavoritesViewWrapper />} />
+      <Route path="/favorites/folder/:shareId" element={<SharedFolderViewWrapper />} />
+      <Route path="/messages" element={
+        isMobile ? 
+        <MobileMessagesViewWrapper /> : 
+        <MessagesViewWrapper showAuthModal={showAuthModal} setShowAuthModal={setShowAuthModal} />
+      } />
+      <Route path="/my-listings" element={<MyListingsView />} />
+      <Route path="/notifications-settings" element={<NotificationsSettingsView />} />
+      <Route path="/help-support" element={<HelpAndSupportView />} />
+      <Route path="/reviews" element={<ReviewsView />} />
+      <Route path="/seller" element={<SellerProfileViewWrapper />} />
+    </Routes>
+  );
+
+  // Проверяем, есть ли контент для текущего маршрута
+  // Если children === null, не добавляем profile-background
+  // (Вариант: используем useLocation и проверяем pathname)
 
   return (
     <div className="main-container">
@@ -693,76 +717,56 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
           <div className="website-nav-divider" />
           {/* Правая группа: действия */}
           <div className="website-nav-group nav-right">
-            {isAuthenticated && (
-              <button 
-                className="add-listing-primary"
-                onClick={() => navigate('/add')}
-                title={t('navigation.addListing')}
-              >
-                <PlusIcon className="add-icon" />
-                <span>Добавить</span>
-              </button>
-            )}
-            {/* Аватар профиля с дропдауном */}
-            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            {isAuthenticated ? (
+              <>
+                <button 
+                  className="add-listing-primary"
+                  onClick={() => navigate('/add')}
+                  title={t('navigation.addListing')}
+                >
+                  <PlusIcon className="add-icon" />
+                  <span>Добавить</span>
+                </button>
+                {/* Аватар профиля с дропдауном */}
+                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <button
+                    className="profile-dropdown-trigger"
+                    style={{gap: 8}}
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  >
+                    <UserIcon style={{ width: 20, height: 20 }} />
+                    <span>Профиль</span>
+                  </button>
+                  <div
+                    ref={profileMenuRef}
+                    className={`profile-dropdown-menu${showProfileMenu ? ' open' : ''}`}
+                  >
+                    <button onClick={() => { setShowProfileMenu(false); navigate('/profile'); }}>Профиль</button>
+                    <button onClick={() => { setShowProfileMenu(false); navigate('/my-listings'); }}>Мои объявления</button>
+                    <button onClick={() => { setShowProfileMenu(false); navigate('/notifications-settings'); }}>Настройки</button>
+                    <button onClick={() => { setShowProfileMenu(false); setShowLanguageModal(true); }}>Сменить язык</button>
+                    <button onClick={() => { setShowProfileMenu(false); onLogout(); }}>Выйти</button>
+                  </div>
+                </div>
+              </>
+            ) : (
               <button
-                className="profile-dropdown-trigger"
-                style={{gap: 8}}
-                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="add-listing-primary"
+                type="button"
+                onClick={() => setShowAuthModal(true)}
+                tabIndex={0}
               >
                 <UserIcon style={{ width: 20, height: 20 }} />
-                <span>Профиль</span>
+                <span>Войти или зарегистрироваться</span>
               </button>
-              <div
-                ref={profileMenuRef}
-                className={`profile-dropdown-menu${showProfileMenu ? ' open' : ''}`}
-              >
-                <button onClick={() => { setShowProfileMenu(false); navigate('/profile'); }}>Профиль</button>
-                <button onClick={() => { setShowProfileMenu(false); navigate('/my-listings'); }}>Мои объявления</button>
-                <button onClick={() => { setShowProfileMenu(false); navigate('/notifications-settings'); }}>Настройки</button>
-                <button onClick={() => { setShowProfileMenu(false); setShowLanguageModal(true); }}>Сменить язык</button>
-                <button onClick={() => { setShowProfileMenu(false); onLogout(); }}>Выйти</button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-      <div className={`content-area ${shouldShowProfileBackground ? 'profile-background' : ''}`}>
-        <Routes>
-          <Route path="/" element={
-            isMobile ? <MobileHomeView /> : <WebsiteAnnouncementsView 
-              showSortSheet={showSortSheet}
-              setShowSortSheet={setShowSortSheet}
-              selectedSort={selectedSort}
-              setSelectedSort={setSelectedSort}
-            />
-          } />
-          <Route path="/add" element={<AddListingViewWrapper />} />
-          <Route path="/favorites" element={<FavoritesViewWrapper />} />
-          <Route path="/favorites/shared/:userId" element={<SharedFavoritesViewWrapper />} />
-          <Route path="/favorites/folder/:shareId" element={<SharedFolderViewWrapper />} />
-          <Route path="/messages" element={
-            isMobile ? 
-            <MobileMessagesViewWrapper /> : 
-            <MessagesViewWrapper />
-          } />
-          <Route path="/my-listings" element={<MyListingsView />} />
-          <Route path="/notifications-settings" element={<NotificationsSettingsView />} />
-          <Route path="/help-support" element={<HelpAndSupportView />} />
-          <Route path="/reviews" element={<ReviewsView />} />
-          <Route path="/profile" element={
-            isAuthenticated ? (
-              <AuthenticatedProfileView 
-                onLogout={onLogout}
-              />
-            ) : (
-              <ProfileView />
-            )
-          } />
-          <Route path="/seller" element={<SellerProfileViewWrapper />} />
-        </Routes>
+      <div className={`content-area${shouldShowProfileBackground && location.pathname !== '/messages' && location.pathname !== '/favorites' ? ' profile-background' : ''}`}>
+        {routes}
       </div>
-      {isMobile && (location.pathname !== '/' || !showWelcomeModal) && <TabBar />}
+      {isMobile && (location.pathname !== '/' || !showWelcomeModal) && <TabBar showAuthModal={showAuthModal} setShowAuthModal={setShowAuthModal} />}
       
       {/* Модальное окно сортировки - на том же уровне, что и панель навигации */}
       <SortSheet
@@ -776,6 +780,7 @@ const MainTabViewContent: React.FC<{ isAuthenticated: boolean; onLogout: () => v
         isOpen={showLanguageModal}
         onClose={() => setShowLanguageModal(false)}
       />
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 };

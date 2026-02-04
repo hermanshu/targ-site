@@ -37,7 +37,7 @@ import WebsiteFilterView, { FilterState } from './WebsiteFilterView';
 import WebsiteCategoryView from './WebsiteCategoryView';
 import ResponsiveListingsGrid from './ResponsiveListingsGrid';
 import Pagination from './Pagination';
-
+import AuthModal from './AuthModal';
 
 import { Listing } from '../types';
 
@@ -46,27 +46,28 @@ interface WebsiteAnnouncementsViewProps {
   setShowSortSheet?: (show: boolean) => void;
   selectedSort?: string;
   setSelectedSort?: (sort: string) => void;
+  showAuthModal: boolean;
+  setShowAuthModal: (show: boolean) => void;
 }
 
 const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({ 
   showSortSheet: externalShowSortSheet, 
   setShowSortSheet: externalSetShowSortSheet,
   selectedSort: externalSelectedSort,
-  setSelectedSort: externalSetSelectedSort
+  setSelectedSort: externalSetSelectedSort,
+  showAuthModal,
+  setShowAuthModal
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useAuth();
   const { addToFavorites, removeFromFavorites, isFavorite } = useFavorites();
   const { getPublishedListings, isLoading, incrementViews } = useListings();
+  const { t } = useTranslation();
 
   // Состояние пагинации
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const { t } = useTranslation();
-
-
 
   const categories = useMemo(() => {
     const cats = [
@@ -366,8 +367,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
   const handleFavoriteToggle = useCallback((listing: Listing) => {
     if (!currentUser) {
-      // Редирект на профиль для авторизации
-      navigate('/profile');
+      setShowAuthModal(true);
       return;
     }
 
@@ -385,7 +385,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
     } catch (error) {
       console.error('Ошибка при изменении избранного:', error);
     }
-  }, [currentUser, isFavorite, removeFromFavorites, addToFavorites, navigate]);
+  }, [currentUser, isFavorite, removeFromFavorites, addToFavorites]);
 
   const handleCardClick = (listing: Listing) => {
     // Увеличиваем счетчик просмотров при клике на карточку
@@ -408,6 +408,10 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   };
 
   const handleNavigateToMessages = (listing: Listing) => {
+    if (!currentUser) {
+      setShowAuthModal(true);
+      return;
+    }
     // Переходим к сообщениям с полными параметрами объявления
     const params = new URLSearchParams({
       listingId: listing.id,
@@ -426,13 +430,7 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
   };
 
   const handleNavigateToProfile = (mode?: 'signin' | 'signup') => {
-    if (mode === 'signup') {
-      navigate('/profile?mode=signup');
-    } else if (mode === 'signin') {
-      navigate('/profile?mode=signin');
-    } else {
-      navigate('/profile');
-    }
+    setShowAuthModal(true);
   };
 
   const handleNavigateToSellerProfile = (sellerId: string, sellerName: string, isCompany: boolean) => {
@@ -671,8 +669,10 @@ const WebsiteAnnouncementsView: React.FC<WebsiteAnnouncementsViewProps> = ({
 
       {/* Детальная карточка объявления */}
       {renderListingDetail()}
+
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
   );
 };
 
-export default WebsiteAnnouncementsView; 
+export default WebsiteAnnouncementsView;
